@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import net.harmal.karnet2.core.Product;
+
 public class HomeFragment extends Fragment
 {
     public HomeFragment()
@@ -30,5 +32,7 @@ public class HomeFragment extends Fragment
                 Navigation.findNavController(view).navigate(action);
             }
         });
+        Product d;
+
     }
 }

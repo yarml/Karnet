@@ -16,14 +16,6 @@ public class Customer
         this.phoneNum     = phoneNum    ;
         this.city         = city        ;
     }
-    public Customer()
-    {
-        cid = 0;
-        creationDate = Date.today();
-        name         = ""          ;
-        phoneNum     = "0600000000";
-        city         = ""          ;
-    }
 
     public int cid()
     {

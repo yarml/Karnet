@@ -1,4 +1,20 @@
 package net.harmal.karnet2.core;
 
-public class ProductCategory {
+import java.util.Objects;
+
+public class ProductCategory
+{
+    String displayName;
+
+    public ProductCategory(String name)
+    {
+        this.displayName = name;
+        if(name == null)
+            this.displayName = "?";
+    }
+
+    public boolean equals(ProductCategory o)
+    {
+        return displayName.equalsIgnoreCase(o.displayName);
+    }
 }

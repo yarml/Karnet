@@ -1,12 +1,14 @@
 package net.harmal.karnet2.core.registers;
 
 import net.harmal.karnet2.core.Customer;
+import net.harmal.karnet2.core.Date;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerRegister
 {
+
     public static int customerIdCount = 0;
 
     private static List<Customer> customerRegister;
@@ -19,7 +21,7 @@ public class CustomerRegister
     {
         if(cid < 0) // CID must be positive
         {
-            add(0, name, city, phoneName, creationDate);
+            add(0, name, city, phoneNum, creationDate);
             return;
         }
         for(Customer c : customerRegister) // Make sure the CID is unique

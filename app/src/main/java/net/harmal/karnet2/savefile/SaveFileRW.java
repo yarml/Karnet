@@ -2,19 +2,24 @@ package net.harmal.karnet2.savefile;
 
 import android.app.Activity;
 
+import net.harmal.karnet2.core.Date;
+import net.harmal.karnet2.core.ProductCategory;
 import net.harmal.karnet2.core.registers.CustomerRegister;
+import net.harmal.karnet2.core.registers.ProductRegister;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SaveFileRW
 {
     private static final int SAVE_FILE_VER = 0x00000200;
 
-    public static void readSaveFile(Activity a) throws IOException, Exceptionst
+    public static void readSaveFile(Activity a) throws IOException, Exception
     {
         ByteBuffer buf = ByteBuffer.wrap(Files.readAllBytes(
                 Paths.get(
@@ -42,7 +47,25 @@ public class SaveFileRW
                     String phoneNum = readString(buf)                                       ;
                     CustomerRegister.add(id, name, city, phoneNum, cdate);
                 }
-                
+
+                ProductRegister.productIdCount = buf.getInt();
+                for(int i = 0; i < productCount; i++)
+                {
+                    int id = buf.getInt();
+                    int unitPrice = buf.getShort();
+                    int catIngCount = buf.getInt();
+                    int catTasteCount = buf.getInt();
+                    int catShapeCount = buf.getInt();
+                    int catExtraCount = buf.getInt();
+                    String name = readString(buf);
+                    List<ProductCategory> catIng = readProductCategory(buf, catIngCount);
+                    List<ProductCategory> catTaste = readProductCategory(buf, catTasteCount);
+                    List<ProductCategory> catShape = readProductCategory(buf, catShapeCount);
+                    List<ProductCategory> catExtra = readProductCategory(buf, catExtraCount);
+
+                    ProductRegister.add(id, unitPrice, name, catIng, catTaste, catShape, catExtra);
+                }
+
                 break;
             default:
                 throw new Exception("Unrecognized save file version");
@@ -51,7 +74,17 @@ public class SaveFileRW
 
     private static String readString(ByteBuffer buf)
     {
-
+        StringBuilder b = new StringBuilder();
+        for(char i = buf.getChar(); i != 0; i = buf.getChar())
+            b.append(i);
+        return b.toString();
+    }
+    private static List<ProductCategory> readProductCategory(ByteBuffer buf, int count)
+    {
+        List<ProductCategory> cat = new ArrayList<ProductCategory>();
+        for(int i = 0; i < count; i++)
+            cat.add(new ProductCategory(readString(buf)));
+        return cat;
     }
 
 }

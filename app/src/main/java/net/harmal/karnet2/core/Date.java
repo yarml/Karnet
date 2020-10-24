@@ -52,7 +52,7 @@ public class Date
     {
         return new Date(LocalDate.now());
     }
-    public static Date tommorow()
+    public static Date tomorrow()
     {
         return new Date(LocalDate.now().plusDays(1));
     }

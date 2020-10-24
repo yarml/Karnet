@@ -3,28 +3,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
-
+    app:startDestination="@id/orderFragment">
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="net.harmal.karnet2.LoginFragment"
-        android:label="Login"
-        tools:layout="@layout/fragment_login" />
+        android:id="@+id/orderFragment"
+        android:name="net.harmal.karnet2.ui.fragments.OrderFragment"
+        android:label="Commandes"
+        tools:layout="@layout/fragment_order" />
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="net.harmal.karnet2.HomeFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@anim/slide_in_top"
-            app:exitAnim="@anim/slide_out_bottom"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left" />
-    </fragment>
+        android:id="@+id/customerFragment"
+        android:name="net.harmal.karnet2.ui.fragments.CustomerFragment"
+        android:label="Clients"
+        tools:layout="@layout/fragment_customer" />
     <action
-        android:id="@+id/action_global_loginFragment"
-        app:destination="@id/loginFragment"
-        app:popUpTo="@id/nav_graph" />
+        android:id="@+id/action_global_orderFragment"
+        app:destination="@id/orderFragment"
+        app:enterAnim="@anim/fragment_fade_enter"
+        app:exitAnim="@anim/fragment_fade_exit"
+        app:popEnterAnim="@anim/fragment_fade_enter"
+        app:popExitAnim="@anim/fragment_close_exit" />
+    <action
+        android:id="@+id/action_global_customerFragment"
+        app:destination="@id/customerFragment"
+        app:enterAnim="@anim/fragment_fade_enter"
+        app:exitAnim="@anim/fragment_fade_exit"
+        app:popEnterAnim="@anim/fragment_fade_enter"
+        app:popExitAnim="@anim/fragment_fade_exit" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="net.harmal.karnet2.ui.fragments.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="net.harmal.karnet2.ui.fragments.ProductFragment"
+        android:label="fragment_product"
+        tools:layout="@layout/fragment_product" />
+    <fragment
+        android:id="@+id/stockFragment"
+        android:name="net.harmal.karnet2.ui.fragments.StockFragment"
+        android:label="fragment_stock"
+        tools:layout="@layout/fragment_stock" />
+    <action
+        android:id="@+id/action_global_stockFragment"
+        app:destination="@id/stockFragment"
+        app:enterAnim="@anim/fragment_fade_enter"
+        app:exitAnim="@anim/fragment_fade_exit"
+        app:popEnterAnim="@anim/fragment_fade_enter"
+        app:popExitAnim="@anim/fragment_fade_exit" />
+    <action
+        android:id="@+id/action_global_aboutFragment"
+        app:destination="@id/aboutFragment"
+        app:enterAnim="@anim/fragment_fade_enter"
+        app:exitAnim="@anim/fragment_fade_exit"
+        app:popEnterAnim="@anim/fragment_fade_enter"
+        app:popExitAnim="@anim/fragment_fade_exit" />
+    <action
+        android:id="@+id/action_global_productFragment"
+        app:destination="@id/productFragment"
+        app:enterAnim="@anim/fragment_fade_enter"
+        app:exitAnim="@anim/fragment_fade_exit"
+        app:popEnterAnim="@anim/fragment_fade_enter"
+        app:popExitAnim="@anim/fragment_fade_exit" />
 </navigation>

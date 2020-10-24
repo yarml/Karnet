@@ -7,7 +7,6 @@ import net.harmal.karnet2.core.ProductCategory;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.ProductRegister;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;

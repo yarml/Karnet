@@ -1,6 +1,5 @@
 package net.harmal.karnet2.core.registers;
 
-import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Product;
 import net.harmal.karnet2.core.ProductCategory;
 

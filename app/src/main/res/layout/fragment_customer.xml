@@ -5,13 +5,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context=".ui.fragments.CustomerFragment">
+    tools:context=".ui.fragments.order.OrderFragment" >
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/str_fragment_customer_no_customer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Customers"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        style="@style/TextAppearance.AppCompat.Large"
+        android:text="@string/str_no_customer"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_customer_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

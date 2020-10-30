@@ -1,12 +1,19 @@
 package net.harmal.karnet2.savefile;
 
 import android.app.Activity;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.ProductCategory;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.ProductRegister;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -18,12 +25,21 @@ public class SaveFileRW
 {
     private static final int SAVE_FILE_VER = 0x00000200;
 
-    public static void readSaveFile(Activity a) throws IOException, Exception
+    public static void readSaveFile(@NotNull Activity a) throws Exception
     {
-        ByteBuffer buf = ByteBuffer.wrap(Files.readAllBytes(
-                Paths.get(
-                        a.getFilesDir().getAbsolutePath() + "/" + "save.bin"
-                        )));
+        // TODO: Debug Start
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            return;
+        // Debug End
+
+        ByteBuffer buf;
+        if(Files.exists(Paths.get(a.getFilesDir().getAbsolutePath() + "/" + "save.bin")))
+            buf = ByteBuffer.wrap(Files.readAllBytes(
+                    Paths.get(
+                            a.getFilesDir().getAbsolutePath() + "/" + "save.bin"
+                            )));
+        else
+            return;
         switch(buf.getInt()) // switch version
         {
             case SAVE_FILE_VER: // Current version
@@ -71,14 +87,16 @@ public class SaveFileRW
         }
     }
 
-    private static String readString(ByteBuffer buf)
+    @NotNull
+    private static String readString(@NotNull ByteBuffer buf)
     {
         StringBuilder b = new StringBuilder();
         for(char i = buf.getChar(); i != 0; i = buf.getChar())
             b.append(i);
         return b.toString();
     }
-    private static List<ProductCategory> readProductCategory(ByteBuffer buf, int count)
+    @NotNull
+    private static List<ProductCategory> readProductCategory(@NotNull ByteBuffer buf, int count)
     {
         List<ProductCategory> cat = new ArrayList<ProductCategory>();
         for(int i = 0; i < count; i++)

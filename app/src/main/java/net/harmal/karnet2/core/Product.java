@@ -1,5 +1,7 @@
 package net.harmal.karnet2.core;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +15,9 @@ public class Product
     private List<ProductCategory> categoryShape     ;
     private List<ProductCategory> categoryExtra     ;
 
-    public Product(int pid, int unitPrice, String name,
-                   List<ProductCategory> catIng  , List<ProductCategory> catTaste,
-                   List<ProductCategory> catShape, List<ProductCategory> catExtra)
+    public Product(int pid, int unitPrice, @NotNull String name,
+                   @NotNull List<ProductCategory> catIng  , @NotNull List<ProductCategory> catTaste,
+                   @NotNull List<ProductCategory> catShape, @NotNull List<ProductCategory> catExtra)
     {
         this.pid                = pid              ;
         this.unitPrice          = (short) unitPrice;
@@ -24,15 +26,6 @@ public class Product
         this.categoryTaste      = catTaste         ;
         this.categoryShape      = catShape         ;
         this.categoryExtra      = catExtra         ;
-
-        if (this.categoryIngredient == null)
-            this.categoryIngredient =  new ArrayList<ProductCategory>();
-        if (this.categoryTaste      == null)
-            this.categoryTaste      =  new ArrayList<ProductCategory>();
-        if (this.categoryShape      == null)
-            this.categoryShape      =  new ArrayList<ProductCategory>();
-        if (this.categoryExtra      == null)
-            this.categoryExtra      =  new ArrayList<ProductCategory>();
     }
 
     public int pid()
@@ -43,22 +36,27 @@ public class Product
     {
         return unitPrice;
     }
+    @NotNull
     public String name()
     {
         return name;
     }
+    @NotNull
     public List<ProductCategory> categoryIngredient()
     {
         return categoryIngredient;
     }
+    @NotNull
     public List<ProductCategory> categoryTaste()
     {
         return categoryTaste;
     }
+    @NotNull
     public List<ProductCategory> categoryShape()
     {
         return categoryShape;
     }
+    @NotNull
     public List<ProductCategory> categoryExtra()
     {
         return categoryExtra;
@@ -72,7 +70,7 @@ public class Product
     {
         this.unitPrice = (short) unitPrice;
     }
-    public void name(String name)
+    public void name(@NotNull String name)
     {
         this.name = name;
     }
@@ -80,15 +78,15 @@ public class Product
     {
         this.categoryIngredient = ncategory;
     }
-    public void categoryTaste(List<ProductCategory> ncategory)
+    public void categoryTaste(@NotNull List<ProductCategory> ncategory)
     {
         this.categoryTaste = ncategory;
     }
-    public void categoryShape(List<ProductCategory> ncategory)
+    public void categoryShape(@NotNull List<ProductCategory> ncategory)
     {
         this.categoryShape = ncategory;
     }
-    public void categoryExtra(List<ProductCategory> ncategory)
+    public void categoryExtra(@NotNull List<ProductCategory> ncategory)
     {
         this.categoryExtra = ncategory;
     }

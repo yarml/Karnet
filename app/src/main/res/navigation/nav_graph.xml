@@ -6,62 +6,94 @@
     app:startDestination="@id/orderFragment">
     <fragment
         android:id="@+id/orderFragment"
-        android:name="net.harmal.karnet2.ui.fragments.OrderFragment"
-        android:label="Commandes"
+        android:name="net.harmal.karnet2.ui.fragments.order.OrderFragment"
+        android:label="@string/fragment_orders_label"
         tools:layout="@layout/fragment_order" />
     <fragment
         android:id="@+id/customerFragment"
-        android:name="net.harmal.karnet2.ui.fragments.CustomerFragment"
-        android:label="Clients"
-        tools:layout="@layout/fragment_customer" />
-    <action
-        android:id="@+id/action_global_orderFragment"
-        app:destination="@id/orderFragment"
-        app:enterAnim="@anim/fragment_fade_enter"
-        app:exitAnim="@anim/fragment_fade_exit"
-        app:popEnterAnim="@anim/fragment_fade_enter"
-        app:popExitAnim="@anim/fragment_close_exit" />
-    <action
-        android:id="@+id/action_global_customerFragment"
-        app:destination="@id/customerFragment"
-        app:enterAnim="@anim/fragment_fade_enter"
-        app:exitAnim="@anim/fragment_fade_exit"
-        app:popEnterAnim="@anim/fragment_fade_enter"
-        app:popExitAnim="@anim/fragment_fade_exit" />
+        android:name="net.harmal.karnet2.ui.fragments.customer.CustomerFragment"
+        android:label="@string/fragment_customer_label"
+        tools:layout="@layout/fragment_customer" >
+        <action
+            android:id="@+id/action_customerFragment_to_customerDetailsFragment"
+            app:destination="@id/customerDetailsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/customerFragment" />
+        <action
+            android:id="@+id/action_customerFragment_to_customerAddModifyFragment"
+            app:destination="@id/customerAddModifyFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/customerFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="net.harmal.karnet2.ui.fragments.AboutFragment"
-        android:label="fragment_about"
+        android:label="@string/fragment_about_label"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/productFragment"
-        android:name="net.harmal.karnet2.ui.fragments.ProductFragment"
-        android:label="fragment_product"
+        android:name="net.harmal.karnet2.ui.fragments.product.ProductFragment"
+        android:label="@string/fragment_products_label"
         tools:layout="@layout/fragment_product" />
     <fragment
         android:id="@+id/stockFragment"
-        android:name="net.harmal.karnet2.ui.fragments.StockFragment"
-        android:label="fragment_stock"
+        android:name="net.harmal.karnet2.ui.fragments.stock.StockFragment"
+        android:label="@string/fragment_stock_label"
         tools:layout="@layout/fragment_stock" />
+    <fragment
+        android:id="@+id/customerDetailsFragment"
+        android:name="net.harmal.karnet2.ui.fragments.customer.CustomerDetailsFragment"
+        android:label="{customerName}"
+        tools:layout="@layout/fragment_details_customer" >
+        <argument
+            android:name="cid"
+            app:argType="integer" />
+        <argument
+            android:name="customerName"
+            app:argType="string" />
+    </fragment>
+
     <action
-        android:id="@+id/action_global_stockFragment"
-        app:destination="@id/stockFragment"
-        app:enterAnim="@anim/fragment_fade_enter"
-        app:exitAnim="@anim/fragment_fade_exit"
-        app:popEnterAnim="@anim/fragment_fade_enter"
-        app:popExitAnim="@anim/fragment_fade_exit" />
-    <action
-        android:id="@+id/action_global_aboutFragment"
-        app:destination="@id/aboutFragment"
-        app:enterAnim="@anim/fragment_fade_enter"
-        app:exitAnim="@anim/fragment_fade_exit"
-        app:popEnterAnim="@anim/fragment_fade_enter"
-        app:popExitAnim="@anim/fragment_fade_exit" />
-    <action
-        android:id="@+id/action_global_productFragment"
-        app:destination="@id/productFragment"
-        app:enterAnim="@anim/fragment_fade_enter"
-        app:exitAnim="@anim/fragment_fade_exit"
-        app:popEnterAnim="@anim/fragment_fade_enter"
-        app:popExitAnim="@anim/fragment_fade_exit" />
+        android:id="@+id/action_global_orderFragment"
+        app:enterAnim="@android:anim/fade_in"
+        app:exitAnim="@android:anim/fade_out"
+        app:popEnterAnim="@android:anim/fade_in"
+        app:popExitAnim="@android:anim/fade_out" />
+    <fragment
+        android:id="@+id/customerAddModifyFragment"
+        android:name="net.harmal.karnet2.ui.fragments.customer.CustomerAddModifyFragment"
+        android:label="{label}"
+        tools:layout="@layout/fragment_add_modify_customer">
+        <argument
+            android:name="cid"
+            app:argType="integer" />
+        <argument
+            android:name="label"
+            app:argType="string" />
+        <argument
+            android:name="default_name"
+            app:argType="string" />
+        <argument
+            android:name="defaultPhoneNum"
+            app:argType="string" />
+        <argument
+            android:name="defaultCity"
+            app:argType="string" />
+        <argument
+            android:name="defaultDateDay"
+            app:argType="integer" />
+        <argument
+            android:name="defaultDateMonth"
+            app:argType="integer" />
+        <argument
+            android:name="defaultDateYear"
+            app:argType="integer" />
+    </fragment>
 </navigation>

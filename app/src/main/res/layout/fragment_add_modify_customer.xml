@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:ignore="HardcodedText"
+    tools:context=".ui.fragments.customer.CustomerAddModifyFragment" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_identity"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:contentDescription="Nom" />
+
+        <EditText
+            android:id="@+id/edit_text_add_customer_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-name-"
+            android:hint="@string/hint_name"
+            android:inputType="textPersonName"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" >
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_contact_phone"
+            android:contentDescription="Téléphone" />
+
+        <EditText
+            android:id="@+id/edit_text_add_customer_phone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-phoneNum-"
+            android:hint="@string/hint_phone_num"
+            android:inputType="phone"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" >
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_city"
+            android:contentDescription="Ville" />
+
+        <AutoCompleteTextView
+            android:id="@+id/edit_text_add_customer_city"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-city-"
+            android:hint="@string/hint_city"
+            android:inputType="textCapWords"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_date"
+            android:contentDescription="Ville" />
+
+        <EditText
+            android:id="@+id/edit_text_add_customer_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-date-"
+            android:inputType="date"
+            android:hint="@string/hint_date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+</LinearLayout>

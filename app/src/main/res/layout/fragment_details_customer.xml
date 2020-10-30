@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:ignore="HardcodedText"
+    tools:context=".ui.fragments.customer.CustomerDetailsFragment" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" >
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_identity"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:contentDescription="Nom" />
+
+        <TextView
+            android:id="@+id/text_details_customer_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-name-"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" >
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_contact_phone"
+            android:contentDescription="Téléphone" />
+
+        <TextView
+            android:id="@+id/text_details_customer_phone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-phoneNum-"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" >
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_city"
+            android:contentDescription="Ville" />
+
+        <TextView
+            android:id="@+id/text_details_customer_city"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-city-"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" >
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_date"
+            android:contentDescription="Ville" />
+
+        <TextView
+            android:id="@+id/text_details_customer_creation_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-date-"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+</LinearLayout>

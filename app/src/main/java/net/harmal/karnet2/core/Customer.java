@@ -1,5 +1,7 @@
 package net.harmal.karnet2.core;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Customer
 {
     private int    cid         ;
@@ -8,7 +10,7 @@ public class Customer
     private String phoneNum    ;
     private String city        ;
 
-    public Customer(int cid, Date creationDate, String name, String phoneNum, String city)
+    public Customer(int cid, @NotNull Date creationDate, @NotNull String name, @NotNull String phoneNum, @NotNull String city)
     {
         this.cid          = cid         ;
         this.creationDate = creationDate;
@@ -21,18 +23,22 @@ public class Customer
     {
         return cid;
     }
+    @NotNull
     public Date creationDate()
     {
         return creationDate;
     }
+    @NotNull
     public String name()
     {
         return name;
     }
+    @NotNull
     public String city()
     {
         return city;
     }
+    @NotNull
     public String phoneNum()
     {
         return phoneNum;
@@ -42,19 +48,19 @@ public class Customer
     {
         cid = ncid;
     }
-    public void creationDate(Date ndate)
+    public void creationDate(@NotNull Date ndate)
     {
         creationDate = ndate;
     }
-    public void name(String nname)
+    public void name(@NotNull String nname)
     {
         name = nname;
     }
-    public void city(String ncity)
+    public void city(@NotNull String ncity)
     {
         city = ncity;
     }
-    public void phoneNum(String nphoneNum)
+    public void phoneNum(@NotNull String nphoneNum)
     {
         phoneNum = nphoneNum;
     }

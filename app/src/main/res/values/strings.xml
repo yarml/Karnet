@@ -1,6 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Karnet2</string>
+    <string-array name="suggestions_cities">
+        <item>Casablanca</item>
+        <item>Mohammadia</item>
+        <item></item>
+    </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Karnet2</string>
+    <string name="str_no_order">Aucune commande</string>
+    <string name="str_no_customer">Aucun client</string>
+    <string name="drawer_order">Commandes</string>
+    <string name="drawer_stock">Stock</string>
+    <string name="drawer_customer">Clients</string>
+    <string name="drawer_products">Produits</string>
+    <string name="nav_drawer_open">Menu de navigation ouvert</string>
+    <string name="nav_drawer_close">Menu de nvigation fermé</string>
+    <string name="add_customer">Ajouter un client</string>
+    <string name="add_order">Ajouter une commande</string>
+    <string name="fragment_products_label">Produits</string>
+    <string name="fragment_orders_label">Commandes</string>
+    <string name="fragment_about_label">A propos</string>
+    <string name="fragment_stock_label">Stock</string>
+    <string name="fragment_customer_label">Clients</string>
+    <string name="drawer_about">A propos</string>
+    <string name="hint_name">Nom</string>
+    <string name="hint_phone_num">N° de téléphone</string>
+    <string name="hint_city">Ville</string>
+    <string name="fragment_add_customer_label">Ajouter un client</string>
+    <string name="hint_date">Date</string>
+    <string name="toast_invalide_phone_num">Numéro de téléphone invalide</string>
+    <string name="name_too_short">Nom trop court</string>
+    <string name="invalid_date">Date invalide</string>
+    <string name="city_too_short">Nom de ville trop court</string>
 </resources>

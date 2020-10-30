@@ -1,20 +1,31 @@
 package net.harmal.karnet2.core;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 public class ProductCategory
 {
-    String displayName;
+    private String displayName;
 
-    public ProductCategory(String name)
+    public ProductCategory(@NotNull String name)
     {
         this.displayName = name;
-        if(name == null)
-            this.displayName = "?";
     }
 
-    public boolean equals(ProductCategory o)
+    public boolean equals(@NotNull ProductCategory o)
     {
         return displayName.equalsIgnoreCase(o.displayName);
+    }
+
+    @NotNull
+    public String displayName()
+    {
+        return displayName;
+    }
+
+    public void displayName(@NotNull String nname)
+    {
+        displayName = nname;
     }
 }

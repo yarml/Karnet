@@ -5,12 +5,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.OrderFragment" >
+    tools:context=".ui.fragments.order.OrderFragment" >
+
+    <TextView
+        android:id="@+id/str_fragment_order_no_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:text="@string/str_no_order"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_order_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:background="@android:color/darker_gray" />
+        android:scrollbars="vertical" />
 
 </LinearLayout>

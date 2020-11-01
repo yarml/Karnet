@@ -1,20 +1,24 @@
 package net.harmal.karnet2.ui.fragments.customer;
 
-import android.content.Context;
-import android.graphics.Color;
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 
-import net.harmal.karnet2.MainActivity;
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Date;
@@ -23,16 +27,18 @@ import net.harmal.karnet2.ui.AnimationRegister;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.utils.Logs;
 
-import java.time.Duration;
+import org.jetbrains.annotations.NotNull;
 
 public class CustomerAddModifyFragment extends KarnetFragment
 {
-    private EditText nameEdit ;
-    private EditText phoneEdit;
-    private EditText cityEdit ;
-    private EditText dateEdit ;
+    private LinearLayout         layout     ;
+    private EditText             nameEdit   ;
+    private EditText             phoneEdit  ;
+    private AutoCompleteTextView cityEdit   ;
+    private EditText             dateEdit   ;
+    private ImageButton          editDateBtn;
 
-    private int      cid      ;
+    private int                  cid       ;
 
     public CustomerAddModifyFragment()
     {
@@ -49,26 +55,44 @@ public class CustomerAddModifyFragment extends KarnetFragment
 
         cid = args.getCid();
 
-        nameEdit  = view.findViewById(R.id.edit_text_add_customer_name );
-        phoneEdit = view.findViewById(R.id.edit_text_add_customer_phone);
-        cityEdit  = view.findViewById(R.id.edit_text_add_customer_city );
-        dateEdit  = view.findViewById(R.id.edit_text_add_customer_date );
+        layout      = view.findViewById(R.id.fragment_add_modify_customer_layout  );
+        nameEdit    = view.findViewById(R.id.edit_text_add_customer_name          );
+        phoneEdit   = view.findViewById(R.id.edit_text_add_customer_phone         );
+        cityEdit    = view.findViewById(R.id.edit_text_add_customer_city          );
+        dateEdit    = view.findViewById(R.id.edit_text_add_customer_date          );
+        editDateBtn = view.findViewById(R.id.btn_edit_date_add_modify_customer    );
+
+        // Setting city suggestions
+        ArrayAdapter<String> citySuggestions = new ArrayAdapter<String>(getContext(),
+                R.layout.support_simple_spinner_dropdown_item
+                , getResources().getStringArray(R.array.suggestions_cities));
+        cityEdit.setAdapter(citySuggestions);
+        cityEdit.setOnFocusChangeListener(this::onCityEditFocusChanged);
+
+        // Setting date button behavior
+        dateEdit.setInputType(InputType.TYPE_NULL);
+        editDateBtn.setOnClickListener(this::onDateEditButtonClicked);
 
         if(cid < 0) // Add customer
         {
             nameEdit.setText(args.getDefaultName());
             phoneEdit.setText(args.getDefaultPhoneNum());
             cityEdit.setText(args.getDefaultCity());
-            dateEdit.setText("");
+            dateEdit.setText(Date.today().toString());
         }
         else // Modify existing customer
         {
             Customer c = CustomerRegister.getCustomer(args.getCid());
+
+            nameEdit.setText (c.name        (           ));
+            phoneEdit.setText(c.phoneNum    (           ));
+            cityEdit.setText (c.city        (           ));
+            dateEdit.setText (c.creationDate().toString());
         }
     }
 
     @Override
-    public void onMenuOptionsSelected(MenuItem item, NavController navController)
+    public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
     {
         if(item.getItemId() == R.id.options_add_customer_validate)
         {
@@ -78,15 +102,15 @@ public class CustomerAddModifyFragment extends KarnetFragment
             String dateStr  = dateEdit.getText().toString() ;
 
             // check name and city
-            if(nameStr.length() <= 3)
+            if(nameStr.length() == 0)
             {
-                nameEdit.startAnimation(AnimationRegister.shakeAnimation());
+                AnimationRegister.shake(nameEdit);
                 Toast.makeText(getContext(), R.string.name_too_short, Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(cityStr.length() <= 3)
+            if(cityStr.length() == 0)
             {
-                nameEdit.startAnimation(AnimationRegister.shakeAnimation());
+                AnimationRegister.shake(cityEdit);
                 Toast.makeText(getContext(), R.string.city_too_short, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -109,8 +133,8 @@ public class CustomerAddModifyFragment extends KarnetFragment
 
             if(phoneStr.length() != 10 || !phoneStr.startsWith("06")) // Invalid phoneStr num
             {
-                phoneEdit.startAnimation(AnimationRegister.shakeAnimation());
-                Toast.makeText(getContext(), R.string.toast_invalide_phone_num, Toast.LENGTH_SHORT).show();
+                AnimationRegister.shake(phoneEdit);
+                Toast.makeText(getContext(), R.string.toast_invalid_phone_num, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -122,19 +146,66 @@ public class CustomerAddModifyFragment extends KarnetFragment
             }
             catch(IllegalArgumentException e) // Invalid date
             {
-                dateEdit.startAnimation(AnimationRegister.shakeAnimation());
+                AnimationRegister.shake(dateEdit);
                 Toast.makeText(getContext(), R.string.invalid_date, Toast.LENGTH_SHORT).show();
                 return;
             }
 
             // Everything okay
             if(cid < 0)
-            {
                 CustomerRegister.add(nameStr, cityStr, phoneStr, date);
+            else
+            {
+                Customer c = CustomerRegister.getCustomer(cid);
+                c.name(nameStr     );
+                c.phoneNum(phoneStr);
+                c.city(cityStr     );
+                c.creationDate(date);
             }
 
 
+            getInputMethodManager().hideSoftInputFromWindow(layout.getWindowToken(), 0);
             navController.navigateUp();
         }
+    }
+
+    /**
+     * Shows the city suggestion menu
+     * when focused
+     */
+    private void onCityEditFocusChanged(View v, boolean hasFocus)
+    {
+        if (hasFocus)
+        {
+            Logs.debug("Showing city suggestions");
+            cityEdit.showDropDown();
+        }
+    }
+
+    /**
+     * Shows DatePickerDialog
+     */
+    private void onDateEditButtonClicked(View v)
+    {
+        Date defaultDate = new Date(dateEdit.getText().toString());
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), 0, this::onDatePickerDateSet,
+                defaultDate.year(), defaultDate.month() - 1, defaultDate.day());
+        dialog.show();
+    }
+
+    /**
+     * Handles data returned from DatePickerDialog
+     */
+    @SuppressLint("DefaultLocale")
+    private void onDatePickerDateSet(DatePicker view, int year, int month, int dayOfMonth)
+    {
+        dateEdit.setText(String.format("%d/%d/%d", dayOfMonth, month + 1, year));
+    }
+
+    @Override
+    @MenuRes
+    public int getOptionsMenu()
+    {
+        return R.menu.options_menu_add_customer;
     }
 }

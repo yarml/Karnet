@@ -66,19 +66,7 @@ public class SaveFileRW
                 ProductRegister.productIdCount = buf.getInt();
                 for(int i = 0; i < productCount; i++)
                 {
-                    int id = buf.getInt();
-                    int unitPrice = buf.getShort();
-                    int catIngCount = buf.getInt();
-                    int catTasteCount = buf.getInt();
-                    int catShapeCount = buf.getInt();
-                    int catExtraCount = buf.getInt();
-                    String name = readString(buf);
-                    List<ProductCategory> catIng = readProductCategory(buf, catIngCount);
-                    List<ProductCategory> catTaste = readProductCategory(buf, catTasteCount);
-                    List<ProductCategory> catShape = readProductCategory(buf, catShapeCount);
-                    List<ProductCategory> catExtra = readProductCategory(buf, catExtraCount);
 
-                    ProductRegister.add(id, unitPrice, name, catIng, catTaste, catShape, catExtra);
                 }
 
                 break;

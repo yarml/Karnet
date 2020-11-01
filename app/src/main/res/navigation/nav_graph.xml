@@ -41,7 +41,11 @@
         android:id="@+id/productFragment"
         android:name="net.harmal.karnet2.ui.fragments.product.ProductFragment"
         android:label="@string/fragment_products_label"
-        tools:layout="@layout/fragment_product" />
+        tools:layout="@layout/fragment_product" >
+        <action
+            android:id="@+id/action_productFragment_to_productAddModifyFragment"
+            app:destination="@id/productAddModifyFragment" />
+    </fragment>
     <fragment
         android:id="@+id/stockFragment"
         android:name="net.harmal.karnet2.ui.fragments.stock.StockFragment"
@@ -58,6 +62,13 @@
         <argument
             android:name="customerName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_customerDetailsFragment_to_customerAddModifyFragment"
+            app:destination="@id/customerAddModifyFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
 
     <action
@@ -95,5 +106,17 @@
         <argument
             android:name="defaultDateYear"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/productAddModifyFragment"
+        android:name="net.harmal.karnet2.ui.fragments.product.ProductAddModifyFragment"
+        android:label="{label}"
+        tools:layout="@layout/fragment_add_modify_product" >
+        <argument
+            android:name="pid"
+            app:argType="integer" />
+        <argument
+            android:name="label"
+            app:argType="string" />
     </fragment>
 </navigation>

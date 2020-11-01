@@ -1,16 +1,23 @@
 package net.harmal.karnet2.ui.adapters;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import net.harmal.karnet2.ui.listeners.OnItemClickListener;
+import net.harmal.karnet2.ui.listeners.OnItemInputListener;
+import net.harmal.karnet2.utils.Logs;
+
+import org.jetbrains.annotations.NotNull;
 
 public abstract class KarnetRecyclerAdapter<T extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<T>
 {
-    protected OnItemClickListener itemClickListener;
+    protected OnItemInputListener onItemInputListener;
 
-    public void setOnItemClickListener(@NonNull OnItemClickListener l)
+    public void setOnItemInputListener(OnItemInputListener l)
     {
-        itemClickListener = l;
+        Logs.debug("Setting on click listener");
+        onItemInputListener = l;
+    }
+    public void setOnItemInputListener(@NotNull OnItemInputListener.Builder builder)
+    {
+        setOnItemInputListener(builder.build());
     }
 }

@@ -1,12 +1,10 @@
 package net.harmal.karnet2;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,12 +19,11 @@ import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
-import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.savefile.SaveFileRW;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
-import net.harmal.karnet2.ui.fragments.customer.CustomerFragmentDirections;
 import net.harmal.karnet2.utils.Logs;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -93,22 +90,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        assert navController.getCurrentDestination() != null;
-        switch(navController.getCurrentDestination().getId())
-        {
-            case R.id.customerFragment:
-                getMenuInflater().inflate(R.menu.customer_options_menu, menu);
-                break;
-            case R.id.orderFragment:
-                getMenuInflater().inflate(R.menu.order_options_menu, menu);
-                break;
-            case R.id.customerAddModifyFragment:
-                getMenuInflater().inflate(R.menu.options_menu_add_customer, menu);
-                break;
-            default:
-                getMenuInflater().inflate(R.menu.default_options_menu, menu);
-                break;
-        }
+        getMenuInflater().inflate(getCurrentFragment().getOptionsMenu(), menu);
         return true;
     }
 
@@ -116,13 +98,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-
-        for(KarnetFragment f : childFragments)
-            if(f.isVisible())
-            {
-                f.onMenuOptionsSelected(item, navController);
-                break;
-            }
+        getCurrentFragment().onMenuOptionsSelected(item, navController);
         return true;
     }
 
@@ -162,6 +138,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Register child fragments
+     * for later use by the Activity
+     */
     public void registerFragment(KarnetFragment child)
     {
         if(childFragments == null)
@@ -173,12 +153,21 @@ public class MainActivity extends AppCompatActivity
      * Animates the drawer icon and makes sure it
      * is replaced with the arrow back when needed
      */
-    private void onDestinationChanged(NavController controller, NavDestination destination, Bundle arguments) {
+    private void onDestinationChanged(NavController controller, @NotNull NavDestination destination, Bundle arguments) {
         if (appBarConfiguration.getTopLevelDestinations().contains(destination.getId())) {
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout,
                     R.string.nav_drawer_open, R.string.nav_drawer_close);
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
         }
+    }
+
+    @Nullable
+    private KarnetFragment getCurrentFragment()
+    {
+        for(KarnetFragment f : childFragments)
+            if(f.isVisible())
+                return f;
+        return null;
     }
 }

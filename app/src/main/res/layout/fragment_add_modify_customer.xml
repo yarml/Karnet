@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/fragment_add_modify_customer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -33,7 +34,7 @@
             android:layout_height="match_parent"
             android:text="-name-"
             android:hint="@string/hint_name"
-            android:inputType="textPersonName"
+            android:inputType="textCapWords"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center_vertical" />
     </LinearLayout>
@@ -93,6 +94,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_date_input_add_modify_customer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -114,10 +116,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="-date-"
-            android:inputType="date"
+            android:inputType="none"
             android:hint="@string/hint_date"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            tools:ignore="TextFields"
+            android:layout_marginEnd="48dp"/>
+        <ImageButton
+            android:id="@+id/btn_edit_date_add_modify_customer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_edit"
+            android:layout_marginStart="-48dp" />
+
     </LinearLayout>
 
 </LinearLayout>

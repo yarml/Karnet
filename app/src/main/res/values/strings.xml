@@ -3,7 +3,9 @@
     <string-array name="suggestions_cities">
         <item>Casablanca</item>
         <item>Mohammadia</item>
-        <item></item>
+        <item>Rabat</item>
+        <item>Fes</item>
+        <item>Temara</item>
     </string-array>
 
     <string name="app_name">Karnet2</string>
@@ -28,8 +30,21 @@
     <string name="hint_city">Ville</string>
     <string name="fragment_add_customer_label">Ajouter un client</string>
     <string name="hint_date">Date</string>
-    <string name="toast_invalide_phone_num">Numéro de téléphone invalide</string>
+    <string name="toast_invalid_phone_num">Numéro de téléphone invalide</string>
     <string name="name_too_short">Nom trop court</string>
     <string name="invalid_date">Date invalide</string>
     <string name="city_too_short">Nom de ville trop court</string>
+    <string name="modify_customer">Modifier le client</string>
+    <string name="customer_removed">Client éffacé</string>
+    <string name="undo">Annuler</string>
+    <string name="sort_ab">A-Z</string>
+    <string name="sort_ba">Z-A</string>
+    <string name="sort_city_ab">Ville (A-Z)</string>
+    <string name="sort_city_ba">Ville (Z-A)</string>
+    <string name="add_product">Ajouter un produit</string>
+    <string name="select_base_ingredient">Sélectionner un ingredient de base</string>
+    <string name="select_extra">Sélectionner les additives</string>
+    <string name="select_type">Sélectionner le type</string>
+    <string name="select_shape">Sélectionner la forme</string>
+    <string name="select_fat">Sélectionner la matière grasse</string>
 </resources>

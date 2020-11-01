@@ -3,6 +3,7 @@ package net.harmal.karnet2.core.registers;
 import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Order;
+import net.harmal.karnet2.core.Trash;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,10 @@ public class CustomerRegister
 
     private static List<Customer> customerRegister;
 
+    public static int add(@NotNull Customer c)
+    {
+        return add(c.cid(), c.name(), c.city(), c.phoneNum(), c.creationDate());
+    }
     // Returns CID
     public static int add(@NotNull String name, @NotNull String city, @NotNull String phoneNum, @NotNull Date creationDate)
     {
@@ -37,7 +42,7 @@ public class CustomerRegister
             {
                 return add(cid + 1, name, city, phoneNum, creationDate);
             }
-        customerRegister.add(new Customer(cid, creationDate, name, city, phoneNum));
+        customerRegister.add(new Customer(cid, creationDate, name, phoneNum, city));
         return cid;
     }
 
@@ -49,12 +54,13 @@ public class CustomerRegister
         for(Customer c : customerRegister)
             if(c.cid() == cid)
             {
+                Trash.pushCustomer(c);
                 customerRegister.remove(c);
                 break;
             }
         for(Order o : OrderRegister.get())
             if(o.cid() == cid)
-                OrderRegister.get().remove(o);
+                OrderRegister.remove(o.oid());
     }
 
     @Nullable

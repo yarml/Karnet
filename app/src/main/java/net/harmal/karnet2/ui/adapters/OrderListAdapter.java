@@ -6,16 +6,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.registers.CustomerRegister;
-import net.harmal.karnet2.ui.listeners.OnItemClickListener;
+import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.OrderViewHolder>
@@ -24,7 +22,7 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     {
         TextView nameView;
         TextView dateView;
-        public OrderViewHolder(@NotNull View itemView, OnItemClickListener l)
+        public OrderViewHolder(@NotNull View itemView, OnItemInputListener l)
         {
             super(itemView, l);
             nameView = itemView.findViewById(R.id.text_order_item_name);
@@ -45,7 +43,7 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_order, parent, false);
-        return new OrderViewHolder(v, itemClickListener);
+        return new OrderViewHolder(v, onItemInputListener);
     }
 
     @Override

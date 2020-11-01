@@ -3,6 +3,7 @@ package net.harmal.karnet2.core.registers;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Stack;
+import net.harmal.karnet2.core.Trash;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,12 +43,15 @@ public class OrderRegister
     {
         if(orderRegister == null)
             orderRegister = new ArrayList<>();
-        for(int i = 0; i < orderRegister.size(); i++)
-            if(orderRegister.get(i).oid() == oid)
+        for(Order o : orderRegister)
+        {
+            if(o.oid() == oid)
             {
-                orderRegister.remove(i);
+                Trash.pushOrder(o);
+                orderRegister.remove(o);
                 break;
             }
+        }
     }
 
     @NotNull

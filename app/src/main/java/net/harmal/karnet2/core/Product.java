@@ -2,92 +2,111 @@ package net.harmal.karnet2.core;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Product
 {
-    private int          pid                        ;
-    private short        unitPrice                  ;
-    private String       name                       ;
-    private List<ProductCategory> categoryIngredient;
-    private List<ProductCategory> categoryTaste     ;
-    private List<ProductCategory> categoryShape     ;
-    private List<ProductCategory> categoryExtra     ;
+    private int          pid                    ;
+    private short        unitPrice              ;
+    private String       name                   ;
+
+    private ProductCategory       baseIngredient;
+    private ProductCategory       fat           ;
+    private ProductCategory       shape         ;
+    private ProductCategory       type          ;
+    private List<ProductCategory> extra         ;
 
     public Product(int pid, int unitPrice, @NotNull String name,
-                   @NotNull List<ProductCategory> catIng  , @NotNull List<ProductCategory> catTaste,
-                   @NotNull List<ProductCategory> catShape, @NotNull List<ProductCategory> catExtra)
+                   @NotNull ProductCategory base, @NotNull ProductCategory fat, @NotNull ProductCategory shape,
+                   @NotNull ProductCategory type, @NotNull List<ProductCategory> extra                        )
     {
         this.pid                = pid              ;
         this.unitPrice          = (short) unitPrice;
         this.name               = name             ;
-        this.categoryIngredient = catIng           ;
-        this.categoryTaste      = catTaste         ;
-        this.categoryShape      = catShape         ;
-        this.categoryExtra      = catExtra         ;
+        this.baseIngredient = base ;
+        this.fat            = fat  ;
+        this.shape          = shape;
+        this.type           = type ;
+        this.extra          = extra;
     }
 
     public int pid()
     {
         return pid;
     }
-    public short unitPrice()
-    {
-        return unitPrice;
-    }
-    @NotNull
-    public String name()
-    {
-        return name;
-    }
-    @NotNull
-    public List<ProductCategory> categoryIngredient()
-    {
-        return categoryIngredient;
-    }
-    @NotNull
-    public List<ProductCategory> categoryTaste()
-    {
-        return categoryTaste;
-    }
-    @NotNull
-    public List<ProductCategory> categoryShape()
-    {
-        return categoryShape;
-    }
-    @NotNull
-    public List<ProductCategory> categoryExtra()
-    {
-        return categoryExtra;
-    }
 
     public void pid(int pid)
     {
         this.pid = pid;
     }
-    public void unitPrice(int unitPrice)
+
+    public short unitPrice()
     {
-        this.unitPrice = (short) unitPrice;
+        return unitPrice;
     }
-    public void name(@NotNull String name)
+
+    public void unitPrice(short unitPrice)
+    {
+        this.unitPrice = unitPrice;
+    }
+
+    public String name()
+    {
+        return name;
+    }
+
+    public void name(String name)
     {
         this.name = name;
     }
-    public void categoryIngredient(List<ProductCategory> ncategory)
-    {
-        this.categoryIngredient = ncategory;
+
+    public ProductCategory baseIngredient() {
+
+        return baseIngredient;
     }
-    public void categoryTaste(@NotNull List<ProductCategory> ncategory)
+
+    public void baseIngredient(ProductCategory baseIngredient)
     {
-        this.categoryTaste = ncategory;
+        this.baseIngredient = baseIngredient;
     }
-    public void categoryShape(@NotNull List<ProductCategory> ncategory)
+
+    public ProductCategory fat()
     {
-        this.categoryShape = ncategory;
+        return fat;
     }
-    public void categoryExtra(@NotNull List<ProductCategory> ncategory)
+
+    public void fat(ProductCategory fat)
     {
-        this.categoryExtra = ncategory;
+        this.fat = fat;
+    }
+
+    public ProductCategory shape()
+    {
+        return shape;
+    }
+
+    public void shape(ProductCategory shape)
+    {
+        this.shape = shape;
+    }
+
+    public ProductCategory type()
+    {
+        return type;
+    }
+
+    public void type(ProductCategory type)
+    {
+        this.type = type;
+    }
+
+    public List<ProductCategory> extra()
+    {
+        return extra;
+    }
+
+    public void extra(List<ProductCategory> extra)
+    {
+        this.extra = extra;
     }
 }

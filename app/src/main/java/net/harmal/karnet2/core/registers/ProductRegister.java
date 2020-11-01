@@ -6,6 +6,7 @@ import net.harmal.karnet2.core.ProductCategory;
 import net.harmal.karnet2.core.Stack;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -19,28 +20,28 @@ public class ProductRegister
 
     // Returns PID
     public static int add(int unitPrice, @NotNull String name,
-                          @NotNull List<ProductCategory> catIng  , @NotNull List<ProductCategory> catTaste,
-                          @NotNull List<ProductCategory> catShape, @NotNull List<ProductCategory> catExtra)
+                          @NotNull ProductCategory base  , @NotNull ProductCategory fat, ProductCategory shape,
+                          @NotNull ProductCategory type, @NotNull List<ProductCategory> extra                 )
     {
-        return add(productIdCount++, unitPrice, name, catIng, catTaste, catShape, catExtra);
+        return add(productIdCount++, unitPrice, name, base, fat, shape, type, extra);
     }
     // Returns PID
     public static int add(int pid, int unitPrice, @NotNull String name,
-                          @NotNull List<ProductCategory> catIng  , @NotNull List<ProductCategory> catTaste,
-                          @NotNull List<ProductCategory> catShape, @NotNull List<ProductCategory> catExtra)
+                          @NotNull ProductCategory base  , @NotNull ProductCategory fat, ProductCategory shape,
+                          @NotNull ProductCategory type, @NotNull List<ProductCategory> extra                 )
     {
         if(productRegister == null)
             productRegister = new ArrayList<Product>();
         if(pid < 0) // PID must be positive
         {
-            return add(0, unitPrice, name, catIng, catTaste, catShape, catExtra);
+            return add(0, unitPrice, name, base, fat, shape, type, extra);
         }
         for(Product p : productRegister) // Make sure the CID is unique
             if(p.pid() == pid)
             {
-                return add(pid + 1, unitPrice, name, catIng, catTaste, catShape, catExtra);
+                return add(pid + 1, unitPrice, name, base, fat, shape, type, extra);
             }
-        productRegister.add(new Product(pid,  unitPrice, name, catIng, catTaste, catShape, catExtra));
+        productRegister.add(new Product(pid,  unitPrice, name, base, fat, shape, type, extra));
         return pid;
     }
 
@@ -63,8 +64,19 @@ public class ProductRegister
                     o.stacks().remove(s);
                 }
             if(o.stacks().size() == 0)
-                OrderRegister.get().remove(o);
+                OrderRegister.remove(o.oid());
         }
+    }
+
+    @Nullable
+    public static Product getProduct(int pid)
+    {
+        if(productRegister == null)
+            productRegister = new ArrayList<>();
+        for(Product p : productRegister)
+            if(p.pid() == pid)
+                return p;
+        return null;
     }
 
     @NotNull
@@ -74,26 +86,5 @@ public class ProductRegister
             productRegister = new ArrayList<>();
         return productRegister;
     }
-
-    @NotNull
-    public static List<ProductCategory> ingredientCategories()
-    {
-        List<ProductCategory> ing = new ArrayList<>();
-        for(Product p : productRegister)
-            for(ProductCategory c : p.categoryIngredient())
-            {
-                boolean exists = false;
-                for(ProductCategory i : ing)
-                    if(c.equals(i))
-                    {
-                        exists = true;
-                        break;
-                    }
-                if(!exists)
-                    ing.add(c);
-            }
-        return ing;
-    }
-
 
 }

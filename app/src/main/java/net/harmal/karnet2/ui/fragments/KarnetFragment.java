@@ -35,7 +35,7 @@ public abstract class KarnetFragment extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-
+        assert getActivity() != null;
         getActivity().invalidateOptionsMenu();
     }
 
@@ -43,6 +43,7 @@ public abstract class KarnetFragment extends Fragment
 
     public InputMethodManager getInputMethodManager()
     {
+        assert getActivity() != null;
         return (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 

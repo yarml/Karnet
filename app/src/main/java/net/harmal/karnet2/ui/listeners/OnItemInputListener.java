@@ -18,8 +18,8 @@ public interface OnItemInputListener
             void onItemLongClick(View v, int position);
         }
 
-        private OnItemClickListener     cl ;
-        private OnItemLongClickListener lcl;
+        private final OnItemClickListener     cl ;
+        private final OnItemLongClickListener lcl;
 
         public Builder(OnItemClickListener cl, OnItemLongClickListener lcl)
         {

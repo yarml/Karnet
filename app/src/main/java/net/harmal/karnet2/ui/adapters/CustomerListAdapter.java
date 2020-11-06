@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
-import net.harmal.karnet2.ui.AnimationRegister;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,9 +20,9 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
 {
     public static class CustomerViewHolder extends KarnetRecyclerViewHolder
     {
-        private TextView    customerName;
-        private TextView    phoneCity   ;
-        private ImageButton deleteBtn;
+        private final TextView    customerName;
+        private final TextView    phoneCity   ;
+        private final ImageButton deleteBtn;
 
         public CustomerViewHolder(@NonNull View itemView, OnItemInputListener listener)
         {

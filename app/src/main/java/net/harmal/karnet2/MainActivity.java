@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
+        assert getCurrentFragment() != null;
         getMenuInflater().inflate(getCurrentFragment().getOptionsMenu(), menu);
         return true;
     }
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        assert getCurrentFragment() != null;
         getCurrentFragment().onMenuOptionsSelected(item, navController);
         return true;
     }

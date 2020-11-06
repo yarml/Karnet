@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 import net.harmal.karnet2.utils.Logs;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class KarnetRecyclerViewHolder extends RecyclerView.ViewHolder
 {
     private final OnItemInputListener l;
@@ -26,7 +28,7 @@ public abstract class KarnetRecyclerViewHolder extends RecyclerView.ViewHolder
         itemView.setOnLongClickListener(this::onLongClick);
     }
 
-    private void addListenerToChildren(ViewGroup vg)
+    private void addListenerToChildren(@NotNull ViewGroup vg)
     {
         for(int i = 0; i < vg.getChildCount(); i++)
         {

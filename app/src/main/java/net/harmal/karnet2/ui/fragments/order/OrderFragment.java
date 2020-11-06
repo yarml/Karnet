@@ -1,32 +1,20 @@
 package net.harmal.karnet2.ui.fragments.order;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.harmal.karnet2.R;
-import net.harmal.karnet2.core.Date;
-import net.harmal.karnet2.core.Stack;
-import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.OrderRegister;
 import net.harmal.karnet2.ui.adapters.OrderListAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
-import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 import net.harmal.karnet2.utils.Logs;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OrderFragment extends KarnetFragment
 {

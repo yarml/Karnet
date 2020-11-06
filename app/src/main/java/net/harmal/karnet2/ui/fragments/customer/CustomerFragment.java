@@ -22,7 +22,7 @@ import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Trash;
 import net.harmal.karnet2.core.registers.CustomerRegister;
-import net.harmal.karnet2.ui.AnimationRegister;
+import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.CustomerListAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
@@ -88,6 +88,7 @@ public class CustomerFragment extends KarnetFragment
             Customer c = CustomerRegister.get().get(position);
             CustomerRegister.remove(c.cid());
             customerListAdapter.notifyItemRemoved(position);
+            assert getView() != null;
             Snackbar undo = Snackbar.make(getView(), R.string.customer_removed, Snackbar.LENGTH_LONG);
             undo.setAction(R.string.undo, this::undoCustomerDeletion);
             undo.show();
@@ -95,10 +96,11 @@ public class CustomerFragment extends KarnetFragment
         else
         {
             View v = customerListLayoutManager.findViewByPosition(position);
+            assert v != null;
             ImageButton deleteButton = v.findViewById(R.id.btn_customer_delete);
             if(deleteButton.getVisibility() == View.VISIBLE)
             {
-                AnimationRegister.popOut(deleteButton);
+                Animations.popOut(deleteButton);
                 return;
             }
             Customer c = CustomerRegister.get().get(position);
@@ -113,11 +115,12 @@ public class CustomerFragment extends KarnetFragment
     private void onItemLongClick(View view, int position)
     {
         View v = customerListLayoutManager.findViewByPosition(position);
+        assert v != null;
         ImageButton deleteButton = v.findViewById(R.id.btn_customer_delete);
         if(deleteButton.getVisibility() == View.GONE) // should appear
-            AnimationRegister.popIn(deleteButton);
+            Animations.popIn(deleteButton);
         else
-            AnimationRegister.popOut(deleteButton);
+            Animations.popOut(deleteButton);
     }
 
 

@@ -14,8 +14,7 @@
         style="@style/TextAppearance.AppCompat.Large"
         android:text="@string/str_no_order"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:visibility="visible" />
+        android:gravity="center" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_order_list"

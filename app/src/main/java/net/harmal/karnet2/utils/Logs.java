@@ -6,14 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Logs
 {
-    private static boolean logToConsole = true;
-
     private static final StringBuilder logBuilder = new StringBuilder();
-
-    public static void logToConsole(boolean l)
-    {
-        logToConsole = l;
-    }
 
     public static void debug(@NotNull String m)
     {

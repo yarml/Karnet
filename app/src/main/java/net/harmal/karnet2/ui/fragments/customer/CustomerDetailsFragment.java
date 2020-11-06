@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 
 import net.harmal.karnet2.R;
@@ -59,6 +58,7 @@ public class CustomerDetailsFragment extends KarnetFragment
         if(item.getItemId() == R.id.options_edit_customer)
         {
             Customer c = CustomerRegister.getCustomer(cid);
+            assert c != null;
             Date date  = c.creationDate();
 
             CustomerDetailsFragmentDirections.ActionCustomerDetailsFragmentToCustomerAddModifyFragment action =

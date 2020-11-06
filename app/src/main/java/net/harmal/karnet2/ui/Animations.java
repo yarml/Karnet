@@ -3,13 +3,12 @@ package net.harmal.karnet2.ui;
 import android.animation.Animator;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
-import android.view.animation.TranslateAnimation;
 
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AnimationRegister
+public class Animations
 {
     public static void shake(@NotNull View v)
     {

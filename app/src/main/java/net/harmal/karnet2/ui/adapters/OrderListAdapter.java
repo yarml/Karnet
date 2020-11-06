@@ -30,7 +30,7 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         }
     }
 
-    private List<Order> orderList;
+    private final List<Order> orderList;
 
     public OrderListAdapter(@NotNull List<Order> orderList)
     {

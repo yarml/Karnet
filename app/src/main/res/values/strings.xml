@@ -47,4 +47,5 @@
     <string name="select_type">Sélectionner le type</string>
     <string name="select_shape">Sélectionner la forme</string>
     <string name="select_fat">Sélectionner la matière grasse</string>
+    <string name="new_categ">Nouveau</string>
 </resources>

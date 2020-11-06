@@ -87,4 +87,60 @@ public class ProductRegister
         return productRegister;
     }
 
+    @NotNull
+    public static List<ProductCategory> getIngredients()
+    {
+        if(productRegister == null)
+            productRegister = new ArrayList<>();
+        List<ProductCategory> ingredients = new ArrayList<>();
+        for(Product p : productRegister)
+            if(!ingredients.contains(p.baseIngredient()))
+                ingredients.add(p.baseIngredient());
+        return ingredients;
+    }
+    @NotNull
+    public static List<ProductCategory> getFats()
+    {
+        if(productRegister == null)
+            productRegister = new ArrayList<>();
+        List<ProductCategory> fats = new ArrayList<>();
+        for(Product p : productRegister)
+            if(!fats.contains(p.fat()))
+                fats.add(p.fat());
+        return fats;
+    }
+    @NotNull
+    public static List<ProductCategory> getShape()
+    {
+        if(productRegister == null)
+            productRegister = new ArrayList<>();
+        List<ProductCategory> shapes = new ArrayList<>();
+        for(Product p : productRegister)
+            if(!shapes.contains(p.shape()))
+                shapes.add(p.shape());
+        return shapes;
+    }
+    @NotNull
+    public static List<ProductCategory> getType()
+    {
+        if(productRegister == null)
+            productRegister = new ArrayList<>();
+        List<ProductCategory> types = new ArrayList<>();
+        for(Product p : productRegister)
+            if(!types.contains(p.type()))
+                types.add(p.type());
+        return types;
+    }
+    @NotNull
+    public static List<ProductCategory> getExtras()
+    {
+        if(productRegister == null)
+            productRegister = new ArrayList<>();
+        List<ProductCategory> extras = new ArrayList<>();
+        for(Product p : productRegister)
+            for(ProductCategory extra : p.extra())
+                if(!extras.contains(extra))
+                    extras.add(extra);
+        return extras;
+    }
 }

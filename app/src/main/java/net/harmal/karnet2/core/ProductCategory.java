@@ -1,8 +1,7 @@
 package net.harmal.karnet2.core;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public class ProductCategory
 {
@@ -13,9 +12,15 @@ public class ProductCategory
         this.displayName = name;
     }
 
-    public boolean equals(@NotNull ProductCategory o)
+    @Contract(value = "null -> false", pure = true)
+    @Override
+    public boolean equals(Object o)
     {
-        return displayName.equalsIgnoreCase(o.displayName);
+        if(o == null)
+            return false;
+        if(o.getClass() == getClass())
+            return displayName.equalsIgnoreCase(((ProductCategory)o).displayName);
+        return  false;
     }
 
     @NotNull

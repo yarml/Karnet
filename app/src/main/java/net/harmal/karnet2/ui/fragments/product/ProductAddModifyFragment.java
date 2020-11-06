@@ -1,6 +1,5 @@
 package net.harmal.karnet2.ui.fragments.product;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +11,7 @@ import androidx.annotation.Nullable;
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Product;
 import net.harmal.karnet2.core.registers.ProductRegister;
+import net.harmal.karnet2.ui.dialogs.CategorySingleChoiceDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 
 public class ProductAddModifyFragment extends KarnetFragment
@@ -46,6 +46,7 @@ public class ProductAddModifyFragment extends KarnetFragment
         extraBtn = view.findViewById(R.id.btn_select_extra          );
 
         // TODO: add the lists here
+        // TODO: I forgot what lists should be added
         if(pid < 0)
         {
             nameEdit.setText("");
@@ -53,15 +54,19 @@ public class ProductAddModifyFragment extends KarnetFragment
         else
         {
             Product p = ProductRegister.getProduct(pid);
+            assert p != null;
             nameEdit.setText(p.name());
         }
 
         // Setting buttons behavior
-        baseBtn.setOnClickListener(this::onBaseSelectButtonClick);
+        baseBtn.setOnClickListener(this::onBasIngredientSelectButtonClick);
     }
 
-    private void onBaseSelectButtonClick(View v)
+    private void onBasIngredientSelectButtonClick(View v)
     {
-
+        assert getContext() != null;
+        CategorySingleChoiceDialog dialog = new CategorySingleChoiceDialog(getContext(),
+                R.string.select_base_ingredient, ProductRegister.getIngredients());
+        dialog.show(getChildFragmentManager(), "");
     }
 }

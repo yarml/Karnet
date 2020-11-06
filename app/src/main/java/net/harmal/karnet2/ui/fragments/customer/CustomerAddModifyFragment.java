@@ -23,7 +23,7 @@ import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.registers.CustomerRegister;
-import net.harmal.karnet2.ui.AnimationRegister;
+import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.utils.Logs;
 
@@ -63,6 +63,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
         editDateBtn = view.findViewById(R.id.btn_edit_date_add_modify_customer    );
 
         // Setting city suggestions
+        assert getContext() != null;
         ArrayAdapter<String> citySuggestions = new ArrayAdapter<String>(getContext(),
                 R.layout.support_simple_spinner_dropdown_item
                 , getResources().getStringArray(R.array.suggestions_cities));
@@ -83,7 +84,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
         else // Modify existing customer
         {
             Customer c = CustomerRegister.getCustomer(args.getCid());
-
+            assert c != null;
             nameEdit.setText (c.name        (           ));
             phoneEdit.setText(c.phoneNum    (           ));
             cityEdit.setText (c.city        (           ));
@@ -104,13 +105,13 @@ public class CustomerAddModifyFragment extends KarnetFragment
             // check name and city
             if(nameStr.length() == 0)
             {
-                AnimationRegister.shake(nameEdit);
+                Animations.shake(nameEdit);
                 Toast.makeText(getContext(), R.string.name_too_short, Toast.LENGTH_SHORT).show();
                 return;
             }
             if(cityStr.length() == 0)
             {
-                AnimationRegister.shake(cityEdit);
+                Animations.shake(cityEdit);
                 Toast.makeText(getContext(), R.string.city_too_short, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -133,7 +134,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
 
             if(phoneStr.length() != 10 || !phoneStr.startsWith("06")) // Invalid phoneStr num
             {
-                AnimationRegister.shake(phoneEdit);
+                Animations.shake(phoneEdit);
                 Toast.makeText(getContext(), R.string.toast_invalid_phone_num, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -146,7 +147,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
             }
             catch(IllegalArgumentException e) // Invalid date
             {
-                AnimationRegister.shake(dateEdit);
+                Animations.shake(dateEdit);
                 Toast.makeText(getContext(), R.string.invalid_date, Toast.LENGTH_SHORT).show();
                 return;
             }

@@ -6,6 +6,21 @@ public class Trash
 {
     private static Stack<Customer> customerTrash; // Sorry for the name
     private static Stack<Order>    orderTrash   ;
+    private static Stack<Product>  productTrash ;
+
+    public static void pushProduct(Product p)
+    {
+        if(productTrash == null)
+            productTrash = new Stack<>();
+        productTrash.push(p);
+    }
+
+    public static Product popProduct()
+    {
+        if(productTrash == null)
+            productTrash = new Stack<>();
+        return productTrash.pop();
+    }
 
     public static void pushCustomer(Customer c)
     {

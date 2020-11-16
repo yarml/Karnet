@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:layout_marginStart="12dp"
-    android:layout_marginEnd="12dp"
-    tools:ignore="HardcodedText"
-    tools:context=".ui.fragments.product.ProductAddModifyFragment">
+    tools:ignore="HardcodedText,UseCompoundDrawables"
+    tools:context=".ui.fragments.product.ProductDetailsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" >
 
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_text" />
+            android:src="@drawable/ic_text"
+            android:scaleX="1.0"
+            android:scaleY="1.0"
+            android:contentDescription="NAME" />
 
-        <EditText
-            android:id="@+id/edit_text_add_product_name"
+        <TextView
+            android:id="@+id/text_details_product_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="-name-"
-            android:hint="@string/hint_name"
-            android:inputType="textCapWords"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center_vertical" />
     </LinearLayout>
@@ -40,6 +42,8 @@
         android:orientation="horizontal"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:gravity="center">
 
         <ImageView
@@ -49,23 +53,13 @@
             android:src="@drawable/ic_money"
             android:contentDescription="UNIT_PRICE" />
 
-        <EditText
-            android:id="@+id/edit_text_add_product_unit_price"
+        <TextView
+            android:id="@+id/text_details_product_unit_price"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="-unit_price-"
-            android:inputType="none"
-            android:hint="@string/hint_unit_price"
+            android:text="-unitPrice-"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:gravity="center_vertical"
-            tools:ignore="TextFields"
-            android:layout_marginEnd="48dp"/>
-        <ImageButton
-            android:id="@+id/btn_edit_unit_price_add_modify_product"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_edit"
-            android:layout_marginStart="-48dp" />
+            android:gravity="center_vertical" />
 
     </LinearLayout>
     <LinearLayout
@@ -73,33 +67,35 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp" >
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp" >
 
         <Button
-            android:id="@+id/btn_select_base"
+            android:id="@+id/btn_details_base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_base_ingredient" />
+            android:text="-baseIngredient-" />
         <Button
-            android:id="@+id/btn_select_fat"
+            android:id="@+id/btn_details_fat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_fat" />
+            android:text="-fat-" />
         <Button
-            android:id="@+id/btn_select_shape"
+            android:id="@+id/btn_details_shape"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_shape" />
+            android:text="-shape-" />
         <Button
-            android:id="@+id/btn_select_type"
+            android:id="@+id/btn_details_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_type" />
+            android:text="-type-" />
         <Button
-            android:id="@+id/btn_select_extra"
+            android:id="@+id/btn_details_extra"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_extra" />
+            android:text="-extra-" />
 
     </LinearLayout>
 </LinearLayout>

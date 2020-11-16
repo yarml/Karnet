@@ -4,6 +4,7 @@ import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Product;
 import net.harmal.karnet2.core.ProductCategory;
 import net.harmal.karnet2.core.Stack;
+import net.harmal.karnet2.core.Trash;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,13 @@ public class ProductRegister
     public static int productIdCount = 0;
 
     private static List<Product> productRegister;
+
+    public static int add(@NotNull Product p)
+    {
+        return add(p.pid(), p.unitPrice(), p.name(),
+                p.baseIngredient(), p.fat(), p.shape(),
+                p.type(), p.extra());
+    }
 
     // Returns PID
     public static int add(int unitPrice, @NotNull String name,
@@ -53,6 +61,7 @@ public class ProductRegister
         for(Product p : productRegister)
             if(p.pid() == pid)
             {
+                Trash.pushProduct(p);
                 productRegister.remove(p);
                 break;
             }
@@ -85,6 +94,11 @@ public class ProductRegister
         if(productRegister == null)
             productRegister = new ArrayList<>();
         return productRegister;
+    }
+
+    public static int size()
+    {
+        return get().size();
     }
 
     @NotNull

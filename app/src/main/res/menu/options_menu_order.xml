@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/options_add_order"
+        android:id="@+id/option_add_order"
         app:showAsAction="always"
         android:icon="@drawable/ic_add"
         android:title="@string/add_order" />

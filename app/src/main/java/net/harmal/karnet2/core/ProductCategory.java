@@ -23,6 +23,11 @@ public class ProductCategory
         return  false;
     }
 
+    @Override
+    public String toString() {
+        return displayName();
+    }
+
     @NotNull
     public String displayName()
     {
@@ -32,5 +37,10 @@ public class ProductCategory
     public void displayName(@NotNull String nname)
     {
         displayName = nname;
+    }
+
+    public ProductCategory clone()
+    {
+        return new ProductCategory(displayName);
     }
 }

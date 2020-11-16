@@ -3,6 +3,7 @@ package net.harmal.karnet2.ui.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,13 +21,15 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
 {
     public static class OrderViewHolder extends KarnetRecyclerViewHolder
     {
-        TextView nameView;
-        TextView dateView;
+        TextView nameView    ;
+        TextView dateView    ;
+        ImageButton deleteBtn;
         public OrderViewHolder(@NotNull View itemView, OnItemInputListener l)
         {
             super(itemView, l);
-            nameView = itemView.findViewById(R.id.text_order_item_name);
-            dateView = itemView.findViewById(R.id.text_order_item_date);
+            nameView  = itemView.findViewById(R.id.text_order_item_name);
+            dateView  = itemView.findViewById(R.id.text_order_item_date);
+            deleteBtn = itemView.findViewById(R.id.btn_order_delete    );
         }
     }
 
@@ -53,6 +56,7 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
 
         holder.nameView.setText(String.format("Pour %s", CustomerRegister.getCustomer(current.cid()).name()));
         holder.dateView.setText(String.format("Pour le: %s", current.dueDate().toString()));
+        holder.deleteBtn.setVisibility(View.GONE);
     }
 
     @Override

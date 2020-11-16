@@ -15,6 +15,7 @@ import androidx.navigation.NavController;
 
 import net.harmal.karnet2.MainActivity;
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.utils.EventHandler;
 
 public abstract class KarnetFragment extends Fragment
 {
@@ -28,28 +29,31 @@ public abstract class KarnetFragment extends Fragment
         super.onAttach(context);
 
         if(context instanceof MainActivity)
-            ((MainActivity) context).registerFragment(this);
+            ((MainActivity) context).onRegisterFragment(this);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        assert getActivity() != null;
-        getActivity().invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
+    @EventHandler
     public void onMenuOptionsSelected(MenuItem item, NavController navController) {}
-
-    public InputMethodManager getInputMethodManager()
-    {
-        assert getActivity() != null;
-        return (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
 
     @MenuRes
     public int getOptionsMenu()
     {
-        return R.menu.default_options_menu;
+        return R.menu.options_menu_default;
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+
+        ((InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 }

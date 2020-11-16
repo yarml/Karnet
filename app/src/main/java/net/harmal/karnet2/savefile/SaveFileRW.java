@@ -1,6 +1,7 @@
 package net.harmal.karnet2.savefile;
 
 import android.app.Activity;
+import android.app.Application;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -25,18 +26,17 @@ public class SaveFileRW
 {
     private static final int SAVE_FILE_VER = 0x00000200;
 
-    public static void readSaveFile(@NotNull Activity a) throws Exception
+    public static void readSaveFile(@NotNull String path) throws Exception
     {
         // TODO: Debug Start
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             return;
         // Debug End
-
         ByteBuffer buf;
-        if(Files.exists(Paths.get(a.getFilesDir().getAbsolutePath() + "/" + "save.bin")))
+        if(Files.exists(Paths.get(path + "/" + "save.bin")))
             buf = ByteBuffer.wrap(Files.readAllBytes(
                     Paths.get(
-                            a.getFilesDir().getAbsolutePath() + "/" + "save.bin"
+                            path + "/" + "save.bin"
                             )));
         else
             return;
@@ -73,6 +73,11 @@ public class SaveFileRW
             default:
                 throw new Exception("Unrecognized save file version");
         }
+    }
+
+    public static void saveSaveFile(@NotNull String path)
+    {
+
     }
 
     @NotNull

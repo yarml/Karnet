@@ -16,6 +16,11 @@ public class OrderRegister
 
     private static List<Order> orderRegister;
 
+
+    public static int add(@NotNull Order o)
+    {
+        return add(o.oid(), o.cid(), o.deliveryPrice(), o.stacks(), o.dueDate());
+    }
     // Returns OID
     public static int add(int cid, int deliveryPrice, List<Stack> stacks, Date dueDate)
     {

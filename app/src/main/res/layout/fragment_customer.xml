@@ -8,7 +8,7 @@
     tools:context=".ui.fragments.order.OrderFragment" >
 
     <TextView
-        android:id="@+id/str_fragment_customer_no_customer"
+        android:id="@+id/text_fragment_customer_no_customer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Large"

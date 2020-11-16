@@ -5,13 +5,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     tools:context=".ui.fragments.stock.StockFragment">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/text_stock_no_product"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Stock"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        style="@style/TextAppearance.AppCompat.Large"
+        android:text="@string/str_no_product"
+        android:layout_gravity="center"
+        android:gravity="center" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_stock"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"/>
 
 </LinearLayout>

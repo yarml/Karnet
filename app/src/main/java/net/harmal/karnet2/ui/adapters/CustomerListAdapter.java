@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
+import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,7 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
         }
     }
 
+    @NotNull
     private final List<Customer> customerList;
 
     public CustomerListAdapter(@NotNull List<Customer> customerList)
@@ -56,7 +58,8 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
 
         holder.customerName.setText(current.name());
         holder.phoneCity.setText(String.format("%s, %s", current.phoneNum(), current.city()));
-        holder.deleteBtn.setVisibility(View.GONE);
+        if(holder.deleteBtn.getVisibility() == View.VISIBLE)
+            Animations.popOut(holder.deleteBtn);
     }
 
     @Override

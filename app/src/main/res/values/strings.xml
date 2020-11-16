@@ -35,7 +35,7 @@
     <string name="invalid_date">Date invalide</string>
     <string name="city_too_short">Nom de ville trop court</string>
     <string name="modify_customer">Modifier le client</string>
-    <string name="customer_removed">Client éffacé</string>
+    <string name="customer_removed">Client supprimé</string>
     <string name="undo">Annuler</string>
     <string name="sort_ab">A-Z</string>
     <string name="sort_ba">Z-A</string>
@@ -48,4 +48,28 @@
     <string name="select_shape">Sélectionner la forme</string>
     <string name="select_fat">Sélectionner la matière grasse</string>
     <string name="new_categ">Nouveau</string>
+    <string name="dialog_positive">Ok</string>
+    <string name="dialog_negative">Annuler</string>
+    <string name="dialog_neutral">Retour</string>
+    <string name="hint_enter_text">Entrer du texte</string>
+    <string name="enter_name">Entrer un nom</string>
+    <string name="hint_unit_price">Prix de la boîte</string>
+    <string name="add_product_invalid_name">Nom de produit trop court</string>
+    <string name="add_product_invalid_unit_price">Prix invalide</string>
+    <string name="add_product_invalid_base">Ingrédient de base pas sélectionner</string>
+    <string name="add_product_invalid_fat">Matière grasse pas sélectionner</string>
+    <string name="add_product_invalid_shape">Forme pas sélectionner</string>
+    <string name="add_product_invalid_type">Type pas sélectionner</string>
+    <string name="choose_price">Choisir le prix</string>
+    <string name="new_extra_category">Nouveau</string>
+    <string name="str_no_product">Aucun produit</string>
+    <string name="product_removed">Produit supprimé</string>
+    <string name="modify_product">Modifier le produit</string>
+    <string name="all_extras">Tout les additives</string>
+    <string name="enter_value">Entrer une valeur</string>
+    <string name="hint_delivery_price">Prix de livraison</string>
+    <string name="str_no_stack">Cliquer sur + pour ajouter un nouvelle élément</string>
+    <string name="order_removed">Commande supprimé</string>
+    <string name="modify_order">Modifier la commande</string>
+    <string name="hint_order_date">Date de livraison</string>
 </resources>

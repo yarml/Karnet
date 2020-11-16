@@ -9,6 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -26,9 +29,12 @@ import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.CustomerListAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
+import net.harmal.karnet2.utils.EventHandler;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class CustomerFragment extends KarnetFragment
 {
@@ -42,29 +48,57 @@ public class CustomerFragment extends KarnetFragment
         super(R.layout.fragment_customer);
     }
 
+    public static class TestViewModel extends ViewModel
+    {
+        public boolean testVal = false;
+        public TestViewModel(){}
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Logs.debug("Creating CUSTOMER fragment");
 
-        noCustomerText = view.findViewById(R.id.str_fragment_customer_no_customer);
-        if(CustomerRegister.size() == 0)
-            noCustomerText.setVisibility(View.VISIBLE);
-        else
-            noCustomerText.setVisibility(View.GONE);
+        noCustomerText = view.findViewById(R.id.text_fragment_customer_no_customer);
 
-        customerList = view.findViewById(R.id.recycler_customer_list);
+
+        customerList              = view.findViewById(R.id.recycler_customer_list);
         customerListLayoutManager = new LinearLayoutManager(getContext());
-        customerListAdapter = new CustomerListAdapter(CustomerRegister.get());
+        customerListAdapter       = new CustomerListAdapter(CustomerRegister.get());
         customerListAdapter.setOnItemInputListener(new OnItemInputListener.Builder(this::onItemClick, this::onItemLongClick));
 
         customerList.setLayoutManager(customerListLayoutManager);
         customerList.setAdapter(customerListAdapter);
 
+
+        if(CustomerRegister.size() == 0)
+        {
+            noCustomerText.setVisibility(View.VISIBLE);
+            customerList.setVisibility(View.GONE);
+        }
+        else
+        {
+            noCustomerText.setVisibility(View.GONE);
+            customerList.setVisibility(View.VISIBLE);
+        }
+
+        TestViewModel model = new ViewModelProvider(this).get(TestViewModel.class);
+
+        if(model.testVal)
+        {
+            model.testVal = false;
+            Logs.debug("Was true became false");
+        }
+        else
+        {
+            model.testVal = true;
+            Logs.debug("Was false became true");
+        }
     }
 
     @Override
+    @EventHandler
     public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController) {
         if(item.getItemId() == R.id.option_add_customer)
         {
@@ -81,6 +115,7 @@ public class CustomerFragment extends KarnetFragment
     /**
      * Handles clicks on the recycler view items
      */
+    @EventHandler
     private void onItemClick(View view, int position)
     {
         if(view.getId() == R.id.btn_customer_delete)
@@ -90,7 +125,7 @@ public class CustomerFragment extends KarnetFragment
             customerListAdapter.notifyItemRemoved(position);
             assert getView() != null;
             Snackbar undo = Snackbar.make(getView(), R.string.customer_removed, Snackbar.LENGTH_LONG);
-            undo.setAction(R.string.undo, this::undoCustomerDeletion);
+            undo.setAction(R.string.undo, this::onUndoCustomerDeletion);
             undo.show();
         }
         else
@@ -104,14 +139,16 @@ public class CustomerFragment extends KarnetFragment
                 return;
             }
             Customer c = CustomerRegister.get().get(position);
-            NavDirections action = CustomerFragmentDirections.actionCustomerFragmentToCustomerDetailsFragment(c.cid(), c.name());
-            NavHostFragment.findNavController(CustomerFragment.this).navigate(action);
+            NavDirections action = CustomerFragmentDirections
+                    .actionCustomerFragmentToCustomerDetailsFragment(c.cid(), c.name());
+            NavHostFragment.findNavController(this).navigate(action);
         }
     }
 
     /**
      * Handles long clicks on the recycler view items
      */
+    @EventHandler
     private void onItemLongClick(View view, int position)
     {
         View v = customerListLayoutManager.findViewByPosition(position);
@@ -123,8 +160,8 @@ public class CustomerFragment extends KarnetFragment
             Animations.popOut(deleteButton);
     }
 
-
-    private void undoCustomerDeletion(View v)
+    @EventHandler
+    private void onUndoCustomerDeletion(View v)
     {
         // TODO: must change item insertion position to enable list sorting
         CustomerRegister.add(Trash.popCustomer());
@@ -135,6 +172,6 @@ public class CustomerFragment extends KarnetFragment
     @MenuRes
     public int getOptionsMenu()
 {
-        return R.menu.customer_options_menu;
+        return R.menu.options_menu_customer;
     }
 }

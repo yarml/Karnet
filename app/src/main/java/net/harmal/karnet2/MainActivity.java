@@ -12,15 +12,18 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.material.navigation.NavigationView;
 
 import net.harmal.karnet2.savefile.SaveFileRW;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
+import net.harmal.karnet2.utils.EventHandler;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
@@ -46,16 +49,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Logs.debug("Starting main activity");
-
-        try
-        {
-            SaveFileRW.readSaveFile(this);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        Logs.debug("Creating main activity");
 
         // init
         drawerLayout   = findViewById(R.id.drawer_layout        );
@@ -83,11 +77,20 @@ public class MainActivity extends AppCompatActivity
         navController.addOnDestinationChangedListener(this::onDestinationChanged);
     }
 
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        Logs.debug("Saving data");
+        SaveFileRW.saveSaveFile(getFilesDir().getAbsolutePath());
+    }
+
     /**
      * Bind each fragment with its options menu
      */
     @SuppressLint("NonConstantResourceId")
     @Override
+    @EventHandler
     public boolean onCreateOptionsMenu(Menu menu)
     {
         assert getCurrentFragment() != null;
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressLint("NonConstantResourceId")
     @Override
+    @EventHandler
     public boolean onOptionsItemSelected(MenuItem item)
     {
         assert getCurrentFragment() != null;
@@ -107,6 +111,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * Closes the drawer when back is pressed
      */
+    @EventHandler
     @Override
     public void onBackPressed()
     {
@@ -128,14 +133,17 @@ public class MainActivity extends AppCompatActivity
     /**
      * Makes navigation drawer icon and back
      * on toolbar work as they should
+     *
+     * Closes keyboard if open
      */
+    @EventHandler
     private void onNavigationReturnClicked(View view)
     {
         assert navController.getCurrentDestination() != null;
         if (appBarConfiguration.getTopLevelDestinations()
                 .contains(navController.getCurrentDestination().getId())) // Top level destination
             drawerLayout.openDrawer(GravityCompat.START);
-        else // Somewhere else
+        else // Somewhere
             navController.navigateUp();
 
     }
@@ -144,7 +152,8 @@ public class MainActivity extends AppCompatActivity
      * Register child fragments
      * for later use by the Activity
      */
-    public void registerFragment(KarnetFragment child)
+    @EventHandler
+    public void onRegisterFragment(KarnetFragment child)
     {
         if(childFragments == null)
             childFragments = new ArrayList<>();
@@ -155,6 +164,7 @@ public class MainActivity extends AppCompatActivity
      * Animates the drawer icon and makes sure it
      * is replaced with the arrow back when needed
      */
+    @EventHandler
     private void onDestinationChanged(NavController controller, @NotNull NavDestination destination, Bundle arguments) {
         if (appBarConfiguration.getTopLevelDestinations().contains(destination.getId())) {
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout,

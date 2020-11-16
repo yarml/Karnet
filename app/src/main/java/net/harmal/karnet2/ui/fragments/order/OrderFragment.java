@@ -1,20 +1,36 @@
 package net.harmal.karnet2.ui.fragments.order;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.core.Customer;
+import net.harmal.karnet2.core.Order;
+import net.harmal.karnet2.core.Trash;
+import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.OrderRegister;
+import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.OrderListAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
+import net.harmal.karnet2.ui.fragments.customer.CustomerFragmentDirections;
+import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 import net.harmal.karnet2.utils.Logs;
+
+import org.jetbrains.annotations.NotNull;
 
 public class OrderFragment extends KarnetFragment
 {
@@ -27,7 +43,6 @@ public class OrderFragment extends KarnetFragment
     public OrderFragment()
     {
         super(R.layout.fragment_order);
-
     }
 
     @Override
@@ -40,6 +55,7 @@ public class OrderFragment extends KarnetFragment
         orderList = view.findViewById(R.id.recycler_order_list);
         orderListLayoutManager = new LinearLayoutManager(getContext());
         orderListAdapter = new OrderListAdapter(OrderRegister.get());
+        orderListAdapter.setOnItemInputListener(new OnItemInputListener.Builder(this::onItemClick, this::onItemLongClick));
 
         orderList.setLayoutManager(orderListLayoutManager);
         orderList.setAdapter(orderListAdapter);
@@ -57,10 +73,67 @@ public class OrderFragment extends KarnetFragment
         }
     }
 
+    private void onItemClick(@NotNull View view, int i)
+    {
+        if(view.getId() == R.id.btn_order_delete)
+        {
+            Order o = OrderRegister.get().get(i);
+            OrderRegister.remove(o.oid());
+            orderListAdapter.notifyItemRemoved(i);
+            assert getView() != null;
+            Snackbar undo = Snackbar.make(getView(), R.string.order_removed, Snackbar.LENGTH_LONG);
+            undo.setAction(R.string.undo, this::onUndoCustomerDeletion);
+            undo.show();
+        }
+        else
+        {
+            View v = orderListLayoutManager.findViewByPosition(i);
+            assert v != null;
+            ImageButton deleteButton = v.findViewById(R.id.btn_order_delete);
+            if(deleteButton.getVisibility() == View.VISIBLE)
+            {
+                Animations.popOut(deleteButton);
+                return;
+            }
+            Order o = OrderRegister.get().get(i);
+            NavDirections action = OrderFragmentDirections
+                    .actionOrderFragmentToOrderAddModifyFragment(o.oid(), getString(R.string.modify_order));
+            NavHostFragment.findNavController(this).navigate(action);
+        }
+    }
+
+    private void onItemLongClick(View view, int i)
+    {
+        View v = orderListLayoutManager.findViewByPosition(i);
+        assert v != null;
+        ImageButton deleteButton = v.findViewById(R.id.btn_order_delete);
+        if(deleteButton.getVisibility() == View.GONE) // should appear
+            Animations.popIn(deleteButton);
+        else
+            Animations.popOut(deleteButton);
+    }
+
+    private void onUndoCustomerDeletion(View view)
+    {
+        OrderRegister.add(Trash.popOrder());
+        orderListAdapter.notifyItemInserted(OrderRegister.size() - 1);
+    }
+
     @Override
     @MenuRes
     public int getOptionsMenu()
     {
-        return R.menu.order_options_menu;
+        return R.menu.options_menu_order;
+    }
+
+    @Override
+    public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
+    {
+        if(item.getItemId() == R.id.option_add_order)
+        {
+            NavDirections action = OrderFragmentDirections
+                    .actionOrderFragmentToOrderAddModifyFragment(-1, getString(R.string.add_order));
+            navController.navigate(action);
+        }
     }
 }

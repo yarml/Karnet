@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
     tools:ignore="HardcodedText"
     tools:context=".ui.fragments.customer.CustomerDetailsFragment" >
 
@@ -14,9 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp" >
+        android:layout_marginBottom="6dp" >
 
         <ImageView
             android:layout_width="48dp"
@@ -41,9 +41,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp" >
+        android:layout_marginBottom="6dp">
 
         <ImageView
             android:layout_width="48dp"
@@ -66,9 +64,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp" >
+        android:layout_marginBottom="6dp" >
 
         <ImageView
             android:layout_width="48dp"
@@ -91,9 +87,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp" >
+        android:layout_marginBottom="6dp" >
 
         <ImageView
             android:layout_width="48dp"

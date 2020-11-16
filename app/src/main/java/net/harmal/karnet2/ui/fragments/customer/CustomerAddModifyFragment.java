@@ -25,6 +25,7 @@ import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
+import net.harmal.karnet2.utils.EventHandler;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
@@ -93,6 +94,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
     }
 
     @Override
+    @EventHandler
     public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
     {
         if(item.getItemId() == R.id.options_add_customer_validate)
@@ -164,8 +166,6 @@ public class CustomerAddModifyFragment extends KarnetFragment
                 c.creationDate(date);
             }
 
-
-            getInputMethodManager().hideSoftInputFromWindow(layout.getWindowToken(), 0);
             navController.navigateUp();
         }
     }
@@ -174,6 +174,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
      * Shows the city suggestion menu
      * when focused
      */
+    @EventHandler
     private void onCityEditFocusChanged(View v, boolean hasFocus)
     {
         if (hasFocus)
@@ -186,6 +187,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
     /**
      * Shows DatePickerDialog
      */
+    @EventHandler
     private void onDateEditButtonClicked(View v)
     {
         Date defaultDate = new Date(dateEdit.getText().toString());
@@ -198,6 +200,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
      * Handles data returned from DatePickerDialog
      */
     @SuppressLint("DefaultLocale")
+    @EventHandler
     private void onDatePickerDateSet(DatePicker view, int year, int month, int dayOfMonth)
     {
         dateEdit.setText(String.format("%d/%d/%d", dayOfMonth, month + 1, year));

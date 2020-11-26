@@ -1,6 +1,9 @@
 package net.harmal.karnet2.core.registers;
 
+import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Stack;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,5 +70,28 @@ public class Stock
         if(stock == null)
             stock = new ArrayList<>();
         return stock;
+    }
+
+    public static int size()
+    {
+        return get().size();
+    }
+
+    public static boolean canValidate(@NotNull Order o)
+    {
+        for(Stack s : o.stacks())
+            if(countOf(s.pid()) < s.count())
+                return false;
+        return true;
+    }
+
+    public static void validate(Order o)
+    {
+        if(!canValidate(o))
+            throw new IllegalStateException("Inssuficient stock");
+        for(Stack s : o.stacks())
+        {
+            remove(s.pid(), s.count());
+        }
     }
 }

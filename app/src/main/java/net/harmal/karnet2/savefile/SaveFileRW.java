@@ -1,100 +1,252 @@
 package net.harmal.karnet2.savefile;
 
-import android.app.Activity;
-import android.app.Application;
+import android.annotation.SuppressLint;
 import android.os.Build;
 
-import androidx.annotation.RequiresApi;
-
+import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Date;
+import net.harmal.karnet2.core.Order;
+import net.harmal.karnet2.core.Product;
 import net.harmal.karnet2.core.ProductCategory;
+import net.harmal.karnet2.core.Stack;
 import net.harmal.karnet2.core.registers.CustomerRegister;
+import net.harmal.karnet2.core.registers.OrderRegister;
 import net.harmal.karnet2.core.registers.ProductRegister;
+import net.harmal.karnet2.core.registers.Stock;
+import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SaveFileRW
 {
+    private static final int SAVE_FILE_SIG = 0x02A41E72;
+    /**
+     * The file's version determines mainly how the header should be interpreted
+     * but other parts of the body might be interpreted differently
+     */
     private static final int SAVE_FILE_VER = 0x00000200;
 
-    public static void readSaveFile(@NotNull String path) throws Exception
+    private static final String SAVE_FILE_NAME = "save.bin";
+    private static final String LOGS_FILE_NAME = "logs.txt";
+
+    public static void read(@NotNull String path) throws Exception
     {
-        // TODO: Debug Start
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
-            return;
-        // Debug End
         ByteBuffer buf;
-        if(Files.exists(Paths.get(path + "/" + "save.bin")))
-            buf = ByteBuffer.wrap(Files.readAllBytes(
-                    Paths.get(
-                            path + "/" + "save.bin"
-                            )));
-        else
-            return;
-        switch(buf.getInt()) // switch version
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
         {
-            case SAVE_FILE_VER: // Current version
-                // Header
-                int clientCount           = buf.getInt ();
-                int productCount          = buf.getInt ();
-                int orderCount            = buf.getInt ();
-                int stockEntriesCount     = buf.getInt ();
-                int statisticsFramesCount = buf.getInt ();
-                for(int i = 0; i < 40; i++) buf.getChar(); // Reserved
+            Logs.debug("Reading save file the old way");
+            File input = new File(path + "/" + SAVE_FILE_NAME);
+            if(input.exists())
+            {
+                FileInputStream stream = new FileInputStream(input);
+                Logs.debug("Allocating " + input.length() + " byte for the buffer");
+                buf = ByteBuffer.allocate((int) input.length());
+                for(int i = 0, b = stream.read(); i < input.length(); i++, b = stream.read())
+                    buf.put((byte) b);
+                stream.close();
+                buf.flip();
+            }
+            else
+            {
+                OldSaveFormat.load(path);
+                return;
+            }
+        }
+        else
+            if(Files.exists(Paths.get(path + "/" + SAVE_FILE_NAME)))
+                buf = ByteBuffer.wrap(Files.readAllBytes(
+                        Paths.get(
+                                path + "/" + SAVE_FILE_NAME
+                                )));
+            else
+            {
+                OldSaveFormat.load(path);
+                return;
+            }
+        Logs.debug("Reading new format save file");
 
-                // Reading customers data
+        // Read pre head
+        if(buf.getInt() != SAVE_FILE_SIG)
+        {
+            Logs.debug("Save file not signed!");
+            return;
+        }
+        int version = buf.getInt();
+        // Read head
+        int customerCount;
+        int productCount ;
+        int orderCount   ;
+        int stockCount   ;
+
+        switch(version)
+        {
+            case SAVE_FILE_VER: // Recent version
+                customerCount = buf.getInt();
+                productCount  = buf.getInt();
+                orderCount    = buf.getInt();
+                stockCount    = buf.getInt();
+
                 CustomerRegister.customerIdCount = buf.getInt();
-                for(int i = 0; i < clientCount; i++)
-                {
-                    int id          = buf.getInt()                                          ;
-                    Date cdate      = new Date(buf.getChar(), buf.getChar(), buf.getShort());
-                    String name     = readString(buf)                                       ;
-                    String city     = readString(buf)                                       ;
-                    String phoneNum = readString(buf)                                       ;
-                    CustomerRegister.add(id, name, city, phoneNum, cdate);
-                }
-
-                ProductRegister.productIdCount = buf.getInt();
-                for(int i = 0; i < productCount; i++)
-                {
-
-                }
-
+                ProductRegister.productIdCount   = buf.getInt();
+                OrderRegister.orderIdCount       = buf.getInt();
                 break;
             default:
+                Logs.error("Unrecognized save file version");
                 throw new Exception("Unrecognized save file version");
         }
+
+        // Read customers data
+        for(int i = 0; i < customerCount; i++)
+        {
+            Customer.CustomerBuilder builder = new Customer.CustomerBuilder();
+            Customer c = builder.readData(version, buf);
+            CustomerRegister.add(c);
+        }
+
+        // Read products data
+        for(int i = 0; i < productCount; i++)
+        {
+            Product.ProductBuilder builder = new Product.ProductBuilder();
+            Product p = builder.readData(version, buf);
+            ProductRegister.add(p);
+        }
+
+        // Read orders
+        for(int i = 0; i < orderCount; i++)
+        {
+            Order.OrderBuilder builder = new Order.OrderBuilder();
+            Order o = builder.readData(version,buf);
+            OrderRegister.add(o);
+        }
+
+        // Read stock
+        for(int i = 0; i < stockCount; i++)
+        {
+            Stack.StackBuilder builder = new Stack.StackBuilder();
+            Stack s = builder.readData(version, buf);
+            Stock.add(s.pid(), s.count());
+        }
+
+        Logs.debug("Data read");
     }
 
-    public static void saveSaveFile(@NotNull String path)
+    @SuppressLint("DefaultLocale")
+    public static void save(@NotNull String path) throws IOException
     {
+        // Save logs
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+        {
+            File logFile = new File(path + "/" + LOGS_FILE_NAME);
+            if(!logFile.exists())
+                logFile.createNewFile();
+            FileOutputStream out = new FileOutputStream(logFile, true);
+            for(byte b : Logs.getLogs().getBytes(StandardCharsets.ISO_8859_1))
+                out.write(b);
+            out.close();
+        }
+        else
+        {
+            if(!Files.exists(Paths.get(path + "/" + LOGS_FILE_NAME)))
+                Files.createFile(Paths.get(path + "/" + LOGS_FILE_NAME));
+            Files.write(Paths.get(path + "/" + LOGS_FILE_NAME),
+                    Logs.getLogs().getBytes(StandardCharsets.ISO_8859_1),
+                    StandardOpenOption.APPEND);
+        }
 
+        // Save data
+        ByteArrayOutputStream rawBytesStream = new ByteArrayOutputStream();
+        DataOutputStream dataStream = new DataOutputStream(rawBytesStream);
+
+        // Pre head
+        dataStream.writeInt(SAVE_FILE_SIG);
+        dataStream.writeInt(SAVE_FILE_VER);
+        // head
+        dataStream.writeInt(CustomerRegister.size());
+        dataStream.writeInt(ProductRegister.size( ));
+        dataStream.writeInt(OrderRegister.size(   ));
+        dataStream.writeInt(Stock.size(           ));
+
+        // id counts
+        dataStream.writeInt(CustomerRegister.customerIdCount);
+        dataStream.writeInt(ProductRegister.productIdCount  );
+        dataStream.writeInt(OrderRegister.orderIdCount      );
+
+
+        // Write customers data
+        for(Customer c : CustomerRegister.get())
+            c.writeData(dataStream);
+
+        // Write products
+        for(Product p : ProductRegister.get())
+            p.writeData(dataStream);
+
+        // Write orders
+        for(Order o : OrderRegister.get())
+            o.writeData(dataStream);
+
+        // Write stock
+        for(Stack s : Stock.get())
+            s.writeData(dataStream);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+        {
+            FileOutputStream outputStream = new FileOutputStream(path + "/" + SAVE_FILE_NAME);
+            for(byte b : rawBytesStream.toByteArray())
+                outputStream.write(b);
+            outputStream.close();
+        }
+        else
+            Files.write(Paths.get(path + "/" + SAVE_FILE_NAME), rawBytesStream.toByteArray(),
+                    StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+        dataStream.close();
+        rawBytesStream.close();
+
+        Logs.debug("Data Saved");
     }
 
     @NotNull
     private static String readString(@NotNull ByteBuffer buf)
     {
-        StringBuilder b = new StringBuilder();
-        for(char i = buf.getChar(); i != 0; i = buf.getChar())
-            b.append(i);
-        return b.toString();
-    }
-    @NotNull
-    private static List<ProductCategory> readProductCategory(@NotNull ByteBuffer buf, int count)
-    {
-        List<ProductCategory> cat = new ArrayList<ProductCategory>();
-        for(int i = 0; i < count; i++)
-            cat.add(new ProductCategory(readString(buf)));
-        return cat;
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        for(byte b = buf.get(); b != 0; b = buf.get())
+            stream.write(b);
+        return new String(stream.toByteArray(), StandardCharsets.ISO_8859_1);
     }
 
+    public static void putString(@NotNull ByteBuffer buf, @NotNull String s)
+    {
+        for(byte c : s.getBytes(StandardCharsets.ISO_8859_1))
+            buf.put(c);
+        buf.put((byte) 0);
+    }
+
+    /**
+     * This is for debug
+     */
+    @NotNull
+    public static String stringToHex(@NotNull String in)
+    {
+        StringBuilder builder = new StringBuilder();
+        for(byte c : in.getBytes(StandardCharsets.ISO_8859_1))
+            builder.append(String.format("%h ", c));
+        builder.append("00");
+        return builder.toString();
+    }
 }

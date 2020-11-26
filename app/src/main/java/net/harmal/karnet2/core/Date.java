@@ -6,17 +6,21 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import net.harmal.karnet2.savefile.Savable;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Date
+public class Date implements Savable
 {
     private byte  day  ;
     private byte  month;
@@ -140,5 +144,22 @@ public class Date
     @Override
     public String toString() {
         return day + "/" + month + "/" + year;
+    }
+
+    @Override
+    public void writeData(@NotNull DataOutputStream stream) throws IOException
+    {
+        stream.writeByte(day);
+        stream.writeByte(month);
+        stream.writeShort(year);
+    }
+
+    public static class DateBuilder implements BUILDER<Date>
+    {
+        @Override
+        public Date readData(int version, ByteBuffer buffer)
+        {
+            return new Date(buffer.get(), buffer.get(), buffer.getShort());
+        }
     }
 }

@@ -1,11 +1,16 @@
 package net.harmal.karnet2.core;
 
+import net.harmal.karnet2.savefile.Savable;
+
 import org.jetbrains.annotations.NotNull;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order
+public class Order implements Savable
 {
     private int         oid          ;
     private int         cid          ;
@@ -88,5 +93,35 @@ public class Order
                 if(s.count() == 0)
                     stacks.remove(s);
             }
+    }
+
+    @Override
+    public void writeData(@NotNull DataOutputStream stream) throws IOException
+    {
+        stream.writeInt(oid);
+        stream.writeInt(cid);
+        stream.writeInt(deliveryPrice);
+        stream.writeInt(stacks.size());
+        dueDate.writeData(stream);
+        for(Stack s : stacks)
+            s.writeData(stream);
+    }
+    public static class OrderBuilder implements Savable.BUILDER<Order>
+    {
+        @Override
+        public Order readData(int version, @NotNull ByteBuffer buffer)
+        {
+            int oid = buffer.getInt();
+            int cid = buffer.getInt();
+            int deliveryPrice = buffer.getInt();
+            int stackCount = buffer.getInt();
+            Date.DateBuilder dateBuilder = new Date.DateBuilder();
+            Date date = dateBuilder.readData(version, buffer);
+            List<Stack> stacks = new ArrayList<>();
+            Stack.StackBuilder stackBuilder = new Stack.StackBuilder();
+            for(int i = 0; i < stackCount; i++)
+                stacks.add(stackBuilder.readData(version, buffer));
+            return new Order(oid, cid, deliveryPrice, stacks, date);
+        }
     }
 }

@@ -15,6 +15,7 @@ import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapter.CustomerViewHolder>
@@ -34,12 +35,18 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
         }
     }
 
+    private String lastFilter;
+
     @NotNull
-    private final List<Customer> customerList;
+    private final List<Customer> customerList       ;
+    private final List<Customer> visibleCustomerList;
 
     public CustomerListAdapter(@NotNull List<Customer> customerList)
     {
         this.customerList = customerList;
+        visibleCustomerList = new ArrayList<>();
+        visibleCustomerList.addAll(customerList);
+        lastFilter = "";
     }
 
     @NonNull
@@ -54,7 +61,7 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
     @Override
     public void onBindViewHolder(@NonNull CustomerViewHolder holder, int position)
     {
-        Customer current = customerList.get(position);
+        Customer current = visibleCustomerList.get(position);
 
         holder.customerName.setText(current.name());
         holder.phoneCity.setText(String.format("%s, %s", current.phoneNum(), current.city()));
@@ -65,7 +72,39 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
     @Override
     public int getItemCount()
     {
-        return customerList.size();
+        return visibleCustomerList.size();
     }
 
+
+    public void filter(@NotNull String s)
+    {
+        lastFilter = s;
+        visibleCustomerList.clear();
+        if(s.isEmpty())
+            visibleCustomerList.addAll(customerList);
+        else
+            for(Customer c : customerList)
+                if(c.name().toLowerCase().contains(s.toLowerCase())
+                || c.phoneNum().toLowerCase().contains(s.toLowerCase())
+                || c.city().toLowerCase().contains(s.toLowerCase())
+                || c.creationDate().toString().toLowerCase().contains(s.toLowerCase()))
+                    visibleCustomerList.add(c);
+        notifyDataSetChanged();
+    }
+
+    public void update()
+    {
+        filter(lastFilter);
+    }
+
+    @NotNull
+    public List<Customer> getCustomerList()
+    {
+        return customerList;
+    }
+
+    public List<Customer> getVisibleCustomerList()
+    {
+        return visibleCustomerList;
+    }
 }

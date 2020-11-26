@@ -24,16 +24,23 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         TextView nameView    ;
         TextView dateView    ;
         ImageButton deleteBtn;
+        ImageButton doneBtn  ;
         public OrderViewHolder(@NotNull View itemView, OnItemInputListener l)
         {
             super(itemView, l);
             nameView  = itemView.findViewById(R.id.text_order_item_name);
             dateView  = itemView.findViewById(R.id.text_order_item_date);
             deleteBtn = itemView.findViewById(R.id.btn_order_delete    );
+            doneBtn   = itemView.findViewById(R.id.btn_order_done      );
         }
     }
 
     private final List<Order> orderList;
+
+    public List<Order> getOrderList()
+    {
+        return orderList;
+    }
 
     public OrderListAdapter(@NotNull List<Order> orderList)
     {
@@ -57,6 +64,7 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         holder.nameView.setText(String.format("Pour %s", CustomerRegister.getCustomer(current.cid()).name()));
         holder.dateView.setText(String.format("Pour le: %s", current.dueDate().toString()));
         holder.deleteBtn.setVisibility(View.GONE);
+        holder.doneBtn.setVisibility(View.GONE);
     }
 
     @Override

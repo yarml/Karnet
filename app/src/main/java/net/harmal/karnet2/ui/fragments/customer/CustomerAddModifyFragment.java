@@ -25,7 +25,6 @@ import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
-import net.harmal.karnet2.utils.EventHandler;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +38,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
     private EditText             dateEdit   ;
     private ImageButton          editDateBtn;
 
-    private int                  cid       ;
+    private int                  cid        ;
 
     public CustomerAddModifyFragment()
     {
@@ -51,8 +50,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        assert getArguments() != null;
-        CustomerAddModifyFragmentArgs args = CustomerAddModifyFragmentArgs.fromBundle(getArguments());
+        CustomerAddModifyFragmentArgs args = CustomerAddModifyFragmentArgs.fromBundle(requireArguments());
 
         cid = args.getCid();
 
@@ -94,7 +92,6 @@ public class CustomerAddModifyFragment extends KarnetFragment
     }
 
     @Override
-    @EventHandler
     public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
     {
         if(item.getItemId() == R.id.options_add_customer_validate)
@@ -134,7 +131,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
             phoneStr = phoneStr.replace(".", "");
             phoneStr = phoneStr.trim();
 
-            if(phoneStr.length() != 10 || !phoneStr.startsWith("06")) // Invalid phoneStr num
+            if(phoneStr.length() != 10 || !(phoneStr.startsWith("06") || phoneStr.startsWith("07"))) // Invalid phoneStr num
             {
                 Animations.shake(phoneEdit);
                 Toast.makeText(getContext(), R.string.toast_invalid_phone_num, Toast.LENGTH_SHORT).show();
@@ -174,7 +171,6 @@ public class CustomerAddModifyFragment extends KarnetFragment
      * Shows the city suggestion menu
      * when focused
      */
-    @EventHandler
     private void onCityEditFocusChanged(View v, boolean hasFocus)
     {
         if (hasFocus)
@@ -187,7 +183,6 @@ public class CustomerAddModifyFragment extends KarnetFragment
     /**
      * Shows DatePickerDialog
      */
-    @EventHandler
     private void onDateEditButtonClicked(View v)
     {
         Date defaultDate = new Date(dateEdit.getText().toString());
@@ -200,7 +195,6 @@ public class CustomerAddModifyFragment extends KarnetFragment
      * Handles data returned from DatePickerDialog
      */
     @SuppressLint("DefaultLocale")
-    @EventHandler
     private void onDatePickerDateSet(DatePicker view, int year, int month, int dayOfMonth)
     {
         dateEdit.setText(String.format("%d/%d/%d", dayOfMonth, month + 1, year));

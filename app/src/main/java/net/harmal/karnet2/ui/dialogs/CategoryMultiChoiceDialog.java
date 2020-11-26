@@ -30,34 +30,47 @@ public class CategoryMultiChoiceDialog extends KarnetDialogFragment
     private EditText              newCategoriesEdit;
     private List<CheckBox>        checkboxes       ;
     private List<ProductCategory> categoryList     ;
+    private boolean showNew;
 
     public CategoryMultiChoiceDialog(@StringRes int title, @NotNull List<ProductCategory> categories,
                                      CategoryMultiChoiceDialogInterface categoryMultiChoiceDialogInterface,
                                      IBinder windowToken)
     {
+        this(title, categories, categoryMultiChoiceDialogInterface, true, windowToken);
+    }
+
+    public CategoryMultiChoiceDialog(@StringRes int title, @NotNull List<ProductCategory> categories,
+                                     CategoryMultiChoiceDialogInterface categoryMultiChoiceDialogInterface,
+                                     boolean showNew, IBinder windowToken)
+    {
         super(title, R.layout.dialog_multi_category_choice, windowToken);
+        this.showNew = showNew;
         this.categoryList = categories;
         positiveListener((dialog, which) -> {
             List<ProductCategory> checkedCategories = new ArrayList<>();
             for(int i = 0; i < checkboxes.size(); i++)
                 if(checkboxes.get(i).isChecked())
                     checkedCategories.add(categoryList.get(i));
-            String newCategories = newCategoriesEdit.getText().toString();
-
-            for(String s : newCategories.split(";"))
+            if(showNew)
             {
-                ProductCategory category = new ProductCategory(s.trim());
-                if(!checkedCategories.contains(category))
-                    checkedCategories.add(category);
+                String newCategories = newCategoriesEdit.getText().toString();
+                for(String s : newCategories.split(","))
+                {
+                    ProductCategory category = new ProductCategory(s.trim());
+                    if(!checkedCategories.contains(category))
+                        checkedCategories.add(category);
+                }
             }
             categoryMultiChoiceDialogInterface.onItemsSelected(checkedCategories);
         });
     }
 
     @Override
-    protected void onCreatingDialog(View v, AlertDialog.Builder builder)
+    protected void onCreatingDialog(@NotNull View v, AlertDialog.Builder builder)
     {
         newCategoriesEdit = v.findViewById(R.id.edit_text_new_categories);
+        if(!showNew)
+            newCategoriesEdit.setVisibility(View.GONE);
         checkboxes = new ArrayList<>();
         LinearLayout linearLayout = v.findViewById(R.id.linear_layout_multi_categories);
         for(ProductCategory c : categoryList)

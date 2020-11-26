@@ -25,7 +25,6 @@ import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.ProductListAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
-import net.harmal.karnet2.utils.EventHandler;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -72,7 +71,6 @@ public class ProductFragment extends KarnetFragment
     }
 
     @Override
-    @EventHandler
     public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
     {
         if(item.getItemId() == R.id.options_add_product)
@@ -85,14 +83,13 @@ public class ProductFragment extends KarnetFragment
         }
     }
 
-    @EventHandler
     private void onItemClick(@NotNull View view, int position)
     {
         if(view.getId() == R.id.btn_product_delete)
         {
-            Product p = ProductRegister.get().get(position);
+            Product p = productListAdapter.getVisibleProducts().get(position);
             ProductRegister.remove(p.pid());
-            productListAdapter.notifyItemRemoved(position);
+            productListAdapter.update();
             assert getView() != null;
             Snackbar undo = Snackbar.make(getView(), R.string.product_removed, Snackbar.LENGTH_LONG);
             undo.setAction(R.string.undo, this::onUndoProductDeletion);
@@ -115,7 +112,6 @@ public class ProductFragment extends KarnetFragment
         }
     }
 
-    @EventHandler
     private void onItemLongClick(View view, int position)
     {
         View v = productListLayoutManager.findViewByPosition(position);
@@ -127,12 +123,13 @@ public class ProductFragment extends KarnetFragment
             Animations.popOut(deleteButton);
     }
 
-    @EventHandler
     private void onUndoProductDeletion(View v)
     {
-        // TODO: must change item insertion position to enable list sorting
-        ProductRegister.add(Trash.popProduct());
-        productListAdapter.notifyItemInserted(ProductRegister.size() - 1);
+        int pid = ProductRegister.add(Trash.popProduct());
+        Product p = ProductRegister.getProduct(pid);
+        productListAdapter.update();
+        if(productListAdapter.getVisibleProducts().contains(p))
+            productListAdapter.notifyItemInserted(productListAdapter.getVisibleProducts().size() - 1);
     }
     @Override
     @MenuRes

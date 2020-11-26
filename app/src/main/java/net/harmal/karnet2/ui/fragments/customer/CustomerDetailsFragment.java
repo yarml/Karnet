@@ -15,7 +15,6 @@ import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
-import net.harmal.karnet2.utils.EventHandler;
 
 public class CustomerDetailsFragment extends KarnetFragment
 {
@@ -55,7 +54,6 @@ public class CustomerDetailsFragment extends KarnetFragment
     }
 
     @Override
-    @EventHandler
     public void onMenuOptionsSelected(MenuItem item, NavController navController) {
         if(item.getItemId() == R.id.options_edit_customer)
         {

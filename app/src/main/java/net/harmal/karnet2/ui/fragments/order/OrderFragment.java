@@ -5,6 +5,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
@@ -23,10 +24,11 @@ import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Trash;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.OrderRegister;
+import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.OrderListAdapter;
+import net.harmal.karnet2.ui.dialogs.ConfirmationDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
-import net.harmal.karnet2.ui.fragments.customer.CustomerFragmentDirections;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 import net.harmal.karnet2.utils.Logs;
 
@@ -61,7 +63,7 @@ public class OrderFragment extends KarnetFragment
         orderList.setAdapter(orderListAdapter);
 
         noOrderText = view.findViewById(R.id.str_fragment_order_no_order);
-        if(OrderRegister.size() == 0)
+        if(orderListAdapter.getItemCount() == 0)
         {
             noOrderText.setVisibility(View.VISIBLE);
             orderList.setVisibility(View.GONE);
@@ -77,22 +79,45 @@ public class OrderFragment extends KarnetFragment
     {
         if(view.getId() == R.id.btn_order_delete)
         {
-            Order o = OrderRegister.get().get(i);
+            Order o = orderListAdapter.getOrderList().get(i);
             OrderRegister.remove(o.oid());
             orderListAdapter.notifyItemRemoved(i);
+            if(orderListAdapter.getItemCount() == 0)
+            {
+                Animations.popIn(noOrderText);
+                orderList.setVisibility(View.GONE);
+            }
             assert getView() != null;
             Snackbar undo = Snackbar.make(getView(), R.string.order_removed, Snackbar.LENGTH_LONG);
             undo.setAction(R.string.undo, this::onUndoCustomerDeletion);
             undo.show();
+        }
+        else if(view.getId() == R.id.btn_order_done)
+        {
+            Order o = orderListAdapter.getOrderList().get(i);
+            if(!Stock.canValidate(o))
+            {
+                Toast.makeText(getContext(), R.string.insufficient_stock, Toast.LENGTH_LONG).show();
+                return;
+            }
+            Customer c = CustomerRegister.getCustomer(o.cid());
+            assert c != null;
+            ConfirmationDialog dialog = new ConfirmationDialog(R.string.confirmation,
+                    String.format("Êtes vous sûr de vouloir valider la commande de %s?", c.name()),
+                    (dialog1, which) -> validateOrder(i),
+                    requireView().getWindowToken());
+            dialog.show(getChildFragmentManager(), "");
         }
         else
         {
             View v = orderListLayoutManager.findViewByPosition(i);
             assert v != null;
             ImageButton deleteButton = v.findViewById(R.id.btn_order_delete);
+            ImageButton doneBtn = v.findViewById(R.id.btn_order_done);
             if(deleteButton.getVisibility() == View.VISIBLE)
             {
                 Animations.popOut(deleteButton);
+                Animations.popOut(doneBtn);
                 return;
             }
             Order o = OrderRegister.get().get(i);
@@ -102,19 +127,47 @@ public class OrderFragment extends KarnetFragment
         }
     }
 
+    /**
+     * @param pos position in the adapter which was validated
+     */
+    private void validateOrder(int pos)
+    {
+        Order o = orderListAdapter.getOrderList().get(pos);
+        Stock.validate(o);
+        OrderRegister.get().remove(o);
+        orderListAdapter.notifyItemRemoved(pos);
+        if(orderListAdapter.getItemCount() == 0)
+        {
+            Animations.popIn(noOrderText);
+            orderList.setVisibility(View.GONE);
+        }
+    }
+
     private void onItemLongClick(View view, int i)
     {
         View v = orderListLayoutManager.findViewByPosition(i);
         assert v != null;
         ImageButton deleteButton = v.findViewById(R.id.btn_order_delete);
+        ImageButton doneBtn = v.findViewById(R.id.btn_order_done);
         if(deleteButton.getVisibility() == View.GONE) // should appear
+        {
             Animations.popIn(deleteButton);
+            Animations.popIn(doneBtn);
+        }
         else
+        {
             Animations.popOut(deleteButton);
+            Animations.popOut(doneBtn);
+        }
     }
 
     private void onUndoCustomerDeletion(View view)
     {
+        if(orderListAdapter.getItemCount() == 0)
+        {
+            Animations.popOut(noOrderText);
+            orderList.setVisibility(View.VISIBLE);
+        }
         OrderRegister.add(Trash.popOrder());
         orderListAdapter.notifyItemInserted(OrderRegister.size() - 1);
     }

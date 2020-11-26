@@ -10,16 +10,18 @@ import androidx.annotation.NonNull;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Product;
+import net.harmal.karnet2.core.ProductCategory;
 import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListAdapter extends KarnetRecyclerAdapter<ProductListAdapter.ProductListViewHolder>
 {
-    public class ProductListViewHolder extends KarnetRecyclerViewHolder
+    public static class ProductListViewHolder extends KarnetRecyclerViewHolder
     {
         private TextView    productName;
         private TextView    priceStats ;
@@ -35,12 +37,22 @@ public class ProductListAdapter extends KarnetRecyclerAdapter<ProductListAdapter
         }
     }
 
+    private ProductCategory filterBase;
+    private ProductCategory filterFat;
+    private ProductCategory filterShape;
+    private ProductCategory filterType;
+    private List<ProductCategory> filterExtra;
+
     @NotNull
     private final List<Product> productList;
+
+    private final List<Product> visibleProducts;
 
     public ProductListAdapter(@NotNull List<Product> productList)
     {
         this.productList = productList;
+        visibleProducts = new ArrayList<>();
+        visibleProducts.addAll(productList);
     }
 
     @NonNull
@@ -55,7 +67,7 @@ public class ProductListAdapter extends KarnetRecyclerAdapter<ProductListAdapter
     @Override
     public void onBindViewHolder(@NonNull ProductListViewHolder holder, int position)
     {
-        Product current = productList.get(position);
+        Product current = visibleProducts.get(position);
 
         holder.productName.setText(current.name(                          ));
         holder.priceStats.setText(String.format("%s ", current.unitPrice()));
@@ -66,6 +78,69 @@ public class ProductListAdapter extends KarnetRecyclerAdapter<ProductListAdapter
     @Override
     public int getItemCount()
     {
-        return productList.size();
+        return visibleProducts.size();
+    }
+
+    @NotNull
+    public List<Product> getProductList()
+    {
+        return productList;
+    }
+
+    public List<Product> getVisibleProducts()
+    {
+        return visibleProducts;
+    }
+
+    public void update()
+    {
+        visibleProducts.clear();
+        for(Product p : productList)
+        {
+            if(p.baseIngredient().equals(filterBase) && p.fat().equals(filterFat)
+                && p.shape().equals(filterShape) && p.type().equals(filterType))
+            {
+                if(filterExtra == null)
+                    visibleProducts.add(p);
+                else
+                    for(ProductCategory c : p.extra())
+                        if(filterExtra.contains(c))
+                        {
+                            visibleProducts.add(p);
+                            break;
+                        }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void filterBase(ProductCategory category)
+    {
+        filterBase = category;
+        update();
+    }
+
+    public void filterFat(ProductCategory category)
+    {
+        filterFat = category;
+        update();
+    }
+
+    public void filterShape(ProductCategory category)
+    {
+        filterShape = category;
+        update();
+    }
+
+    public void filterType(ProductCategory category)
+    {
+        filterType = category;
+        update();
+    }
+
+    public void filterExtras(@NonNull List<ProductCategory> categories)
+    {
+        filterExtra = categories;
+        update();
     }
 }

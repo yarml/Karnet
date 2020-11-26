@@ -15,7 +15,6 @@ import androidx.navigation.NavController;
 
 import net.harmal.karnet2.MainActivity;
 import net.harmal.karnet2.R;
-import net.harmal.karnet2.utils.EventHandler;
 
 public abstract class KarnetFragment extends Fragment
 {
@@ -39,7 +38,6 @@ public abstract class KarnetFragment extends Fragment
         requireActivity().invalidateOptionsMenu();
     }
 
-    @EventHandler
     public void onMenuOptionsSelected(MenuItem item, NavController navController) {}
 
     @MenuRes
@@ -54,6 +52,6 @@ public abstract class KarnetFragment extends Fragment
         super.onDestroyView();
 
         ((InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                .hideSoftInputFromWindow(requireView().getWindowToken(), 0);
     }
 }

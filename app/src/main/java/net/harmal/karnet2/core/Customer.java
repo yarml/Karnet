@@ -1,8 +1,15 @@
 package net.harmal.karnet2.core;
 
+import net.harmal.karnet2.savefile.Savable;
+import net.harmal.karnet2.savefile.Utils;
+
 import org.jetbrains.annotations.NotNull;
 
-public class Customer
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+public class Customer implements Savable
 {
     private int    cid         ;
     private Date   creationDate;
@@ -63,5 +70,29 @@ public class Customer
     public void phoneNum(@NotNull String nphoneNum)
     {
         phoneNum = nphoneNum;
+    }
+
+    @Override
+    public void writeData(@NotNull DataOutputStream stream) throws IOException
+    {
+        stream.writeInt(cid);
+        creationDate.writeData(stream);
+        Utils.writeString(name, stream);
+        Utils.writeString(city, stream);
+        Utils.writeString(phoneNum, stream);
+    }
+    public static class CustomerBuilder implements Savable.BUILDER<Customer>
+    {
+        @Override
+        public Customer readData(int version, @NotNull ByteBuffer buffer)
+        {
+            int cid = buffer.getInt();
+            Date.DateBuilder dateBuilder = new Date.DateBuilder();
+            Date date = dateBuilder.readData(version, buffer);
+            String name = Utils.readString(buffer);
+            String city = Utils.readString(buffer);
+            String phoneNum = Utils.readString(buffer);
+            return new Customer(cid, date, name, phoneNum, city);
+        }
     }
 }

@@ -32,9 +32,19 @@ public class CategorySingleChoiceDialog extends KarnetDialogFragment
                                       RadioGroup.OnCheckedChangeListener checkedChangeListener,
                                       IBinder windowToken)
     {
+        this(context, title, categories,
+                checkedChangeListener, true,
+                windowToken);
+    }
+
+    public CategorySingleChoiceDialog(Context context, @StringRes int title, @NonNull List<ProductCategory> categories,
+                                      RadioGroup.OnCheckedChangeListener checkedChangeListener,
+                                      boolean newOption, IBinder windowToken)
+    {
         super(title, R.layout.dialog_single_category_choice, windowToken);
         this.categories = new ArrayList<>();
-        this.categories.add(new ProductCategory(context.getResources().getString(R.string.new_categ)));
+        if(newOption)
+            this.categories.add(new ProductCategory(context.getResources().getString(R.string.new_categ)));
         this.categories.addAll(categories);
         this.checkedChangeListener = checkedChangeListener;
     }

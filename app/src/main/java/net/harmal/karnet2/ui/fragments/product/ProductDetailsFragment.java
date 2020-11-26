@@ -100,7 +100,7 @@ public class ProductDetailsFragment extends KarnetFragment
     private void onExtraButtonClick(View v)
     {
         ExtraCategoryDetailsDialog dialog = new ExtraCategoryDetailsDialog(R.string.all_extras,
-                ProductRegister.getProduct(pid).extra(), getView().getWindowToken());
+                ProductRegister.getProduct(pid).extra(), requireView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }
 }

@@ -18,4 +18,15 @@ public class Logs
         Log.e("ERROR", m);
         logBuilder.append("ERROR: ").append(m).append('\n');
     }
+
+    public static void info(@NotNull String m)
+    {
+        Log.i("INFO", m);
+        logBuilder.append("INFO: ").append(m).append('\n');
+    }
+
+    public static String getLogs()
+    {
+        return logBuilder.toString();
+    }
 }

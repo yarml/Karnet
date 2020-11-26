@@ -26,8 +26,6 @@ import net.harmal.karnet2.ui.dialogs.CategorySingleChoiceDialog;
 import net.harmal.karnet2.ui.dialogs.NumberInputDialog;
 import net.harmal.karnet2.ui.dialogs.StringInputDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
-import net.harmal.karnet2.utils.EventHandler;
-import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -114,9 +112,9 @@ public class ProductAddModifyFragment extends KarnetFragment
 
         // Setting buttons behavior
         baseBtn.setOnClickListener (v -> onSelectButtonClick(R.string.select_base_ingredient, ProductRegister.getIngredients(), this::onBaseSet ));
-        fatBtn.setOnClickListener  (v -> onSelectButtonClick(R.string.select_fat            , ProductRegister.getFats()       , this::onFatSet  ));
-        shapeBtn.setOnClickListener(v -> onSelectButtonClick(R.string.select_shape          , ProductRegister.getShape()      , this::onShapeSet));
-        typeBtn.setOnClickListener (v -> onSelectButtonClick(R.string.select_type           , ProductRegister.getType()       , this::onTypeSet ));
+        fatBtn.setOnClickListener  (v -> onSelectButtonClick(R.string.select_fat            , ProductRegister.getFats(       ), this::onFatSet  ));
+        shapeBtn.setOnClickListener(v -> onSelectButtonClick(R.string.select_shape          , ProductRegister.getShape(      ), this::onShapeSet));
+        typeBtn.setOnClickListener (v -> onSelectButtonClick(R.string.select_type           , ProductRegister.getType(       ), this::onTypeSet ));
         extraBtn.setOnClickListener(this::onExtraSelectButtonClick);
     }
 
@@ -127,7 +125,6 @@ public class ProductAddModifyFragment extends KarnetFragment
     }
 
     @Override
-    @EventHandler
     public void onMenuOptionsSelected(MenuItem item, NavController navController)
     {
         super.onMenuOptionsSelected(item, navController);
@@ -194,23 +191,22 @@ public class ProductAddModifyFragment extends KarnetFragment
         }
     }
 
-    @EventHandler
     private void onSelectButtonClick(@StringRes int title, List<ProductCategory> categories, ProductSetter setter)
     {
         assert getContext() != null;
         CategorySingleChoiceDialog dialog = new CategorySingleChoiceDialog(getContext(),
                 title, categories, (group, checkedId) ->
-                onCategoryChecked(group, categories, checkedId, setter), getView().getWindowToken());
+                onCategoryChecked(group, categories, checkedId, setter), requireView().getWindowToken());
 
         dialog.show(getChildFragmentManager(), "");
     }
 
-    @EventHandler
     private void onCategoryChecked(@NotNull RadioGroup group, List<ProductCategory> categories, int checkedId, ProductSetter setter)
     {
         int position = (int) group.findViewById(checkedId).getTag();
         if(position == 0)
         {
+            assert getView() != null;
             // Create a new product category
             StringInputDialog dialog = new StringInputDialog(R.string.enter_name, true,
                     input -> setter.set(new ProductCategory(input)), getView().getWindowToken());
@@ -220,43 +216,38 @@ public class ProductAddModifyFragment extends KarnetFragment
             setter.set(categories.get(position - 1));
     }
 
-    @EventHandler
     private void onUnitPriceButtonClick(View v)
     {
+        assert getView() != null;
         NumberInputDialog dialog = new NumberInputDialog(R.string.choose_price,
                 1, 100, this::onNumberInputReturn, getView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }
 
     @SuppressLint("DefaultLocale")
-    @EventHandler
     private void onNumberInputReturn(int input)
     {
         unitPriceEdit.setText(String.format("%d", input));
     }
 
-    @EventHandler
     private void onBaseSet(@NotNull ProductCategory value)
     {
         baseCategory = value;
         baseBtn.setText(value.displayName());
     }
 
-    @EventHandler
     private void onFatSet(@NotNull ProductCategory value)
     {
         fatCategory = value;
         fatBtn.setText(value.displayName());
     }
 
-    @EventHandler
     private void onShapeSet(@NotNull ProductCategory value)
     {
         shapeCategory = value;
         shapeBtn.setText(value.displayName());
     }
 
-    @EventHandler
     private void onTypeSet(@NotNull ProductCategory value)
     {
         typeCategory = value;
@@ -264,7 +255,6 @@ public class ProductAddModifyFragment extends KarnetFragment
         baseBtn.setText(baseCategory.displayName());
     }
 
-    // TODO: Find another way to modify categories
     private interface ProductSetter
     {
         void set(ProductCategory value);
@@ -273,7 +263,7 @@ public class ProductAddModifyFragment extends KarnetFragment
     private void onExtraSelectButtonClick(View v)
     {
         CategoryMultiChoiceDialog dialog = new CategoryMultiChoiceDialog(R.string.select_extra, ProductRegister.getExtras(),
-                this::onExtraItemsSelected, getView().getWindowToken());
+                this::onExtraItemsSelected, requireView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }
 

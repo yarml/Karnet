@@ -9,9 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
@@ -29,12 +26,9 @@ import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.CustomerListAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
-import net.harmal.karnet2.utils.EventHandler;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class CustomerFragment extends KarnetFragment
 {
@@ -46,12 +40,6 @@ public class CustomerFragment extends KarnetFragment
     public CustomerFragment()
     {
         super(R.layout.fragment_customer);
-    }
-
-    public static class TestViewModel extends ViewModel
-    {
-        public boolean testVal = false;
-        public TestViewModel(){}
     }
 
     @Override
@@ -66,8 +54,8 @@ public class CustomerFragment extends KarnetFragment
         customerList              = view.findViewById(R.id.recycler_customer_list);
         customerListLayoutManager = new LinearLayoutManager(getContext());
         customerListAdapter       = new CustomerListAdapter(CustomerRegister.get());
-        customerListAdapter.setOnItemInputListener(new OnItemInputListener.Builder(this::onItemClick, this::onItemLongClick));
 
+        customerListAdapter.setOnItemInputListener(new OnItemInputListener.Builder(this::onItemClick, this::onItemLongClick));
         customerList.setLayoutManager(customerListLayoutManager);
         customerList.setAdapter(customerListAdapter);
 
@@ -82,23 +70,9 @@ public class CustomerFragment extends KarnetFragment
             noCustomerText.setVisibility(View.GONE);
             customerList.setVisibility(View.VISIBLE);
         }
-
-        TestViewModel model = new ViewModelProvider(this).get(TestViewModel.class);
-
-        if(model.testVal)
-        {
-            model.testVal = false;
-            Logs.debug("Was true became false");
-        }
-        else
-        {
-            model.testVal = true;
-            Logs.debug("Was false became true");
-        }
     }
 
     @Override
-    @EventHandler
     public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController) {
         if(item.getItemId() == R.id.option_add_customer)
         {
@@ -115,14 +89,18 @@ public class CustomerFragment extends KarnetFragment
     /**
      * Handles clicks on the recycler view items
      */
-    @EventHandler
-    private void onItemClick(View view, int position)
+    private void onItemClick(@NotNull View view, int position)
     {
         if(view.getId() == R.id.btn_customer_delete)
         {
-            Customer c = CustomerRegister.get().get(position);
+            Customer c = customerListAdapter.getVisibleCustomerList().get(position);
             CustomerRegister.remove(c.cid());
-            customerListAdapter.notifyItemRemoved(position);
+            customerListAdapter.update();
+            // TODO: experiment with this, try to understand it first please,
+            //  don't just delete this line thinking "I changed my mind"
+            // Later
+            // I actually forgot what it was about
+            // customerListAdapter.notifyItemRemoved(position);
             assert getView() != null;
             Snackbar undo = Snackbar.make(getView(), R.string.customer_removed, Snackbar.LENGTH_LONG);
             undo.setAction(R.string.undo, this::onUndoCustomerDeletion);
@@ -138,7 +116,7 @@ public class CustomerFragment extends KarnetFragment
                 Animations.popOut(deleteButton);
                 return;
             }
-            Customer c = CustomerRegister.get().get(position);
+            Customer c = customerListAdapter.getVisibleCustomerList().get(position);
             NavDirections action = CustomerFragmentDirections
                     .actionCustomerFragmentToCustomerDetailsFragment(c.cid(), c.name());
             NavHostFragment.findNavController(this).navigate(action);
@@ -148,7 +126,6 @@ public class CustomerFragment extends KarnetFragment
     /**
      * Handles long clicks on the recycler view items
      */
-    @EventHandler
     private void onItemLongClick(View view, int position)
     {
         View v = customerListLayoutManager.findViewByPosition(position);
@@ -160,12 +137,13 @@ public class CustomerFragment extends KarnetFragment
             Animations.popOut(deleteButton);
     }
 
-    @EventHandler
     private void onUndoCustomerDeletion(View v)
     {
-        // TODO: must change item insertion position to enable list sorting
-        CustomerRegister.add(Trash.popCustomer());
-        customerListAdapter.notifyItemInserted(CustomerRegister.size() - 1);
+        int cid = CustomerRegister.add(Trash.popCustomer());
+        Customer c = CustomerRegister.getCustomer(cid);
+        customerListAdapter.update();
+        if(customerListAdapter.getVisibleCustomerList().contains(c))
+            customerListAdapter.notifyItemInserted(customerListAdapter.getVisibleCustomerList().size() - 1);
     }
 
     @Override

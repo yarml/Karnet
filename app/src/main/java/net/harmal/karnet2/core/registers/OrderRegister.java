@@ -6,6 +6,7 @@ import net.harmal.karnet2.core.Stack;
 import net.harmal.karnet2.core.Trash;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,17 @@ public class OrderRegister
                 break;
             }
         }
+    }
+
+    @Nullable
+    public static Order getOrder(int oid)
+    {
+        if(orderRegister == null)
+            orderRegister = new ArrayList<>();
+        for(Order o : orderRegister)
+            if(o.oid() == oid)
+                return o;
+        return null;
     }
 
     @NotNull

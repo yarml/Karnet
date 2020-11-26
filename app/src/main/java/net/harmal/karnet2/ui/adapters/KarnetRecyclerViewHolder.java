@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
-import net.harmal.karnet2.utils.EventHandler;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,6 @@ public abstract class KarnetRecyclerViewHolder extends RecyclerView.ViewHolder
         }
     }
 
-    @EventHandler
     private void onClick(View v)
     {
         Logs.debug("Recycler holder child view clicked");
@@ -51,7 +49,6 @@ public abstract class KarnetRecyclerViewHolder extends RecyclerView.ViewHolder
                 l.onItemClick(v, position);
     }
 
-    @EventHandler
     private boolean onLongClick(View v)
     {
         Logs.debug("Recycler holder child view long clicked");

@@ -43,14 +43,15 @@ public abstract class KarnetDialogFragment extends AppCompatDialogFragment
     private int negative = R.string.dialog_negative;
     @StringRes
     private int neutral  = R.string.dialog_neutral;
-    private IBinder windowToken;
+    private final IBinder windowToken;
 
+    private View view;
 
     private DialogInterface.OnClickListener positiveListener;
     private DialogInterface.OnClickListener negativeListener;
     private DialogInterface.OnClickListener neutralListener ;
 
-    private List<CustomDismissEvent> customDismissEvents;
+    private final List<CustomDismissEvent> customDismissEvents;
 
 
     public KarnetDialogFragment(@StringRes int title, @LayoutRes int layout, IBinder windowToken)
@@ -66,11 +67,17 @@ public abstract class KarnetDialogFragment extends AppCompatDialogFragment
         customDismissEvents.add(e);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        return view;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState)
     {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(title);
         View view = getLayoutInflater().inflate(layout, null);
@@ -84,6 +91,7 @@ public abstract class KarnetDialogFragment extends AppCompatDialogFragment
 
         onCreatingDialog(view, builder);
         builder.setView(view);
+        this.view = view;
         return builder.create();
     }
 

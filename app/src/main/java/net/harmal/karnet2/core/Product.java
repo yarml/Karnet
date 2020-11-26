@@ -1,10 +1,17 @@
 package net.harmal.karnet2.core;
 
+import net.harmal.karnet2.savefile.Savable;
+import net.harmal.karnet2.savefile.Utils;
+
 import org.jetbrains.annotations.NotNull;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Product
+public class Product implements Savable
 {
     private int          pid                    ;
     private short        unitPrice              ;
@@ -108,5 +115,42 @@ public class Product
     public void extra(List<ProductCategory> extra)
     {
         this.extra = extra;
+    }
+
+    @Override
+    public void writeData(@NotNull DataOutputStream stream) throws IOException
+    {
+        stream.writeInt(pid);
+        stream.writeShort(unitPrice);
+        stream.writeInt(extra.size());
+        Utils.writeString(name, stream);
+        baseIngredient.writeData(stream);
+        fat.writeData(stream);
+        shape.writeData(stream);
+        type.writeData(stream);
+        for(ProductCategory c : extra)
+            c.writeData(stream);
+    }
+
+    public static class ProductBuilder implements BUILDER<Product>
+    {
+        @Override
+        public Product readData(int version, @NotNull ByteBuffer buffer)
+        {
+            int pid = buffer.getInt();
+            int unitPrice = buffer.getShort();
+            int extraCount = buffer.getInt();
+            String name = Utils.readString(buffer);
+            ProductCategory.ProductCategoryBuilder builder = new ProductCategory
+                    .ProductCategoryBuilder();
+            ProductCategory base  = builder.readData(version, buffer);
+            ProductCategory fat   = builder.readData(version, buffer);
+            ProductCategory shape = builder.readData(version, buffer);
+            ProductCategory type  = builder.readData(version, buffer);
+            List<ProductCategory> extra = new ArrayList<>();
+            for(int i = 0; i < extraCount; i++)
+                extra.add(builder.readData(version, buffer));
+            return new Product(pid, unitPrice, name, base, fat, shape, type, extra);
+        }
     }
 }

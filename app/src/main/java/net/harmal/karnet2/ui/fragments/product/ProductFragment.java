@@ -71,7 +71,7 @@ public class ProductFragment extends KarnetFragment
     }
 
     @Override
-    public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
+    public boolean onOptionsItemSelected(@NotNull MenuItem item)
     {
         if(item.getItemId() == R.id.options_add_product)
         {
@@ -79,8 +79,9 @@ public class ProductFragment extends KarnetFragment
                     ProductFragmentDirections.actionProductFragmentToProductAddModifyFragment(
                             -1, getString(R.string.add_product)
                     );
-            navController.navigate(action);
+            NavHostFragment.findNavController(this).navigate(action);
         }
+        return true;
     }
 
     private void onItemClick(@NotNull View view, int position)

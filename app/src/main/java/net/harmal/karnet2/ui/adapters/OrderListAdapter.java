@@ -60,7 +60,6 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position)
     {
         Order current = orderList.get(position);
-
         holder.nameView.setText(String.format("Pour %s", CustomerRegister.getCustomer(current.cid()).name()));
         holder.dateView.setText(String.format("Pour le: %s", current.dueDate().toString()));
         holder.deleteBtn.setVisibility(View.GONE);

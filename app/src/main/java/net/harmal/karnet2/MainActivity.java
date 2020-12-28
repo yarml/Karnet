@@ -11,24 +11,18 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
 import net.harmal.karnet2.savefile.SaveFileRW;
-import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -39,8 +33,6 @@ public class MainActivity extends AppCompatActivity
     private AppBarConfiguration appBarConfiguration;
     private NavigationView      navigationView     ;
     private NavHostFragment     navHostFragment    ;
-
-    private List<KarnetFragment> childFragments     ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -61,6 +53,7 @@ public class MainActivity extends AppCompatActivity
                 R.id.customerFragment, R.id.productFragment, R.id.aboutFragment)
                 .setOpenableLayout(drawerLayout)
                 .build();
+
 
         navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_activity_main_fragment);
@@ -86,27 +79,6 @@ public class MainActivity extends AppCompatActivity
         {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Bind each fragment with its options menu
-     */
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        assert getCurrentFragment() != null;
-        getMenuInflater().inflate(getCurrentFragment().getOptionsMenu(), menu);
-        return true;
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        assert getCurrentFragment() != null;
-        getCurrentFragment().onMenuOptionsSelected(item, navController);
-        return true;
     }
 
     /**
@@ -138,6 +110,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void onNavigationReturnClicked(View view)
     {
+        Logs.debug("navig return clicked");
         assert navController.getCurrentDestination() != null;
         if (appBarConfiguration.getTopLevelDestinations()
                 .contains(navController.getCurrentDestination().getId())) // Top level destination
@@ -147,16 +120,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Register child fragments
-     * for later use by the Activity
-     */
-    public void onRegisterFragment(KarnetFragment child)
-    {
-        if(childFragments == null)
-            childFragments = new ArrayList<>();
-        childFragments.add(child);
-    }
 
     /**
      * Animates the drawer icon and makes sure it
@@ -169,14 +132,5 @@ public class MainActivity extends AppCompatActivity
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
         }
-    }
-
-    @Nullable
-    private KarnetFragment getCurrentFragment()
-    {
-        for(KarnetFragment f : childFragments)
-            if(f.isVisible())
-                return f;
-        return null;
     }
 }

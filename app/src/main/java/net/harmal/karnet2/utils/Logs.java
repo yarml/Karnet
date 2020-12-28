@@ -25,6 +25,7 @@ public class Logs
         logBuilder.append("INFO: ").append(m).append('\n');
     }
 
+    @NotNull
     public static String getLogs()
     {
         return logBuilder.toString();

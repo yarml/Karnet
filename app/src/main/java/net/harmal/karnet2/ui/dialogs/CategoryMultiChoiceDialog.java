@@ -1,14 +1,12 @@
 package net.harmal.karnet2.ui.dialogs;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.IBinder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 import androidx.annotation.StringRes;
 
@@ -29,8 +27,8 @@ public class CategoryMultiChoiceDialog extends KarnetDialogFragment
 
     private EditText              newCategoriesEdit;
     private List<CheckBox>        checkboxes       ;
-    private List<ProductCategory> categoryList     ;
-    private boolean showNew;
+    private final List<ProductCategory> categoryList     ;
+    private final boolean showNew;
 
     public CategoryMultiChoiceDialog(@StringRes int title, @NotNull List<ProductCategory> categories,
                                      CategoryMultiChoiceDialogInterface categoryMultiChoiceDialogInterface,

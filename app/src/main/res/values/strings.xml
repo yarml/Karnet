@@ -74,11 +74,6 @@
     <string name="hint_order_date">Date de livraison</string>
     <string name="choose_customer">Choisir un client</string>
     <string name="select_customer">Sélectionner un client</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
     <string name="hint_filter">Filtre</string>
     <string name="select_delivery_price">Sélectionner le prix de livraison</string>
     <string name="invalid_customer">Veuiller choisir un client</string>
@@ -88,4 +83,10 @@
     <string name="add_products">Veuiller ajouter un produit</string>
     <string name="confirmation">Confirmation</string>
     <string name="insufficient_stock">Stock insuffisant</string>
+    <string name="search">Recherche</string>
+    <string name="modify_order_label">Modifier la commande pour: %s</string>
+    <string name="confirm_order_delete">Êtes vous sûr de vouloir valider la commande de %s?</string>
+    <string name="order_details_label">Commande pour: %s</string>
+    <string name="total_price">Total: %d dhs</string>
+    <string name="currency">%d dhs</string>
 </resources>

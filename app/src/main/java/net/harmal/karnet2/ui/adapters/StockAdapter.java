@@ -4,16 +4,12 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Product;
-import net.harmal.karnet2.core.Stack;
-import net.harmal.karnet2.core.registers.ProductRegister;
 import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
@@ -21,10 +17,10 @@ import java.util.List;
 
 public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHolder>
 {
-    public class StockItemHolder extends KarnetRecyclerViewHolder
+    public static class StockItemHolder extends KarnetRecyclerViewHolder
     {
-        private TextView    productName;
-        private TextView    count;
+        private final TextView    productName;
+        private final TextView    count;
 
         public StockItemHolder(@NonNull View itemView, OnItemInputListener listener)
         {

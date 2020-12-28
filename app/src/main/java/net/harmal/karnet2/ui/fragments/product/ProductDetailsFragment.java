@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Product;
@@ -17,6 +18,8 @@ import net.harmal.karnet2.core.ProductCategory;
 import net.harmal.karnet2.core.registers.ProductRegister;
 import net.harmal.karnet2.ui.dialogs.ExtraCategoryDetailsDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ProductDetailsFragment extends KarnetFragment
 {
@@ -84,7 +87,7 @@ public class ProductDetailsFragment extends KarnetFragment
     }
 
     @Override
-    public void onMenuOptionsSelected(MenuItem item, NavController navController)
+    public boolean onOptionsItemSelected(@NotNull MenuItem item)
     {
         if(item.getItemId() == R.id.options_edit_product)
         {
@@ -93,8 +96,9 @@ public class ProductDetailsFragment extends KarnetFragment
 
             NavDirections action = ProductDetailsFragmentDirections
                     .actionProductDetailsFragmentToProductAddModifyFragment(pid, p.name());
-            navController.navigate(action);
+            NavHostFragment.findNavController(this).navigate(action);
         }
+        return true;
     }
 
     private void onExtraButtonClick(View v)

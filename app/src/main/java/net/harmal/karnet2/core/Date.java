@@ -124,14 +124,6 @@ public class Date implements Savable
         return new Date(LocalDate.now());
     }
     @NotNull
-    @Contract(" -> new")
-    public static Date tomorrow()
-    {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
-            return new Date(2, 1, 2019);
-        return new Date(LocalDate.now().plusDays(1));
-    }
-    @NotNull
     @Contract("_ -> new")
     public static Date afterDays(int days)
     {

@@ -16,6 +16,9 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out"/>
+        <action
+            android:id="@+id/action_orderFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/customerFragment"
@@ -162,6 +165,21 @@
         android:name="net.harmal.karnet2.ui.fragments.order.OrderAddModifyFragment"
         android:label="{label}"
         tools:layout="@layout/fragment_add_modify_order" >
+        <argument
+            android:name="oid"
+            app:argType="integer" />
+        <argument
+            android:name="label"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="net.harmal.karnet2.ui.fragments.order.OrderDetailsFragment"
+        android:label="{label}"
+        tools:layout="@layout/fragment_details_order">
+        <action
+            android:id="@+id/action_orderDetailsFragment_to_orderAddModifyFragment"
+            app:destination="@id/orderAddModifyFragment" />
         <argument
             android:name="oid"
             app:argType="integer" />

@@ -1,5 +1,6 @@
 package net.harmal.karnet2.core;
 
+import net.harmal.karnet2.core.registers.ProductRegister;
 import net.harmal.karnet2.savefile.Savable;
 
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +70,18 @@ public class Order implements Savable
     public void dueDate(@NotNull Date ndate)
     {
         this.dueDate = ndate;
+    }
+
+    public int totalPrice()
+    {
+        int price = 0;
+        for(Stack s : stacks)
+        {
+            Product p = ProductRegister.getProduct(s.pid());
+            assert p != null;
+            price += p.unitPrice() * s.count();
+        }
+        return price + deliveryPrice;
     }
 
     public void add(int pid, int count)

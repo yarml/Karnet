@@ -8,12 +8,13 @@ import android.widget.NumberPicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.harmal.karnet2.R;
-import net.harmal.karnet2.core.Stack;
 import net.harmal.karnet2.core.registers.Stock;
+
+import org.jetbrains.annotations.NotNull;
 
 public class StockItemCountModifyDialog extends KarnetDialogFragment
 {
-    private int pid;
+    private final int pid;
 
     private NumberPicker         numberPicker;
     private FloatingActionButton setBtn      ;
@@ -27,7 +28,7 @@ public class StockItemCountModifyDialog extends KarnetDialogFragment
     }
 
     @Override
-    protected void onCreatingDialog(View v, AlertDialog.Builder builder)
+    protected void onCreatingDialog(@NotNull View v, AlertDialog.Builder builder)
     {
         numberPicker = v.findViewById(R.id.number_picker_stock_number_input);
         numberPicker.setMinValue(0);

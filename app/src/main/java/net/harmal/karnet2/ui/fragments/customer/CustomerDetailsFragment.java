@@ -9,6 +9,8 @@ import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
@@ -54,20 +56,21 @@ public class CustomerDetailsFragment extends KarnetFragment
     }
 
     @Override
-    public void onMenuOptionsSelected(MenuItem item, NavController navController) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.options_edit_customer)
         {
             Customer c = CustomerRegister.getCustomer(cid);
             assert c != null;
             Date date  = c.creationDate();
 
-            CustomerDetailsFragmentDirections.ActionCustomerDetailsFragmentToCustomerAddModifyFragment action =
-                    CustomerDetailsFragmentDirections.actionCustomerDetailsFragmentToCustomerAddModifyFragment(cid,
+            NavDirections action = CustomerDetailsFragmentDirections
+                    .actionCustomerDetailsFragmentToCustomerAddModifyFragment(cid,
                             "Modifier " + c.name(), c.name(), c.phoneNum(), c.city(),
                             date.day(), date.month(), date.year());
 
-            navController.navigate(action);
+            NavHostFragment.findNavController(this).navigate(action);
         }
+        return true;
     }
 
     @Override

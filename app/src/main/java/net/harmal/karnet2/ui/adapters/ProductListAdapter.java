@@ -23,9 +23,9 @@ public class ProductListAdapter extends KarnetRecyclerAdapter<ProductListAdapter
 {
     public static class ProductListViewHolder extends KarnetRecyclerViewHolder
     {
-        private TextView    productName;
-        private TextView    priceStats ;
-        private ImageButton deleteBtn  ;
+        private final TextView    productName;
+        private final TextView    priceStats ;
+        private final ImageButton deleteBtn  ;
 
         public ProductListViewHolder(@NonNull View itemView, OnItemInputListener listener)
         {

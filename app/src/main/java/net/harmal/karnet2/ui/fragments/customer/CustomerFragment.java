@@ -1,15 +1,18 @@
 package net.harmal.karnet2.ui.fragments.customer;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +28,9 @@ import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.CustomerListAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
+import net.harmal.karnet2.ui.listeners.OnActionExpandListenerBuilder;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
+import net.harmal.karnet2.ui.listeners.OnQueryTextListenerBuilder;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,12 +55,12 @@ public class CustomerFragment extends KarnetFragment
 
         noCustomerText = view.findViewById(R.id.text_fragment_customer_no_customer);
 
-
         customerList              = view.findViewById(R.id.recycler_customer_list);
         customerListLayoutManager = new LinearLayoutManager(getContext());
         customerListAdapter       = new CustomerListAdapter(CustomerRegister.get());
 
-        customerListAdapter.setOnItemInputListener(new OnItemInputListener.Builder(this::onItemClick, this::onItemLongClick));
+        customerListAdapter.setOnItemInputListener(new OnItemInputListener
+                .Builder(this::onItemClick, this::onItemLongClick));
         customerList.setLayoutManager(customerListLayoutManager);
         customerList.setAdapter(customerListAdapter);
 
@@ -73,17 +78,40 @@ public class CustomerFragment extends KarnetFragment
     }
 
     @Override
-    public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(R.id.option_customer_search);
+        searchItem.setOnActionExpandListener(new OnActionExpandListenerBuilder(null,
+                this::onSearchClose).build());
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setIconifiedByDefault(false);
+        searchView.setIconified(false);
+        ViewGroup.LayoutParams params = new ViewGroup
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT              );
+        searchView.setLayoutParams(params);
+        searchView.setOnQueryTextListener(new OnQueryTextListenerBuilder(this::onSearchChange,
+                                                                         this::onSearchChange)
+                                                                         .build());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        Logs.debug("OptionsItemClicked");
         if(item.getItemId() == R.id.option_add_customer)
         {
             Date today = Date.today();
-            CustomerFragmentDirections.ActionCustomerFragmentToCustomerAddModifyFragment action = CustomerFragmentDirections
+            CustomerFragmentDirections.ActionCustomerFragmentToCustomerAddModifyFragment action
+                    = CustomerFragmentDirections
                     .actionCustomerFragmentToCustomerAddModifyFragment(
                             -1, getString(R.string.fragment_add_customer_label),
                             "", "", "",
                             today.day(), today.month(), today.year());
-            navController.navigate(action);
+            NavHostFragment.findNavController(this).navigate(action);
         }
+        return true;
     }
 
     /**
@@ -100,9 +128,9 @@ public class CustomerFragment extends KarnetFragment
             //  don't just delete this line thinking "I changed my mind"
             // Later
             // I actually forgot what it was about
+            // I should have described how it worked.
             // customerListAdapter.notifyItemRemoved(position);
-            assert getView() != null;
-            Snackbar undo = Snackbar.make(getView(), R.string.customer_removed, Snackbar.LENGTH_LONG);
+            Snackbar undo = Snackbar.make(requireView(), R.string.customer_removed, Snackbar.LENGTH_LONG);
             undo.setAction(R.string.undo, this::onUndoCustomerDeletion);
             undo.show();
         }
@@ -151,5 +179,21 @@ public class CustomerFragment extends KarnetFragment
     public int getOptionsMenu()
 {
         return R.menu.options_menu_customer;
+    }
+
+    private boolean onSearchChange(String text)
+    {
+        customerListAdapter.filter(text);
+        return true;
+    }
+
+    private boolean onSearchClose(@NotNull MenuItem item)
+    {
+        Logs.debug("Search closed");
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQuery("", false);
+        hideSoftwareKeyboard();
+        // Refiltering the list is done automatically when we set query to empty
+        return true;
     }
 }

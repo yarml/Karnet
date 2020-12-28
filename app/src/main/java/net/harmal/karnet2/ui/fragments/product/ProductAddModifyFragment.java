@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Product;
@@ -125,9 +126,9 @@ public class ProductAddModifyFragment extends KarnetFragment
     }
 
     @Override
-    public void onMenuOptionsSelected(MenuItem item, NavController navController)
+    public boolean onOptionsItemSelected(@NotNull MenuItem item)
     {
-        super.onMenuOptionsSelected(item, navController);
+        super.onOptionsItemSelected(item);
 
         if(item.getItemId() == R.id.options_add_product_validate)
         {
@@ -137,37 +138,37 @@ public class ProductAddModifyFragment extends KarnetFragment
             {
                 Animations.shake(nameEdit);
                 Toast.makeText(getContext(), R.string.add_product_invalid_name, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
             if(unitPrice.isEmpty())
             {
                 Animations.shake(unitPriceEdit);
                 Toast.makeText(getContext(), R.string.add_product_invalid_unit_price, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
             if(baseCategory == null)
             {
                 Animations.shake(baseBtn);
                 Toast.makeText(getContext(), R.string.add_product_invalid_base, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
             if(fatCategory == null)
             {
                 Animations.shake(fatBtn);
                 Toast.makeText(getContext(), R.string.add_product_invalid_fat, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
             if(shapeCategory == null)
             {
                 Animations.shake(shapeBtn);
                 Toast.makeText(getContext(), R.string.add_product_invalid_shape, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
             if(typeCategory == null)
             {
                 Animations.shake(typeBtn);
                 Toast.makeText(getContext(), R.string.add_product_invalid_type, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
             int unitPriceInt = Integer.parseInt(unitPrice); // Shouldn't throw any error
 
@@ -187,8 +188,9 @@ public class ProductAddModifyFragment extends KarnetFragment
                 p.extra(extraCategory           );
             }
 
-            navController.navigateUp();
+            NavHostFragment.findNavController(this).navigateUp();
         }
+        return true;
     }
 
     private void onSelectButtonClick(@StringRes int title, List<ProductCategory> categories, ProductSetter setter)

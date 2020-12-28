@@ -63,10 +63,7 @@ public class SaveFileRW
                 buf.flip();
             }
             else
-            {
-                OldSaveFormat.load(path);
                 return;
-            }
         }
         else
             if(Files.exists(Paths.get(path + "/" + SAVE_FILE_NAME)))
@@ -75,10 +72,7 @@ public class SaveFileRW
                                 path + "/" + SAVE_FILE_NAME
                                 )));
             else
-            {
-                OldSaveFormat.load(path);
                 return;
-            }
         Logs.debug("Reading new format save file");
 
         // Read pre head
@@ -219,34 +213,5 @@ public class SaveFileRW
         rawBytesStream.close();
 
         Logs.debug("Data Saved");
-    }
-
-    @NotNull
-    private static String readString(@NotNull ByteBuffer buf)
-    {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        for(byte b = buf.get(); b != 0; b = buf.get())
-            stream.write(b);
-        return new String(stream.toByteArray(), StandardCharsets.ISO_8859_1);
-    }
-
-    public static void putString(@NotNull ByteBuffer buf, @NotNull String s)
-    {
-        for(byte c : s.getBytes(StandardCharsets.ISO_8859_1))
-            buf.put(c);
-        buf.put((byte) 0);
-    }
-
-    /**
-     * This is for debug
-     */
-    @NotNull
-    public static String stringToHex(@NotNull String in)
-    {
-        StringBuilder builder = new StringBuilder();
-        for(byte c : in.getBytes(StandardCharsets.ISO_8859_1))
-            builder.append(String.format("%h ", c));
-        builder.append("00");
-        return builder.toString();
     }
 }

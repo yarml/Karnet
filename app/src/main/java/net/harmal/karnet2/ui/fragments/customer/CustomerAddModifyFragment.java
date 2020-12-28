@@ -11,13 +11,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
@@ -31,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class CustomerAddModifyFragment extends KarnetFragment
 {
-    private LinearLayout         layout     ;
     private EditText             nameEdit   ;
     private EditText             phoneEdit  ;
     private AutoCompleteTextView cityEdit   ;
@@ -54,7 +52,6 @@ public class CustomerAddModifyFragment extends KarnetFragment
 
         cid = args.getCid();
 
-        layout      = view.findViewById(R.id.fragment_add_modify_customer_layout  );
         nameEdit    = view.findViewById(R.id.edit_text_add_customer_name          );
         phoneEdit   = view.findViewById(R.id.edit_text_add_customer_phone         );
         cityEdit    = view.findViewById(R.id.edit_text_add_customer_city          );
@@ -63,7 +60,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
 
         // Setting city suggestions
         assert getContext() != null;
-        ArrayAdapter<String> citySuggestions = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> citySuggestions = new ArrayAdapter<>(getContext(),
                 R.layout.support_simple_spinner_dropdown_item
                 , getResources().getStringArray(R.array.suggestions_cities));
         cityEdit.setAdapter(citySuggestions);
@@ -92,7 +89,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
     }
 
     @Override
-    public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
+    public boolean onOptionsItemSelected(@NotNull MenuItem item)
     {
         if(item.getItemId() == R.id.options_add_customer_validate)
         {
@@ -106,13 +103,13 @@ public class CustomerAddModifyFragment extends KarnetFragment
             {
                 Animations.shake(nameEdit);
                 Toast.makeText(getContext(), R.string.name_too_short, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
             if(cityStr.length() == 0)
             {
                 Animations.shake(cityEdit);
                 Toast.makeText(getContext(), R.string.city_too_short, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
 
             // format and check phoneStr num
@@ -135,7 +132,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
             {
                 Animations.shake(phoneEdit);
                 Toast.makeText(getContext(), R.string.toast_invalid_phone_num, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
 
             // format and check date
@@ -148,7 +145,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
             {
                 Animations.shake(dateEdit);
                 Toast.makeText(getContext(), R.string.invalid_date, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
 
             // Everything okay
@@ -157,14 +154,15 @@ public class CustomerAddModifyFragment extends KarnetFragment
             else
             {
                 Customer c = CustomerRegister.getCustomer(cid);
+                assert c != null;
                 c.name(nameStr     );
                 c.phoneNum(phoneStr);
                 c.city(cityStr     );
                 c.creationDate(date);
             }
-
-            navController.navigateUp();
+            NavHostFragment.findNavController(this).navigateUp();
         }
+        return true;
     }
 
     /**
@@ -186,7 +184,7 @@ public class CustomerAddModifyFragment extends KarnetFragment
     private void onDateEditButtonClicked(View v)
     {
         Date defaultDate = new Date(dateEdit.getText().toString());
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), 0, this::onDatePickerDateSet,
+        DatePickerDialog dialog = new DatePickerDialog(requireContext(), 0, this::onDatePickerDateSet,
                 defaultDate.year(), defaultDate.month() - 1, defaultDate.day());
         dialog.show();
     }

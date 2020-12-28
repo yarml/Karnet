@@ -31,7 +31,7 @@ public class OrderRegister
     public static int add(int oid, int cid, int deliveryPrice, List<Stack> stacks, Date dueDate)
     {
         if(orderRegister == null)
-            orderRegister = new ArrayList<Order>();
+            orderRegister = new ArrayList<>();
         if(cid < 0) // CID must be positive
         {
             return add(0, cid, deliveryPrice, stacks, dueDate);

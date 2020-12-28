@@ -32,7 +32,7 @@ public class CustomerRegister
     public static int add(int cid, @NotNull String name, @NotNull String city, @NotNull String phoneNum, @NotNull Date creationDate)
     {
         if(customerRegister == null)
-            customerRegister = new ArrayList<Customer>();
+            customerRegister = new ArrayList<>();
         if(cid < 0) // CID must be positive
         {
             return add(0, name, city, phoneNum, creationDate);

@@ -30,6 +30,7 @@ public class ProductCategory implements Savable
         return  false;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return displayName();

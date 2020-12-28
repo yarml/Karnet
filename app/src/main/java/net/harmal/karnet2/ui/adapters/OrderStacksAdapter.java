@@ -23,22 +23,30 @@ public class OrderStacksAdapter extends KarnetRecyclerAdapter<OrderStacksAdapter
     {
         private final TextView    stackItemName ;
         private final TextView    stackItemCount;
-
+        private final ImageButton stackDeleteBtn;
         public OrderStacksViewHolder(@NonNull View itemView, OnItemInputListener listener)
         {
             super(itemView, listener);
 
             stackItemName  = itemView.findViewById(R.id.text_order_stack_item_name );
             stackItemCount = itemView.findViewById(R.id.text_order_stack_item_count);
+            stackDeleteBtn = itemView.findViewById(R.id.btn_order_stack_delete     );
         }
     }
 
     @NonNull
     private final List<Stack> stackList;
+    private final boolean showDelete;
 
     public OrderStacksAdapter(@NonNull List<Stack> stackList)
     {
+        this(stackList, true);
+    }
+
+    public OrderStacksAdapter(@NonNull List<Stack> stackList, boolean showDelete)
+    {
         this.stackList = stackList;
+        this.showDelete = showDelete;
     }
 
     @NonNull
@@ -53,7 +61,12 @@ public class OrderStacksAdapter extends KarnetRecyclerAdapter<OrderStacksAdapter
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_order_stack, parent, false);
-        return new OrderStacksViewHolder(v, onItemInputListener);
+        OrderStacksViewHolder vh = new OrderStacksViewHolder(v, onItemInputListener);
+        if(showDelete)
+            vh.stackDeleteBtn.setVisibility(View.VISIBLE);
+        else
+            vh.stackDeleteBtn.setVisibility(View.GONE);
+        return vh;
     }
 
     @SuppressLint("DefaultLocale")

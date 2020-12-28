@@ -103,7 +103,7 @@ public class OrderFragment extends KarnetFragment
             Customer c = CustomerRegister.getCustomer(o.cid());
             assert c != null;
             ConfirmationDialog dialog = new ConfirmationDialog(R.string.confirmation,
-                    String.format("Êtes vous sûr de vouloir valider la commande de %s?", c.name()),
+                    String.format(getString(R.string.confirm_order_delete), c.name()),
                     (dialog1, which) -> validateOrder(i),
                     requireView().getWindowToken());
             dialog.show(getChildFragmentManager(), "");
@@ -121,8 +121,12 @@ public class OrderFragment extends KarnetFragment
                 return;
             }
             Order o = OrderRegister.get().get(i);
+            Customer c = CustomerRegister.getCustomer(o.cid());
+            assert c != null;
             NavDirections action = OrderFragmentDirections
-                    .actionOrderFragmentToOrderAddModifyFragment(o.oid(), getString(R.string.modify_order));
+                    .actionOrderFragmentToOrderDetailsFragment(o.oid(), c.name());
+
+            Logs.debug("Navigating to order details");
             NavHostFragment.findNavController(this).navigate(action);
         }
     }
@@ -180,13 +184,14 @@ public class OrderFragment extends KarnetFragment
     }
 
     @Override
-    public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
+    public boolean onOptionsItemSelected(@NotNull MenuItem item)
     {
         if(item.getItemId() == R.id.option_add_order)
         {
             NavDirections action = OrderFragmentDirections
                     .actionOrderFragmentToOrderAddModifyFragment(-1, getString(R.string.add_order));
-            navController.navigate(action);
+            NavHostFragment.findNavController(this).navigate(action);
         }
+        return true;
     }
 }

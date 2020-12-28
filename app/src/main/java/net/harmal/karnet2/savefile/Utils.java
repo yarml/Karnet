@@ -28,35 +28,4 @@ public class Utils
             stream.write(b);
         return new String(stream.toByteArray(), StandardCharsets.ISO_8859_1);
     }
-
-    public static int intFromByteArray(@NotNull byte[] arr) {
-        if (arr.length == 4) {
-            return ByteBuffer.wrap(arr).getInt();
-        }
-        return 0;
-    }
-
-    @NotNull
-    @Contract(pure = true)
-    public static byte[] getPart(byte[] src, int from, int to) {
-        if (from > to) {
-            return new byte[0];
-        }
-        byte[] res = new byte[((to - from) + 1)];
-        int i = from;
-        int j = 0;
-        while (i <= to) {
-            res[j] = src[i];
-            i++;
-            j++;
-        }
-        return res;
-    }
-
-    public static short byteArrayToShort(@NotNull byte[] arr) {
-        if (arr.length == 2) {
-            return ByteBuffer.wrap(arr).getShort();
-        }
-        return 0;
-    }
 }

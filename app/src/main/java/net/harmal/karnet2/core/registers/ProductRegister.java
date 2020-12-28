@@ -39,7 +39,7 @@ public class ProductRegister
                           @NotNull ProductCategory type, @NotNull List<ProductCategory> extra                 )
     {
         if(productRegister == null)
-            productRegister = new ArrayList<Product>();
+            productRegister = new ArrayList<>();
         if(pid < 0) // PID must be positive
         {
             return add(0, unitPrice, name, base, fat, shape, type, extra);

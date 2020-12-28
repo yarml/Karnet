@@ -5,9 +5,7 @@ import android.content.res.Resources;
 import android.os.IBinder;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +20,7 @@ import java.util.List;
 public class ExtraCategoryDetailsDialog extends KarnetDialogFragment
 {
 
-    private List<ProductCategory> extras;
+    private final List<ProductCategory> extras;
 
     public ExtraCategoryDetailsDialog(@StringRes int title, @NonNull List<ProductCategory> extras,
                                       IBinder windowToken)

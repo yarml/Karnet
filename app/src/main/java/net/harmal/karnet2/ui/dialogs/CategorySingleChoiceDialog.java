@@ -2,14 +2,12 @@ package net.harmal.karnet2.ui.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import net.harmal.karnet2.R;

@@ -19,12 +19,6 @@ public class Stack implements Savable
         this.count = count;
     }
 
-    public Stack()
-    {
-        pid   = 0;
-        count = 0;
-    }
-
     public int pid()
     {
         return pid;

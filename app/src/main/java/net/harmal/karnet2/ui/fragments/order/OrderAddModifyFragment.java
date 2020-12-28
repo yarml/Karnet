@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +37,7 @@ import net.harmal.karnet2.ui.dialogs.SelectCustomerDialog;
 import net.harmal.karnet2.ui.dialogs.SelectProductDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
+import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -72,7 +74,7 @@ public class OrderAddModifyFragment extends KarnetFragment
         super.onViewCreated(v, savedInstanceState);
 
         assert getArguments() != null;
-        OrderAddModifyFragmentArgs args = OrderAddModifyFragmentArgs.fromBundle(getArguments());
+        OrderAddModifyFragmentArgs args = OrderAddModifyFragmentArgs.fromBundle(requireArguments());
 
         oid = args.getOid();
 
@@ -114,18 +116,22 @@ public class OrderAddModifyFragment extends KarnetFragment
             deliveryPriceEdit.setText(String.format("%d", o.deliveryPrice()));
             dateEdit.setText(o.dueDate().toString());
             stackListAdapter = new OrderStacksAdapter(o.stacks());
+            if(o.stacks().size() == 0)
+                Animations.popIn(noStackText);
         }
         stackListAdapter.setOnItemInputListener(new OnItemInputListener.Builder(this::onStackItemClick, null));
         stackList.setLayoutManager(stackListLayoutManager);
         stackList.setAdapter(stackListAdapter);
     }
 
-    private void onStackItemClick(View view, int i)
+    private void onStackItemClick(@NotNull View view, int i)
     {
         if(view.getId() == R.id.btn_order_stack_delete)
         {
             stackListAdapter.stackList().remove(i);
             stackListAdapter.notifyItemRemoved(i);
+            if(stackListAdapter.stackList().size() == 0)
+                Animations.popIn(noStackText);
         }
     }
 
@@ -152,6 +158,7 @@ public class OrderAddModifyFragment extends KarnetFragment
                         }
                         stackListAdapter.stackList().add(new Stack(pid, input));
                         stackListAdapter.notifyItemInserted(stackListAdapter.getItemCount() - 1);
+                        Animations.popOut(noStackText);
                     }, requireView().getWindowToken());
             inputDialog.show(getChildFragmentManager(), "");
         },requireView().getWindowToken());
@@ -165,7 +172,7 @@ public class OrderAddModifyFragment extends KarnetFragment
     }
 
     @Override
-    public void onMenuOptionsSelected(@NotNull MenuItem item, NavController navController)
+    public boolean onOptionsItemSelected(@NotNull MenuItem item)
     {
         if(item.getItemId() == R.id.options_add_order_validate)
         {
@@ -173,7 +180,7 @@ public class OrderAddModifyFragment extends KarnetFragment
             {
                 Animations.shake(chooseCustomerBtn);
                 Toast.makeText(getContext(), R.string.invalid_customer, Toast.LENGTH_SHORT).show();
-                return;
+                return true;
             }
             int deliveryPrice = Integer.parseInt(deliveryPriceEdit.getText().toString());
             Date date = new Date(dateEdit.getText().toString());
@@ -188,8 +195,9 @@ public class OrderAddModifyFragment extends KarnetFragment
                 o.stacks(stackListAdapter.stackList());
                 o.dueDate(date);
             }
-            navController.navigateUp();
+            NavHostFragment.findNavController(this).navigateUp();
         }
+        return true;
     }
 
     private void onDateEditButtonClick(View view)

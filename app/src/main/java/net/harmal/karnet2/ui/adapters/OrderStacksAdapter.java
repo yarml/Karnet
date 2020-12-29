@@ -35,18 +35,20 @@ public class OrderStacksAdapter extends KarnetRecyclerAdapter<OrderStacksAdapter
     }
 
     @NonNull
-    private final List<Stack> stackList;
-    private final boolean showDelete;
+    private final List<Stack> stackList   ;
+    private final boolean     showDelete  ;
+    private final String      itemSubtitle;
 
     public OrderStacksAdapter(@NonNull List<Stack> stackList)
     {
-        this(stackList, true);
+        this(stackList, true, "%d");
     }
 
-    public OrderStacksAdapter(@NonNull List<Stack> stackList, boolean showDelete)
+    public OrderStacksAdapter(@NonNull List<Stack> stackList, boolean showDelete, String itemSubtitle)
     {
-        this.stackList = stackList;
-        this.showDelete = showDelete;
+        this.stackList    = stackList   ;
+        this.showDelete   = showDelete  ;
+        this.itemSubtitle = itemSubtitle;
     }
 
     @NonNull
@@ -77,7 +79,7 @@ public class OrderStacksAdapter extends KarnetRecyclerAdapter<OrderStacksAdapter
         Product p = ProductRegister.getProduct(current.pid());
         assert p != null;
         holder.stackItemName.setText(p.name());
-        holder.stackItemCount.setText(String.format("%d", current.count()));
+        holder.stackItemCount.setText(String.format(itemSubtitle, current.count(), p.unitPrice()));
     }
 
     @Override

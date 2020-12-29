@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.core.ContactData;
 import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Trash;
@@ -31,7 +32,9 @@ import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnActionExpandListenerBuilder;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 import net.harmal.karnet2.ui.listeners.OnQueryTextListenerBuilder;
+import net.harmal.karnet2.utils.ExternalActivityInterface;
 import net.harmal.karnet2.utils.Logs;
+import net.harmal.karnet2.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -110,6 +113,25 @@ public class CustomerFragment extends KarnetFragment
                             "", "", "",
                             today.day(), today.month(), today.year());
             NavHostFragment.findNavController(this).navigate(action);
+        }
+        else  if(item.getItemId() == R.id.option_add_from_contacts)
+        {
+            Thread other = new Thread(() -> {
+                ContactData contact = ExternalActivityInterface.getContactData(requireActivity());
+                if(contact == null)
+                    return;
+                Date today = Date.today();
+                CustomerFragmentDirections.ActionCustomerFragmentToCustomerAddModifyFragment action
+                        = CustomerFragmentDirections
+                        .actionCustomerFragmentToCustomerAddModifyFragment(
+                                -1, getString(R.string.fragment_add_customer_label),
+                                Utils.extractCustomerName(contact),
+                                Utils.extractCustomerNum(contact), "",
+                                today.day(), today.month(), today.year());
+                requireActivity().runOnUiThread(() ->
+                        NavHostFragment.findNavController(this).navigate(action));
+            });
+            other.start();
         }
         return true;
     }

@@ -10,8 +10,31 @@
     android:layout_marginStart="12dp"
     android:layout_marginEnd="12dp"
     tools:ignore="HardcodedText,ContentDescription,UseCompoundDrawables"
-    tools:context=".ui.fragments.order.OrderDetailsFragment">
+    tools:context=".ui.fragments.order.OrderDetailsFragment" >
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:orientation="horizontal" >
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_date"
+            android:contentDescription="DELIVERY_PRICE" />
+        <TextView
+            android:id="@+id/text_order_details_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-date-"
+            android:inputType="none"
+            android:hint="@string/hint_order_date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/layout_delivery_price"
         android:layout_width="match_parent"
@@ -35,32 +58,9 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center_vertical"/>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:orientation="horizontal" >
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_date"
-            android:contentDescription="DELIVERY_PRICE" />
-        <TextView
-            android:id="@+id/text_order_details_date"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="-date-"
-            android:inputType="none"
-            android:hint="@string/hint_order_date"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:gravity="center_vertical"/>
-    </LinearLayout>
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="48dp"
         app:cardCornerRadius="48dp">
@@ -87,5 +87,14 @@
         android:layout_marginTop="-42dp"
         android:layout_marginBottom="6dp"
         android:text="Total: -total-"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="center"/>
+    <TextView
+        android:id="@+id/text_order_details_total_with_delivery_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:text="Total + livraison: -total + livraison-"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="center" />
 </LinearLayout>

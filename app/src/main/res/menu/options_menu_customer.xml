@@ -14,5 +14,10 @@
         android:icon="@drawable/ic_add"
         android:title="@string/add_customer"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/option_add_from_contacts"
+        android:icon="@drawable/ic_person_add"
+        android:title="@string/add_customer"
+        app:showAsAction="always" />
 
 </menu>

@@ -48,7 +48,7 @@
     <string name="select_shape">Sélectionner la forme</string>
     <string name="select_fat">Sélectionner la matière grasse</string>
     <string name="new_categ">Nouveau</string>
-    <string name="dialog_positive">Ok</string>
+    <string name="dialog_positive">@android:string/ok</string>
     <string name="dialog_negative">Annuler</string>
     <string name="dialog_neutral">Retour</string>
     <string name="hint_enter_text">Entrer du texte</string>
@@ -89,4 +89,6 @@
     <string name="order_details_label">Commande pour: %s</string>
     <string name="total_price">Total: %d dhs</string>
     <string name="currency">%d dhs</string>
+    <string name="order_details_item_description">%d boîtes x %d dhs</string>
+    <string name="total_with_delivery_price">Total + livraison: %d dhs</string>
 </resources>

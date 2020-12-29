@@ -72,6 +72,9 @@ public class Order implements Savable
         this.dueDate = ndate;
     }
 
+    /**
+     * @return Total price without delivery into account
+     */
     public int totalPrice()
     {
         int price = 0;
@@ -81,7 +84,7 @@ public class Order implements Savable
             assert p != null;
             price += p.unitPrice() * s.count();
         }
-        return price + deliveryPrice;
+        return price;
     }
 
     public void add(int pid, int count)

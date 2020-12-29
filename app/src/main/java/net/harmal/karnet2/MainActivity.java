@@ -11,12 +11,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
 import net.harmal.karnet2.savefile.SaveFileRW;
+import net.harmal.karnet2.utils.ExternalActivityInterface;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
@@ -79,6 +81,16 @@ public class MainActivity extends AppCompatActivity
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK)
+            ExternalActivityInterface.activityResulted(requestCode, data);
+        else
+            ExternalActivityInterface.cancel(requestCode);
     }
 
     /**

@@ -86,7 +86,7 @@ public class OrderAddModifyFragment extends KarnetFragment
         addStackBtn            = v.findViewById(R.id.floating_btn_add_order_stack            );
         noStackText            = v.findViewById(R.id.text_order_no_stack                     );
         stackList              = v.findViewById(R.id.recycler_order_stacks                   );
-        stackListLayoutManager = new LinearLayoutManager(getContext(                        ));
+        stackListLayoutManager = new LinearLayoutManager(requireContext(                    ));
 
         addStackBtn.setOnClickListener(this::onAddStackButtonClick);
 
@@ -204,20 +204,22 @@ public class OrderAddModifyFragment extends KarnetFragment
     {
         Date date = new Date(dateEdit.getText().toString());
         assert getContext() != null;
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), this::onDateSet, date.year(), date.month(), date.day());
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), this::onDateSet,
+                date.year(), date.month() - 1, date.day());
         dialog.show();
     }
 
     @SuppressLint("DefaultLocale")
     private void onDateSet(DatePicker datePicker, int year, int month, int day)
     {
-        dateEdit.setText(String.format("%d/%d/%d", day, month, year));
+        dateEdit.setText(String.format("%d/%d/%d", day, month + 1, year));
     }
 
     private void onDeliveryEditButtonClick(View view)
     {
         assert getView() != null;
-        NumberInputDialog dialog = new NumberInputDialog(R.string.select_delivery_price, 0, 200,
+        NumberInputDialog dialog = new NumberInputDialog(R.string.select_delivery_price,
+                0, 200,
                 this::onDeliveryPriceSet, getView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }

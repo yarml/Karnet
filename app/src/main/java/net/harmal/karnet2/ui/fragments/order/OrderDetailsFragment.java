@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.harmal.karnet2.R;
@@ -22,18 +23,21 @@ import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.OrderStacksAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 
+import org.w3c.dom.Text;
+
 public class OrderDetailsFragment extends KarnetFragment
 {
 
     private int oid;
 
-    private LinearLayout deliveryPriceLayout;
-    private TextView     deliveryPriceText  ;
-    private TextView     dateText           ;
-    private TextView     totalPriceText     ;
-    private RecyclerView               stackList;
+    private LinearLayout               deliveryPriceLayout   ;
+    private TextView                   deliveryPriceText     ;
+    private TextView                   dateText              ;
+    private TextView                   totalPriceText        ;
+    private TextView                   totalWithDeliveryText ;
+    private RecyclerView               stackList             ;
     private RecyclerView.LayoutManager stackListLayoutManager;
-    private OrderStacksAdapter         stackListAdapter;
+    private OrderStacksAdapter         stackListAdapter      ;
 
     public OrderDetailsFragment()
     {
@@ -49,19 +53,36 @@ public class OrderDetailsFragment extends KarnetFragment
         OrderDetailsFragmentArgs args = OrderDetailsFragmentArgs.fromBundle(requireArguments());
         oid = args.getOid();
 
-        deliveryPriceLayout = view.findViewById(R.id.layout_delivery_price            );
-        deliveryPriceText   = view.findViewById(R.id.text_order_details_delivery_price);
-        dateText            = view.findViewById(R.id.text_order_details_date          );
-        totalPriceText      = view.findViewById(R.id.text_order_details_total_price   );
+        deliveryPriceLayout    = view.findViewById(R.id.layout_delivery_price                       );
+        deliveryPriceText      = view.findViewById(R.id.text_order_details_delivery_price           );
+        dateText               = view.findViewById(R.id.text_order_details_date                     );
+        totalPriceText         = view.findViewById(R.id.text_order_details_total_price              );
+        totalWithDeliveryText  = view.findViewById(R.id.text_order_details_total_with_delivery_price);
+        stackList              = view.findViewById(R.id.recycler_order_details_stacks               );
+        stackListLayoutManager = new LinearLayoutManager(requireContext(                           ));
+
 
         Order o = OrderRegister.getOrder(oid);
         assert o != null;
         if(o.deliveryPrice() == 0)
-            deliveryPriceLayout.setVisibility(View.GONE);
-        else
-            deliveryPriceText.setText(String.format(getString(R.string.currency), o.deliveryPrice()));
+        {
+            deliveryPriceLayout.setVisibility(View.GONE  );
+            totalWithDeliveryText.setVisibility(View.GONE);
+        }
+        else {
+            deliveryPriceText.setText(String.format(getString(R.string.currency),
+                    o.deliveryPrice()));
+            totalWithDeliveryText.setText(String.format(getString(
+                    R.string.total_with_delivery_price),
+                    o.totalPrice() + o.deliveryPrice()));
+        }
         dateText.setText(o.dueDate().toString());
         totalPriceText.setText(String.format(getString(R.string.total_price), o.totalPrice()));
+
+        stackListAdapter = new OrderStacksAdapter(o.stacks(), false,
+                getString(R.string.order_details_item_description));
+        stackList.setLayoutManager(stackListLayoutManager);
+        stackList.setAdapter(stackListAdapter);
     }
 
     @Override

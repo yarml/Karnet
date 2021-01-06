@@ -50,7 +50,6 @@ public class Date implements Savable
     {
         try
         {
-            // TODO: Debug Start
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             {
                 String[] split = raw.split("/");
@@ -73,10 +72,11 @@ public class Date implements Savable
                 this.year  = (short) year ;
                 return;
             }
-            // Debug End
 
             DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            Logs.debug("Parsing date");
             LocalDate date = LocalDate.parse(raw, format);
+            Logs.debug("Date parsed");
             this.day   = (byte ) date.getDayOfMonth();
             this.month = (byte ) date.getMonthValue();
             this.year  = (short) date.getYear(      );
@@ -134,8 +134,12 @@ public class Date implements Savable
 
     @NotNull
     @Override
-    public String toString() {
-        return day + "/" + month + "/" + year;
+    public String toString()
+    {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            return day + "/" + month + "/" + year;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return LocalDate.of(year, month, day).format(formatter);
     }
 
     @Override

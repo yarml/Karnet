@@ -4,8 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/option_add_order"
+        android:id="@+id/option_stock_filter"
         app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_filter"
+        android:title="@string/stock_filter_title"/>
+
+    <item
+        android:id="@+id/option_add_stock"
+        app:showAsAction="always"
         android:icon="@drawable/ic_add"
         android:title="@string/add_order" />
 

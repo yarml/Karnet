@@ -5,20 +5,20 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context=".ui.fragments.product.ProductFragment">
+    tools:context=".ui.fragments.ingredients.IngredientFragment" >
 
     <TextView
-        android:id="@+id/text_no_product"
+        android:id="@+id/text_fragment_ingredient_no_ingredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Large"
-        android:text="@string/str_no_product"
+        android:text="@string/str_no_ingredient"
         android:layout_gravity="center"
-        android:gravity="center" />
+        android:gravity="center"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_product_list"
+        android:id="@+id/recycler_ingredient_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" />

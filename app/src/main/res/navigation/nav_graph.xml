@@ -49,26 +49,6 @@
         android:label="@string/fragment_about_label"
         tools:layout="@layout/fragment_about" />
     <fragment
-        android:id="@+id/productFragment"
-        android:name="net.harmal.karnet2.ui.fragments.product.ProductFragment"
-        android:label="@string/fragment_products_label"
-        tools:layout="@layout/fragment_product" >
-        <action
-            android:id="@+id/action_productFragment_to_productAddModifyFragment"
-            app:destination="@id/productAddModifyFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_productFragment_to_productDetailsFragment"
-            app:destination="@id/productDetailsFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"/>
-    </fragment>
-    <fragment
         android:id="@+id/stockFragment"
         android:name="net.harmal.karnet2.ui.fragments.stock.StockFragment"
         android:label="@string/fragment_stock_label"
@@ -130,37 +110,6 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/productAddModifyFragment"
-        android:name="net.harmal.karnet2.ui.fragments.product.ProductAddModifyFragment"
-        android:label="{label}"
-        tools:layout="@layout/fragment_add_modify_product" >
-        <argument
-            android:name="pid"
-            app:argType="integer" />
-        <argument
-            android:name="label"
-            app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/productDetailsFragment"
-        android:name="net.harmal.karnet2.ui.fragments.product.ProductDetailsFragment"
-        android:label="{label}"
-        tools:layout="@layout/fragment_product_details">
-        <argument
-            android:name="pid"
-            app:argType="integer" />
-        <argument
-            android:name="label"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_productDetailsFragment_to_productAddModifyFragment"
-            app:destination="@id/productAddModifyFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"/>
-    </fragment>
-    <fragment
         android:id="@+id/orderAddModifyFragment"
         android:name="net.harmal.karnet2.ui.fragments.order.OrderAddModifyFragment"
         android:label="{label}"
@@ -186,5 +135,26 @@
         <argument
             android:name="label"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/ingredientFragment"
+        android:name="net.harmal.karnet2.ui.fragments.ingredients.IngredientFragment"
+        android:label="@string/fragment_ingredient"
+        tools:layout="@layout/fragment_ingredient" >
+        <action
+            android:id="@+id/action_ingredientFragment_to_ingredientAddModifyFragment"
+            app:destination="@id/ingredientAddModifyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ingredientAddModifyFragment"
+        android:name="net.harmal.karnet2.ui.fragments.ingredients.IngredientAddModifyFragment"
+        android:label="{label}"
+        tools:layout="@layout/fragment_ingredient_add_modify" >
+        <argument
+            android:name="label"
+            app:argType="string" />
+        <argument
+            android:name="piid"
+            app:argType="integer" />
     </fragment>
 </navigation>

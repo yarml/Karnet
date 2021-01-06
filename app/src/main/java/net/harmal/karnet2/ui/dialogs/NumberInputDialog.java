@@ -5,6 +5,8 @@ import android.os.IBinder;
 import android.view.View;
 import android.widget.NumberPicker;
 
+import androidx.annotation.StringRes;
+
 import net.harmal.karnet2.R;
 
 public class NumberInputDialog extends KarnetDialogFragment
@@ -17,7 +19,7 @@ public class NumberInputDialog extends KarnetDialogFragment
     private final int min;
     private final int max;
 
-    public NumberInputDialog(int title, int min, int max,
+    public NumberInputDialog(@StringRes int title, int min, int max,
                              NumberInputDialogInterface numberInputDialogInterface,
                              IBinder windowToken)
     {

@@ -19,25 +19,22 @@ import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.OrderRegister;
-import net.harmal.karnet2.ui.Animations;
-import net.harmal.karnet2.ui.adapters.OrderStacksAdapter;
+import net.harmal.karnet2.ui.adapters.OrderItemAdapter;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
-
-import org.w3c.dom.Text;
 
 public class OrderDetailsFragment extends KarnetFragment
 {
 
     private int oid;
 
-    private LinearLayout               deliveryPriceLayout   ;
-    private TextView                   deliveryPriceText     ;
-    private TextView                   dateText              ;
-    private TextView                   totalPriceText        ;
-    private TextView                   totalWithDeliveryText ;
-    private RecyclerView               stackList             ;
-    private RecyclerView.LayoutManager stackListLayoutManager;
-    private OrderStacksAdapter         stackListAdapter      ;
+    private LinearLayout               deliveryPriceLayout  ;
+    private TextView                   deliveryPriceText    ;
+    private TextView                   dateText             ;
+    private TextView                   totalPriceText       ;
+    private TextView                   totalWithDeliveryText;
+    private RecyclerView               itemList             ;
+    private RecyclerView.LayoutManager itemListLayoutManager;
+    private OrderItemAdapter           itemListAdapter      ;
 
     public OrderDetailsFragment()
     {
@@ -58,8 +55,8 @@ public class OrderDetailsFragment extends KarnetFragment
         dateText               = view.findViewById(R.id.text_order_details_date                     );
         totalPriceText         = view.findViewById(R.id.text_order_details_total_price              );
         totalWithDeliveryText  = view.findViewById(R.id.text_order_details_total_with_delivery_price);
-        stackList              = view.findViewById(R.id.recycler_order_details_stacks               );
-        stackListLayoutManager = new LinearLayoutManager(requireContext(                           ));
+        itemList = view.findViewById(R.id.recycler_order_details_stacks               );
+        itemListLayoutManager = new LinearLayoutManager(requireContext(                           ));
 
 
         Order o = OrderRegister.getOrder(oid);
@@ -79,10 +76,10 @@ public class OrderDetailsFragment extends KarnetFragment
         dateText.setText(o.dueDate().toString());
         totalPriceText.setText(String.format(getString(R.string.total_price), o.totalPrice()));
 
-        stackListAdapter = new OrderStacksAdapter(o.stacks(), false,
+        itemListAdapter = new OrderItemAdapter(o.items(), false,
                 getString(R.string.order_details_item_description));
-        stackList.setLayoutManager(stackListLayoutManager);
-        stackList.setAdapter(stackListAdapter);
+        itemList.setLayoutManager(itemListLayoutManager);
+        itemList.setAdapter(itemListAdapter);
     }
 
     @Override

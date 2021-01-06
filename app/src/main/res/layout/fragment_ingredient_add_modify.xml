@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    tools:ignore="Autofill,HardcodedText"
+    tools:context=".ui.fragments.ingredients.IngredientAddModifyFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="48dp"
+        android:orientation="horizontal" >
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_text"
+            android:contentDescription="DELIVERY_PRICE" />
+        <EditText
+            android:id="@+id/edit_text_ingredient_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textCapWords"
+            android:hint="@string/hint_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical"
+            tools:ignore="Autofill,TextFields" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:orientation="horizontal" >
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_money"
+            android:contentDescription="DELIVERY_PRICE" />
+        <EditText
+            android:id="@+id/edit_text_ingredient_price"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:hint="@string/hint_price"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_vertical"
+            tools:ignore="Autofill,TextFields"
+            android:layout_marginEnd="48dp" />
+        <ImageButton
+            android:id="@+id/btn_edit_ingredient_price"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_edit"
+            android:layout_marginStart="-48dp"
+            android:contentDescription="edit" />
+    </LinearLayout>
+    <Spinner
+        android:id="@+id/spinner_ingredient_type"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="Hello"/>
+</LinearLayout>

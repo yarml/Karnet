@@ -17,9 +17,9 @@
             android:icon="@drawable/ic_identity"
             android:title="@string/drawer_customer" />
         <item
-            android:id="@+id/productFragment"
+            android:id="@+id/ingredientFragment"
             android:icon="@drawable/ic_business_center"
-            android:title="@string/drawer_products" />
+            android:title="@string/drawer_ingredients" />
         <item
             android:id="@+id/aboutFragment"
             android:icon="@drawable/ic_info"

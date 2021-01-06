@@ -21,15 +21,15 @@
                 android:id="@+id/text_order_stack_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pour -customerName-"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:text="-itemName-"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
             <TextView
                 android:id="@+id/text_order_stack_item_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
                 android:layout_marginTop="1dp"
-                android:text="Pour le -date-"
+                android:text="-itemCount-"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
         </LinearLayout>
 

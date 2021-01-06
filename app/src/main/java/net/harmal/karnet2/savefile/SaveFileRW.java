@@ -4,34 +4,32 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 
 import net.harmal.karnet2.core.Customer;
-import net.harmal.karnet2.core.Date;
+import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.Order;
-import net.harmal.karnet2.core.Product;
-import net.harmal.karnet2.core.ProductCategory;
-import net.harmal.karnet2.core.Stack;
+import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.registers.CustomerRegister;
+import net.harmal.karnet2.core.registers.IngredientRegister;
 import net.harmal.karnet2.core.registers.OrderRegister;
-import net.harmal.karnet2.core.registers.ProductRegister;
 import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SaveFileRW
 {
@@ -40,7 +38,7 @@ public class SaveFileRW
      * The file's version determines mainly how the header should be interpreted
      * but other parts of the body might be interpreted differently
      */
-    private static final int SAVE_FILE_VER = 0x00000200;
+    private static final int SAVE_FILE_VER = 0x00000201;
 
     private static final String SAVE_FILE_NAME = "save.bin";
     private static final String LOGS_FILE_NAME = "logs.txt";
@@ -83,22 +81,34 @@ public class SaveFileRW
         }
         int version = buf.getInt();
         // Read head
-        int customerCount;
-        int productCount ;
-        int orderCount   ;
-        int stockCount   ;
+        int customerCount  ;
+        int ingredientCount;
+        int orderCount     ;
+        int stockCount     ;
 
         switch(version)
         {
-            case SAVE_FILE_VER: // Recent version
+            case 0x00000200: // First version
                 customerCount = buf.getInt();
-                productCount  = buf.getInt();
-                orderCount    = buf.getInt();
-                stockCount    = buf.getInt();
+                ingredientCount = buf.getInt();
+                orderCount = buf.getInt();
+                stockCount = buf.getInt();
 
                 CustomerRegister.customerIdCount = buf.getInt();
-                ProductRegister.productIdCount   = buf.getInt();
-                OrderRegister.orderIdCount       = buf.getInt();
+                buf.getInt(); // product register id count
+                buf.getInt();
+                break;
+            case SAVE_FILE_VER:
+                // head
+                customerCount   = buf.getInt();
+                ingredientCount = buf.getInt();
+                orderCount      = buf.getInt();
+                stockCount      = buf.getInt();
+
+                // id counts
+                CustomerRegister.customerIdCount     = buf.getInt();
+                IngredientRegister.ingredientIdCount = buf.getInt();
+                OrderRegister.orderIdCount           = buf.getInt();
                 break;
             default:
                 Logs.error("Unrecognized save file version");
@@ -113,12 +123,15 @@ public class SaveFileRW
             CustomerRegister.add(c);
         }
 
-        // Read products data
-        for(int i = 0; i < productCount; i++)
+        if(version == 0x00000200)
+            return;
+
+        // Read ingredient data
+        for(int i = 0; i < ingredientCount; i++)
         {
-            Product.ProductBuilder builder = new Product.ProductBuilder();
-            Product p = builder.readData(version, buf);
-            ProductRegister.add(p);
+            ProductIngredient.ProductIngredientBuilder builder = new
+                    ProductIngredient.ProductIngredientBuilder();
+            IngredientRegister.add(builder.readData(version, buf));
         }
 
         // Read orders
@@ -132,9 +145,8 @@ public class SaveFileRW
         // Read stock
         for(int i = 0; i < stockCount; i++)
         {
-            Stack.StackBuilder builder = new Stack.StackBuilder();
-            Stack s = builder.readData(version, buf);
-            Stock.add(s.pid(), s.count());
+            Item.ItemBuilder builder = new Item.ItemBuilder();
+            Stock.add(builder.readData(version, buf));
         }
 
         Logs.debug("Data read");
@@ -143,24 +155,27 @@ public class SaveFileRW
     @SuppressLint("DefaultLocale")
     public static void save(@NotNull String path) throws IOException
     {
+
         // Save logs
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
         {
-            File logFile = new File(path + "/" + LOGS_FILE_NAME);
-            if(!logFile.exists())
-                logFile.createNewFile();
-            FileOutputStream out = new FileOutputStream(logFile, true);
-            for(byte b : Logs.getLogs().getBytes(StandardCharsets.ISO_8859_1))
-                out.write(b);
-            out.close();
-        }
-        else
-        {
-            if(!Files.exists(Paths.get(path + "/" + LOGS_FILE_NAME)))
-                Files.createFile(Paths.get(path + "/" + LOGS_FILE_NAME));
-            Files.write(Paths.get(path + "/" + LOGS_FILE_NAME),
-                    Logs.getLogs().getBytes(StandardCharsets.ISO_8859_1),
-                    StandardOpenOption.APPEND);
+            File logFile = new File(path, LOGS_FILE_NAME);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            {
+                if(!logFile.exists())
+                    logFile.createNewFile();
+                FileOutputStream out = new FileOutputStream(logFile, true);
+                for(byte b : Logs.getLogs().getBytes(StandardCharsets.ISO_8859_1))
+                    out.write(b);
+                out.close();
+            }
+            else
+            {
+                if(!Files.exists(Paths.get(path + "/" + LOGS_FILE_NAME)))
+                    Files.createFile(Paths.get(path + "/" + LOGS_FILE_NAME));
+                Files.write(Paths.get(path + "/" + LOGS_FILE_NAME),
+                        Logs.getLogs().getBytes(StandardCharsets.ISO_8859_1),
+                        StandardOpenOption.APPEND);
+            }
         }
 
         // Save data
@@ -171,15 +186,16 @@ public class SaveFileRW
         dataStream.writeInt(SAVE_FILE_SIG);
         dataStream.writeInt(SAVE_FILE_VER);
         // head
-        dataStream.writeInt(CustomerRegister.size());
-        dataStream.writeInt(ProductRegister.size( ));
-        dataStream.writeInt(OrderRegister.size(   ));
-        dataStream.writeInt(Stock.size(           ));
+        Logs.debug("There are: " + CustomerRegister.size() + " customers");
+        dataStream.writeInt(CustomerRegister.size(  ));
+        dataStream.writeInt(IngredientRegister.size());
+        dataStream.writeInt(OrderRegister.size(     ));
+        dataStream.writeInt(Stock.size(             ));
 
         // id counts
-        dataStream.writeInt(CustomerRegister.customerIdCount);
-        dataStream.writeInt(ProductRegister.productIdCount  );
-        dataStream.writeInt(OrderRegister.orderIdCount      );
+        dataStream.writeInt(CustomerRegister.customerIdCount    );
+        dataStream.writeInt(IngredientRegister.ingredientIdCount);
+        dataStream.writeInt(OrderRegister.orderIdCount          );
 
 
         // Write customers data
@@ -187,7 +203,7 @@ public class SaveFileRW
             c.writeData(dataStream);
 
         // Write products
-        for(Product p : ProductRegister.get())
+        for(ProductIngredient p : IngredientRegister.get())
             p.writeData(dataStream);
 
         // Write orders
@@ -195,19 +211,25 @@ public class SaveFileRW
             o.writeData(dataStream);
 
         // Write stock
-        for(Stack s : Stock.get())
+        for(Item s : Stock.get())
             s.writeData(dataStream);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
         {
-            FileOutputStream outputStream = new FileOutputStream(path + "/" + SAVE_FILE_NAME);
-            for(byte b : rawBytesStream.toByteArray())
-                outputStream.write(b);
-            outputStream.close();
+            File dataFile = new File(path, SAVE_FILE_NAME);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            {
+                FileOutputStream outputStream = new FileOutputStream(dataFile, false);
+                for(byte b : rawBytesStream.toByteArray())
+                    outputStream.write(b);
+                outputStream.close();
+            }
+            else
+                Files.write(Paths.get(path + "/" + SAVE_FILE_NAME),
+                        rawBytesStream.toByteArray(),
+                        StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
         }
-        else
-            Files.write(Paths.get(path + "/" + SAVE_FILE_NAME), rawBytesStream.toByteArray(),
-                    StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 
         dataStream.close();
         rawBytesStream.close();

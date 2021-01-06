@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,6 +40,8 @@ public class OrderFragment extends KarnetFragment
     private RecyclerView               orderList             ;
     private RecyclerView.LayoutManager orderListLayoutManager;
     private OrderListAdapter           orderListAdapter      ;
+
+
 
     public OrderFragment()
     {
@@ -79,7 +80,7 @@ public class OrderFragment extends KarnetFragment
     {
         if(view.getId() == R.id.btn_order_delete)
         {
-            Order o = orderListAdapter.getOrderList().get(i);
+            Order o = orderListAdapter.visibleOrderList().get(i);
             OrderRegister.remove(o.oid());
             orderListAdapter.notifyItemRemoved(i);
             if(orderListAdapter.getItemCount() == 0)
@@ -94,7 +95,7 @@ public class OrderFragment extends KarnetFragment
         }
         else if(view.getId() == R.id.btn_order_done)
         {
-            Order o = orderListAdapter.getOrderList().get(i);
+            Order o = orderListAdapter.visibleOrderList().get(i);
             if(!Stock.canValidate(o))
             {
                 Toast.makeText(getContext(), R.string.insufficient_stock, Toast.LENGTH_LONG).show();
@@ -136,7 +137,7 @@ public class OrderFragment extends KarnetFragment
      */
     private void validateOrder(int pos)
     {
-        Order o = orderListAdapter.getOrderList().get(pos);
+        Order o = orderListAdapter.visibleOrderList().get(pos);
         Stock.validate(o);
         OrderRegister.get().remove(o);
         orderListAdapter.notifyItemRemoved(pos);
@@ -191,6 +192,10 @@ public class OrderFragment extends KarnetFragment
             NavDirections action = OrderFragmentDirections
                     .actionOrderFragmentToOrderAddModifyFragment(-1, getString(R.string.add_order));
             NavHostFragment.findNavController(this).navigate(action);
+        }
+        else if(item.getItemId() == R.id.option_order_filter)
+        {
+
         }
         return true;
     }

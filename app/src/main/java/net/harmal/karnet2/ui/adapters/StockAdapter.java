@@ -9,10 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import net.harmal.karnet2.R;
-import net.harmal.karnet2.core.Product;
+import net.harmal.karnet2.core.IngredientBundle;
+import net.harmal.karnet2.core.Item;
+import net.harmal.karnet2.core.ProductIngredient;
+import net.harmal.karnet2.core.registers.IngredientRegister;
 import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHolder>
@@ -31,11 +35,16 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
         }
     }
 
-    private final List<Product> products;
+    private final List<Item> items        ;
+    private       List<Item> visibleItems ;
 
-    public StockAdapter(@NonNull List<Product> products)
+    private List<ProductIngredient> filter; /* Allowed ingredient */
+
+    public StockAdapter(@NonNull List<Item> products)
     {
-        this.products = products;
+        this.items = products;
+        this.visibleItems = new ArrayList<>(products);
+        this.filter = new ArrayList<>(IngredientRegister.get());
     }
 
     @NonNull
@@ -51,15 +60,64 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
     @Override
     public void onBindViewHolder(@NonNull StockItemHolder holder, int position)
     {
-        Product current = products.get(position);
+        Item current = visibleItems.get(position);
 
-        holder.productName.setText(current.name());
-        holder.count.setText(String.format("%d", Stock.countOf(current.pid())));
+        holder.productName.setText(current.bundle().name());
+        holder.count.setText(String.format("%d", Stock.countOf(current.bundle())));
+    }
+
+    public void update()
+    {
+        this.visibleItems = new ArrayList<>();
+
+        MAIN_LOOP:
+        for(Item i : items)
+        {
+            IngredientBundle bundle = i.bundle();
+            if(filterAllow(bundle.basePiid(  ))
+            || filterAllow(bundle.fatPiid(   ))
+            || filterAllow(bundle.shapePiid( ))
+            || filterAllow(bundle.tastePiid()))
+            {
+                visibleItems.add(i);
+                continue;
+            }
+            for(int extraPiid : bundle.extrasPiid())
+                if(filterAllow(extraPiid))
+                {
+                    visibleItems.add(i);
+                    continue MAIN_LOOP;
+                }
+        }
+        notifyDataSetChanged();
+    }
+
+    private boolean filterAllow(int piid)
+    {
+        ProductIngredient p = IngredientRegister.getIngredient(piid);
+        assert p != null;
+        return filter.contains(p);
+    }
+
+    public List<Item> visibleItemList()
+    {
+        return items;
     }
 
     @Override
     public int getItemCount()
     {
-        return products.size();
+        return visibleItems.size();
+    }
+
+    public List<ProductIngredient> filter()
+    {
+        return filter;
+    }
+
+    public void filter(List<ProductIngredient> filter)
+    {
+        this.filter = filter;
+        update();
     }
 }

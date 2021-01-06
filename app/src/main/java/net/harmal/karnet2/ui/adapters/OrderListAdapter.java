@@ -9,12 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.Order;
+import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.OrderViewHolder>
@@ -34,17 +37,14 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
             doneBtn   = itemView.findViewById(R.id.btn_order_done      );
         }
     }
-
-    private final List<Order> orderList;
-
-    public List<Order> getOrderList()
-    {
-        return orderList;
-    }
+    private final List<Order> orderList       ;
+    private List<Order>       visibleOrderList;
 
     public OrderListAdapter(@NotNull List<Order> orderList)
     {
-        this.orderList = orderList;
+        this.orderList   = orderList        ;
+        visibleOrderList = new ArrayList<>();
+        visibleOrderList.addAll(  orderList);
     }
 
     @NonNull
@@ -59,7 +59,7 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position)
     {
-        Order current = orderList.get(position);
+        Order current = visibleOrderList.get(position);
         holder.nameView.setText(String.format("Pour %s", CustomerRegister.getCustomer(current.cid()).name()));
         holder.dateView.setText(String.format("Pour le: %s", current.dueDate().toString()));
         holder.deleteBtn.setVisibility(View.GONE);
@@ -68,6 +68,16 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
 
     @Override
     public int getItemCount() {
-        return orderList.size();
+        return visibleOrderList.size();
     }
+
+    public List<Order> orderList()
+    {
+        return orderList;
+    }
+    public List<Order> visibleOrderList()
+    {
+        return visibleOrderList;
+    }
+
 }

@@ -8,23 +8,25 @@ import android.widget.NumberPicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.core.IngredientBundle;
+import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.registers.Stock;
 
 import org.jetbrains.annotations.NotNull;
 
 public class StockItemCountModifyDialog extends KarnetDialogFragment
 {
-    private final int pid;
+    private final IngredientBundle bundle;
 
     private NumberPicker         numberPicker;
     private FloatingActionButton setBtn      ;
     private FloatingActionButton addBtn      ;
     private FloatingActionButton removeBtn   ;
 
-    public StockItemCountModifyDialog(int title, int pid, IBinder windowToken)
+    public StockItemCountModifyDialog(int title, IngredientBundle bundle, IBinder windowToken)
     {
         super(title, R.layout.dialog_modify_stock_item_count, windowToken);
-        this.pid = pid;
+        this.bundle = bundle;
     }
 
     @Override
@@ -39,18 +41,18 @@ public class StockItemCountModifyDialog extends KarnetDialogFragment
 
         setBtn.setOnClickListener(v1 -> {
             int num = numberPicker.getValue();
-            Stock.set(pid, num);
+            Stock.set(bundle, num);
             dismiss();
         });
 
         addBtn.setOnClickListener(v1 -> {
             int num = numberPicker.getValue();
-            Stock.add(pid, num);
+            Stock.add(bundle, num);
             dismiss();
         });
         removeBtn.setOnClickListener(v1 -> {
             int num = numberPicker.getValue();
-            Stock.remove(pid, num);
+            Stock.remove(bundle, num);
             dismiss();
         });
     }

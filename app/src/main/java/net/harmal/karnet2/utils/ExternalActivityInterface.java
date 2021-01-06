@@ -34,11 +34,12 @@ public class ExternalActivityInterface
                 "vnd.android.cursor.dir/phone_v2");
         a.startActivityForResult(pickContactIntent, PICK_CONTACT_REQ);
 
-        Pair<Boolean, Intent> activityState = waitingFor.get(PICK_CONTACT_REQ);
-        assert activityState != null;
         waitingFor.put(PICK_CONTACT_REQ, new Pair<>(false, null));
 
-        while(!activityState.first);
+        while(!waitingFor.get(PICK_CONTACT_REQ).first);
+
+        Pair<Boolean, Intent> activityState = waitingFor.get(PICK_CONTACT_REQ);
+        assert activityState != null;
 
         Intent data = activityState.second;
         if(data == null)
@@ -55,6 +56,7 @@ public class ExternalActivityInterface
         contactData.name = cursor.getString(nameIndex);
         contactData.num  = cursor.getString(numIndex );
         cursor.close();
+        Logs.debug("Picked contact: " + contactData.name);
         return contactData;
     }
 

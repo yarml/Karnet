@@ -106,8 +106,7 @@ public class CustomerFragment extends KarnetFragment
         if(item.getItemId() == R.id.option_add_customer)
         {
             Date today = Date.today();
-            CustomerFragmentDirections.ActionCustomerFragmentToCustomerAddModifyFragment action
-                    = CustomerFragmentDirections
+            NavDirections action = CustomerFragmentDirections
                     .actionCustomerFragmentToCustomerAddModifyFragment(
                             -1, getString(R.string.fragment_add_customer_label),
                             "", "", "",
@@ -193,7 +192,7 @@ public class CustomerFragment extends KarnetFragment
         Customer c = CustomerRegister.getCustomer(cid);
         customerListAdapter.update();
         if(customerListAdapter.getVisibleCustomerList().contains(c))
-            customerListAdapter.notifyItemInserted(customerListAdapter.getVisibleCustomerList().size() - 1);
+            customerListAdapter.notifyItemInserted(customerListAdapter.getItemCount() - 1);
     }
 
     @Override

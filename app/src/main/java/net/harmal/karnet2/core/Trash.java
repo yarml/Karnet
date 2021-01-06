@@ -4,22 +4,22 @@ import java.util.Stack;
 
 public class Trash
 {
-    private static Stack<Customer> customerTrash; // Sorry for the name
-    private static Stack<Order>    orderTrash   ;
-    private static Stack<Product>  productTrash ;
+    private static Stack<Customer>          customerTrash  ; // Sorry for the name
+    private static Stack<Order>             orderTrash     ;
+    private static Stack<ProductIngredient> ingredientTrash;
 
-    public static void pushProduct(Product p)
+    public static void pushIngredient(ProductIngredient p)
     {
-        if(productTrash == null)
-            productTrash = new Stack<>();
-        productTrash.push(p);
+        if(ingredientTrash == null)
+            ingredientTrash = new Stack<>();
+        ingredientTrash.push(p);
     }
 
-    public static Product popProduct()
+    public static ProductIngredient popIngredient()
     {
-        if(productTrash == null)
-            productTrash = new Stack<>();
-        return productTrash.pop();
+        if(ingredientTrash == null)
+            ingredientTrash = new Stack<>();
+        return ingredientTrash.pop();
     }
 
     public static void pushCustomer(Customer c)

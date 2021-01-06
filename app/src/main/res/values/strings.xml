@@ -14,7 +14,7 @@
     <string name="drawer_order">Commandes</string>
     <string name="drawer_stock">Stock</string>
     <string name="drawer_customer">Clients</string>
-    <string name="drawer_products">Produits</string>
+    <string name="drawer_ingredients">Ingredients</string>
     <string name="nav_drawer_open">Menu de navigation ouvert</string>
     <string name="nav_drawer_close">Menu de nvigation fermé</string>
     <string name="add_customer">Ajouter un client</string>
@@ -91,4 +91,15 @@
     <string name="currency">%d dhs</string>
     <string name="order_details_item_description">%d boîtes x %d dhs</string>
     <string name="total_with_delivery_price">Total + livraison: %d dhs</string>
+    <string name="fragment_ingredient">Ingrédient</string>
+    <string name="str_no_ingredient">Aucun ingrédient</string>
+    <string name="add_ingredient">Ajouter un Ingrédient</string>
+    <string name="new_ingredient">Nouveau ingrédient</string>
+    <string name="done">Terminé</string>
+    <string name="ingredient_name">Nom de l\'ingrédient</string>
+    <string name="hint_price">hint_price</string>
+    <string name="ingredient_removed">Ingrédient supprimé</string>
+    <string name="modify">Modifier %s</string>
+    <string name="missing_ingredients">Veuillez ajouter des ingrédients premièrement</string>
+    <string name="stock_filter_title">Filtrer le stock</string>
 </resources>

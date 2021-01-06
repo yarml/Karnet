@@ -1,7 +1,8 @@
 package net.harmal.karnet2.core.registers;
 
+import net.harmal.karnet2.core.IngredientBundle;
+import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.Order;
-import net.harmal.karnet2.core.Stack;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -10,62 +11,67 @@ import java.util.List;
 
 public class Stock
 {
-    private static List<Stack> stock;
+    private static List<Item> stock;
 
-    public static void add(int pid, int count)
+    public static void add(Item i)
     {
-        if(stock == null)
-            stock = new ArrayList<>();
-        for(Stack s : stock)
-            if(s.pid() == pid)
-            {
-                s.add(count);
-                return;
-            }
-        stock.add(new Stack(pid, count));
+        add(i.bundle(), i.count());
     }
 
-    public static void remove(int pid, int count)
+    public static void add(IngredientBundle bundle, int count)
     {
         if(stock == null)
             stock = new ArrayList<>();
-        for(Stack s : stock)
-            if(s.pid() == pid)
+        for(Item i : stock)
+            if(i.bundle().equals(bundle))
             {
-                s.remove(count);
-                if(s.count() <= 0)
-                    stock.remove(s);
+                i.add(count);
+                return;
+            }
+        stock.add(new Item(bundle, count));
+    }
+
+    public static void remove(IngredientBundle bundle, int count)
+    {
+        if(stock == null)
+            stock = new ArrayList<>();
+        for(Item i : stock)
+            if(i.bundle().equals(bundle))
+            {
+                i.remove(count);
+                if(i.count() <= 0)
+                    stock.remove(i);
                 return;
             }
     }
 
-    public static void set(int pid, int count)
+    public static void set(IngredientBundle bundle, int count)
     {
         if(stock == null)
             stock = new ArrayList<>();
-        for(Stack s : stock)
-            if(s.pid() == pid)
+        for(Item i : stock)
+            if(i.bundle().equals(bundle))
             {
-                s.count(count);
-                if(s.count() <= 0)
-                    stock.remove(s);
+                i.count(count);
+                if(i.count() <= 0)
+                    stock.remove(i);
                 return;
             }
         if(count >= 0)
-            stock.add(new Stack(pid, count));
+            stock.add(new Item(bundle, count));
     }
 
-    public static int countOf(int pid)
+    public static int countOf(IngredientBundle bundle)
     {
         if(stock == null)
             stock = new ArrayList<>();
-        for(Stack s : stock)
-            if(s.pid() == pid)
-                return s.count();
+        for(Item i : stock)
+            if(i.bundle().equals(bundle))
+                return i.count();
         return 0;
     }
 
-    public static List<Stack> get()
+    public static List<Item> get()
     {
         if(stock == null)
             stock = new ArrayList<>();
@@ -79,19 +85,18 @@ public class Stock
 
     public static boolean canValidate(@NotNull Order o)
     {
-        for(Stack s : o.stacks())
-            if(countOf(s.pid()) < s.count())
+        for(Item i : o.items())
+            if(countOf(i.bundle()) < i.count())
                 return false;
         return true;
     }
 
     public static void validate(Order o)
     {
-        if(!canValidate(o))
-            throw new IllegalStateException("Inssuficient stock");
-        for(Stack s : o.stacks())
+        if(canValidate(o))
         {
-            remove(s.pid(), s.count());
+            for(Item i : o.items())
+                remove(i.bundle(), i.count());
         }
     }
 }

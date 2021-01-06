@@ -10,21 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import net.harmal.karnet2.R;
-import net.harmal.karnet2.core.Product;
-import net.harmal.karnet2.core.Stack;
-import net.harmal.karnet2.core.registers.ProductRegister;
+import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import java.util.List;
 
-public class OrderStacksAdapter extends KarnetRecyclerAdapter<OrderStacksAdapter.OrderStacksViewHolder>
+public class OrderItemAdapter extends KarnetRecyclerAdapter<OrderItemAdapter.OrderItemViewHolder>
 {
-    public static class OrderStacksViewHolder extends KarnetRecyclerViewHolder
+    public static class OrderItemViewHolder extends KarnetRecyclerViewHolder
     {
         private final TextView    stackItemName ;
         private final TextView    stackItemCount;
         private final ImageButton stackDeleteBtn;
-        public OrderStacksViewHolder(@NonNull View itemView, OnItemInputListener listener)
+        public OrderItemViewHolder(@NonNull View itemView, OnItemInputListener listener)
         {
             super(itemView, listener);
 
@@ -35,35 +33,37 @@ public class OrderStacksAdapter extends KarnetRecyclerAdapter<OrderStacksAdapter
     }
 
     @NonNull
-    private final List<Stack> stackList   ;
+    private final List<Item> itemList;
     private final boolean     showDelete  ;
     private final String      itemSubtitle;
 
-    public OrderStacksAdapter(@NonNull List<Stack> stackList)
+    public OrderItemAdapter(@NonNull List<Item> itemList)
     {
-        this(stackList, true, "%d");
+        this(itemList, true,
+                "%d boîtes x %d dhs");
     }
 
-    public OrderStacksAdapter(@NonNull List<Stack> stackList, boolean showDelete, String itemSubtitle)
+    public OrderItemAdapter(@NonNull List<Item> itemList, boolean showDelete, String itemSubtitle)
     {
-        this.stackList    = stackList   ;
+        this.itemList = itemList;
         this.showDelete   = showDelete  ;
         this.itemSubtitle = itemSubtitle;
     }
 
     @NonNull
-    public List<Stack> stackList()
+    public List<Item> itemList()
     {
-        return stackList;
+        return itemList;
     }
+
 
     @NonNull
     @Override
-    public OrderStacksViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public OrderItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_order_stack, parent, false);
-        OrderStacksViewHolder vh = new OrderStacksViewHolder(v, onItemInputListener);
+                .inflate(R.layout.list_item_order_item, parent, false);
+        OrderItemViewHolder vh = new OrderItemViewHolder(v, onItemInputListener);
         if(showDelete)
             vh.stackDeleteBtn.setVisibility(View.VISIBLE);
         else
@@ -73,18 +73,17 @@ public class OrderStacksAdapter extends KarnetRecyclerAdapter<OrderStacksAdapter
 
     @SuppressLint("DefaultLocale")
     @Override
-    public void onBindViewHolder(@NonNull OrderStacksViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull OrderItemViewHolder holder, int position)
     {
-        Stack current = stackList.get(position);
-        Product p = ProductRegister.getProduct(current.pid());
-        assert p != null;
-        holder.stackItemName.setText(p.name());
-        holder.stackItemCount.setText(String.format(itemSubtitle, current.count(), p.unitPrice()));
+        Item current = itemList.get(position);
+        holder.stackItemName.setText(current.bundle().name());
+        holder.stackItemCount.setText(String.format(itemSubtitle,
+                current.count(), current.bundle().price()));
     }
 
     @Override
     public int getItemCount()
     {
-        return stackList.size();
+        return itemList.size();
     }
 }

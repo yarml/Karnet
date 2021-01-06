@@ -1,8 +1,8 @@
 package net.harmal.karnet2.core.registers;
 
+import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Date;
-import net.harmal.karnet2.core.Stack;
 import net.harmal.karnet2.core.Trash;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,15 +20,15 @@ public class OrderRegister
 
     public static int add(@NotNull Order o)
     {
-        return add(o.oid(), o.cid(), o.deliveryPrice(), o.stacks(), o.dueDate());
+        return add(o.oid(), o.cid(), o.deliveryPrice(), o.items(), o.dueDate());
     }
     // Returns OID
-    public static int add(int cid, int deliveryPrice, List<Stack> stacks, Date dueDate)
+    public static int add(int cid, int deliveryPrice, List<Item> stacks, Date dueDate)
     {
         return add(orderIdCount++, cid, deliveryPrice, stacks, dueDate);
     }
     // Returns OID
-    public static int add(int oid, int cid, int deliveryPrice, List<Stack> stacks, Date dueDate)
+    public static int add(int oid, int cid, int deliveryPrice, List<Item> stacks, Date dueDate)
     {
         if(orderRegister == null)
             orderRegister = new ArrayList<>();

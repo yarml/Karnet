@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/options_add_product_validate"
+        android:id="@+id/options_add_ingredient"
         app:showAsAction="always"
-        android:icon="@drawable/ic_done"
-        android:title="@string/add_customer" />
+        android:icon="@drawable/ic_add"
+        android:title="@string/add_ingredient" />
 
 </menu>

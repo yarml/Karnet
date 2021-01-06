@@ -1,6 +1,5 @@
 package net.harmal.karnet2.core;
 
-import net.harmal.karnet2.core.registers.ProductRegister;
 import net.harmal.karnet2.savefile.Savable;
 
 import org.jetbrains.annotations.NotNull;
@@ -16,15 +15,15 @@ public class Order implements Savable
     private int         oid          ;
     private int         cid          ;
     private int         deliveryPrice;
-    private List<Stack> stacks       ;
+    private List<Item>  items       ;
     private Date        dueDate      ;
 
-    public Order(int oid, int cid, int deliveryPrice, @NotNull List<Stack> stacks, @NotNull Date dueDate)
+    public Order(int oid, int cid, int deliveryPrice, @NotNull List<Item> items, @NotNull Date dueDate)
     {
         this.oid           = oid          ;
         this.cid           = cid          ;
         this.deliveryPrice = deliveryPrice;
-        this.stacks        = stacks       ;
+        this.items        = items       ;
         this.dueDate       = dueDate      ;
     }
 
@@ -41,9 +40,9 @@ public class Order implements Savable
         return deliveryPrice;
     }
     @NotNull
-    public List<Stack> stacks()
+    public List<Item> items()
     {
-        return stacks;
+        return items;
     }
     @NotNull
     public Date dueDate()
@@ -63,9 +62,9 @@ public class Order implements Savable
     {
         deliveryPrice = nDeliveryPrice;
     }
-    public void stacks(@NotNull List<Stack> nstacks)
+    public void items(@NotNull List<Item> items)
     {
-        stacks = nstacks;
+        this.items = items;
     }
     public void dueDate(@NotNull Date ndate)
     {
@@ -78,36 +77,31 @@ public class Order implements Savable
     public int totalPrice()
     {
         int price = 0;
-        for(Stack s : stacks)
-        {
-            Product p = ProductRegister.getProduct(s.pid());
-            assert p != null;
-            price += p.unitPrice() * s.count();
-        }
+        for(Item i : items)
+            price += i.count() * i.bundle().price();
         return price;
     }
 
-    public void add(int pid, int count)
+    public void add(Item item)
     {
         boolean added = false;
-        for(Stack s : stacks)
-            if(s.pid() == pid)
+        for(Item i : items)
+            if(i.bundle().equals(item.bundle()))
             {
-                s.add(count);
-                added = true;
+                i.add(item.count());
             }
         if(!added)
-            stacks.add(new Stack(pid, count));
+            items.add(item);
     }
 
-    public void remove(int pid, int count)
+    public void remove(Item item)
     {
-        for(Stack s : stacks)
-            if(s.pid() == pid)
+        for(Item i : items)
+            if(i.bundle().equals(item.bundle()))
             {
-                s.remove(count);
-                if(s.count() == 0)
-                    stacks.remove(s);
+                i.remove(item.count());
+                if(i.count() <= 0)
+                    items.remove(i);
             }
     }
 
@@ -117,10 +111,10 @@ public class Order implements Savable
         stream.writeInt(oid);
         stream.writeInt(cid);
         stream.writeInt(deliveryPrice);
-        stream.writeInt(stacks.size());
+        stream.writeInt(items.size());
         dueDate.writeData(stream);
-        for(Stack s : stacks)
-            s.writeData(stream);
+        for(Item i : items)
+            i.writeData(stream);
     }
     public static class OrderBuilder implements Savable.BUILDER<Order>
     {
@@ -130,14 +124,16 @@ public class Order implements Savable
             int oid = buffer.getInt();
             int cid = buffer.getInt();
             int deliveryPrice = buffer.getInt();
-            int stackCount = buffer.getInt();
+            int itemCount = buffer.getInt();
             Date.DateBuilder dateBuilder = new Date.DateBuilder();
             Date date = dateBuilder.readData(version, buffer);
-            List<Stack> stacks = new ArrayList<>();
-            Stack.StackBuilder stackBuilder = new Stack.StackBuilder();
-            for(int i = 0; i < stackCount; i++)
-                stacks.add(stackBuilder.readData(version, buffer));
-            return new Order(oid, cid, deliveryPrice, stacks, date);
+            List<Item> items = new ArrayList<>();
+            for(int i = 0; i < itemCount; i++)
+            {
+                Item.ItemBuilder builder = new Item.ItemBuilder();
+                items.add(builder.readData(version, buffer));
+            }
+            return new Order(oid, cid, deliveryPrice, items, date);
         }
     }
 }

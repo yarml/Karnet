@@ -1,6 +1,7 @@
 package net.harmal.karnet2;
 
 import android.app.Application;
+import android.os.Looper;
 
 import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.registers.CustomerRegister;
@@ -49,9 +50,10 @@ public class KarnetApplication extends Application
     {
         super.onCreate();
         Logs.debug("Reading save file");
+        String path = getApplicationContext().getFilesDir().getAbsolutePath();
         try
         {
-            SaveFileRW.read(getApplicationContext().getFilesDir().getAbsolutePath());
+            SaveFileRW.read(path);
         }
         catch (Exception e)
         {

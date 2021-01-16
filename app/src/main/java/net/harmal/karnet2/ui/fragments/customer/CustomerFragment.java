@@ -28,6 +28,7 @@ import net.harmal.karnet2.core.Trash;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.CustomerListAdapter;
+import net.harmal.karnet2.ui.dialogs.WaitDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnActionExpandListenerBuilder;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
@@ -109,7 +110,8 @@ public class CustomerFragment extends KarnetFragment
             NavDirections action = CustomerFragmentDirections
                     .actionCustomerFragmentToCustomerAddModifyFragment(
                             -1, getString(R.string.fragment_add_customer_label),
-                            "", "", "",
+                            "", "",
+                            getString(R.string.default_city)  ,
                             today.day(), today.month(), today.year());
             NavHostFragment.findNavController(this).navigate(action);
         }
@@ -125,12 +127,22 @@ public class CustomerFragment extends KarnetFragment
                         .actionCustomerFragmentToCustomerAddModifyFragment(
                                 -1, getString(R.string.fragment_add_customer_label),
                                 Utils.extractCustomerName(contact),
-                                Utils.extractCustomerNum(contact), "",
+                                Utils.extractCustomerNum(contact) ,
+                                getString(R.string.default_city)  ,
                                 today.day(), today.month(), today.year());
                 requireActivity().runOnUiThread(() ->
                         NavHostFragment.findNavController(this).navigate(action));
             });
             other.start();
+        }
+        else if(item.getItemId() == R.id.option_customers_sync)
+        {
+            WaitDialog waitDialog = new WaitDialog(() -> {
+                ExternalActivityInterface.syncCustomers(requireContext());
+                requireActivity().runOnUiThread(() -> customerListAdapter.update());
+            }, "Synchronization en cours", "Clients synchronizé",
+                    requireView().getWindowToken());
+            waitDialog.show(getChildFragmentManager(), "");
         }
         return true;
     }

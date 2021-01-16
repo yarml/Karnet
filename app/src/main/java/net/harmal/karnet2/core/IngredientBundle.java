@@ -83,35 +83,70 @@ public class IngredientBundle implements Savable
         this.extrasPiid = extrasPiid;
     }
 
+    public boolean contains(@NotNull ProductIngredient ingredient)
+    {
+        return contains(ingredient.piid());
+    }
+
+    public boolean contains(int piid)
+    {
+        return basePiid  == piid
+        || fatPiid   == piid
+        || shapePiid == piid
+        || tastePiid == piid
+        || extrasPiid.contains(piid);
+    }
+
     public int price()
     {
         int price = 0;
-        price += IngredientRegister.getIngredient(basePiid).price();
-        price += IngredientRegister.getIngredient(fatPiid).price();
-        price += IngredientRegister.getIngredient(shapePiid).price();
-        price += IngredientRegister.getIngredient(tastePiid).price();
+
+        ProductIngredient baseI  = IngredientRegister.getIngredient(basePiid );
+        ProductIngredient fatI   = IngredientRegister.getIngredient(fatPiid  );
+        ProductIngredient shapeI = IngredientRegister.getIngredient(shapePiid);
+        ProductIngredient tasteI = IngredientRegister.getIngredient(tastePiid);
+
+        assert baseI != null && fatI != null && shapeI != null && tasteI != null;
+
+        price += baseI.price( );
+        price += fatI.price(  );
+        price += shapeI.price();
+        price += tasteI.price();
 
         for(int i : extrasPiid)
-            price += IngredientRegister.getIngredient(i).price();
+        {
+            ProductIngredient extra = IngredientRegister.getIngredient(i);
+            assert extra != null;
+            price += extra.price();
+        }
         return price;
     }
 
     public String name()
     {
-        String base  = IngredientRegister.getIngredient(basePiid).displayName( );
-        String fat   = IngredientRegister.getIngredient(fatPiid).displayName(  );
-        String shape = IngredientRegister.getIngredient(shapePiid).displayName();
-        String taste = IngredientRegister.getIngredient(tastePiid).displayName();
+        ProductIngredient baseI  = IngredientRegister.getIngredient(basePiid );
+        ProductIngredient fatI   = IngredientRegister.getIngredient(fatPiid  );
+        ProductIngredient shapeI = IngredientRegister.getIngredient(shapePiid);
+        ProductIngredient tasteI = IngredientRegister.getIngredient(tastePiid);
+
+        assert baseI != null && fatI != null && shapeI != null && tasteI != null;
+
+        String base  = baseI.displayName( );
+        String fat   = fatI.displayName(  );
+        String shape = shapeI.displayName();
+        String taste = tasteI.displayName();
         
         StringBuilder nameBuilder = new StringBuilder();
-        nameBuilder.append(String.format("%s %s en %s en %s", shape, taste, base, fat));
+        nameBuilder.append(String.format("%s %s %s %s", shape, taste, base, fat));
 
         if(extrasPiid.size() > 0)
         {
             nameBuilder.append("(");
             for(int extra : extrasPiid)
             {
-                String extraName = IngredientRegister.getIngredient(extra).displayName();
+                ProductIngredient extraI = IngredientRegister.getIngredient(extra);
+                assert extraI != null;
+                String extraName = extraI.displayName();
                 nameBuilder.append("+").append(extraName);
             }
             nameBuilder.append(")");

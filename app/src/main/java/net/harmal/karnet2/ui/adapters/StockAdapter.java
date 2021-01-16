@@ -11,10 +11,14 @@ import androidx.annotation.NonNull;
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.Item;
+import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.registers.IngredientRegister;
+import net.harmal.karnet2.core.registers.OrderRegister;
 import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,46 +66,38 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
     {
         Item current = visibleItems.get(position);
 
+        int stock = Stock.countOf(current.bundle());
+        int count = OrderRegister.countOf(current.bundle());
+        int sum = stock - count;
+
         holder.productName.setText(current.bundle().name());
-        holder.count.setText(String.format("%d", Stock.countOf(current.bundle())));
+        holder.count.setText(String.format("%d / %d", stock, sum));
     }
 
     public void update()
     {
         this.visibleItems = new ArrayList<>();
 
-        MAIN_LOOP:
-        for(Item i : items)
+        if(filter.size() == 0)
         {
-            IngredientBundle bundle = i.bundle();
-            if(filterAllow(bundle.basePiid(  ))
-            || filterAllow(bundle.fatPiid(   ))
-            || filterAllow(bundle.shapePiid( ))
-            || filterAllow(bundle.tastePiid()))
-            {
-                visibleItems.add(i);
-                continue;
-            }
-            for(int extraPiid : bundle.extrasPiid())
-                if(filterAllow(extraPiid))
+            visibleItems.addAll(items);
+            notifyDataSetChanged();
+            return;
+        }
+
+        for(Item i : items)
+            for(ProductIngredient filterIngredient : filter)
+                if(i.bundle().contains(filterIngredient))
                 {
                     visibleItems.add(i);
-                    continue MAIN_LOOP;
+                    break;
                 }
-        }
         notifyDataSetChanged();
-    }
-
-    private boolean filterAllow(int piid)
-    {
-        ProductIngredient p = IngredientRegister.getIngredient(piid);
-        assert p != null;
-        return filter.contains(p);
     }
 
     public List<Item> visibleItemList()
     {
-        return items;
+        return visibleItems;
     }
 
     @Override
@@ -118,6 +114,37 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
     public void filter(List<ProductIngredient> filter)
     {
         this.filter = filter;
+        update();
+    }
+
+    public boolean[] filterArray()
+    {
+        boolean[] filter = new boolean[IngredientRegister.size()];
+        for(int i = 0; i < filter.length; i++)
+        {
+            filter[i] = false;
+            ProductIngredient ingredient = IngredientRegister.get().get(i);
+            for(ProductIngredient ingredientFilter : this.filter)
+            {
+                if(ingredientFilter.equals(ingredient))
+                {
+                    filter[i] = true;
+                    break;
+                }
+            }
+        }
+        return filter;
+    }
+
+    public void filterArray(@NotNull boolean[] newFilter)
+    {
+        if(newFilter.length != IngredientRegister.size())
+            throw new IllegalArgumentException("New filter array length should be the" +
+                    " same as the ingredient register size");
+        filter = new ArrayList<>();
+        for(int i = 0; i < newFilter.length; i++)
+            if(newFilter[i])
+                filter.add(IngredientRegister.get().get(i));
         update();
     }
 }

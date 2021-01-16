@@ -3,6 +3,7 @@ package net.harmal.karnet2;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -11,7 +12,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
@@ -139,7 +142,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void onDestinationChanged(NavController controller, @NotNull NavDestination destination, Bundle arguments) {
         if (appBarConfiguration.getTopLevelDestinations().contains(destination.getId())) {
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout,
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
                     R.string.nav_drawer_open, R.string.nav_drawer_close);
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();

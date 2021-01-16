@@ -102,4 +102,15 @@
     <string name="modify">Modifier %s</string>
     <string name="missing_ingredients">Veuillez ajouter des ingrédients premièrement</string>
     <string name="stock_filter_title">Filtrer le stock</string>
+    <string name="modify_filter_dialog_title">Modifier le filtre</string>
+    <string name="clear_selection">Désélectionner tout</string>
+    <string name="only_delivery_text">Montrer que les commandes avec livraison</string>
+    <string name="more_details">Plus de détails</string>
+    <string name="show_all_orders_text">Tout les commandes seront affichés</string>
+    <string name="show_only_delivery_orders_text">Seulement les commandes avec livraison seront affichés</string>
+    <string name="delivery">Livraison</string>
+    <string name="delivery_total">Total: %d dhs</string>
+    <string name="default_city">Casablanca</string>
+    <string name="sync">Sync</string>
+    <string name="wait">Veuillez patienter</string>
 </resources>

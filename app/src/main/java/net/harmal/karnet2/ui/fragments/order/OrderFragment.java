@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -82,6 +83,7 @@ public class OrderFragment extends KarnetFragment
         {
             Order o = orderListAdapter.visibleOrderList().get(i);
             OrderRegister.remove(o.oid());
+            orderListAdapter.update();
             orderListAdapter.notifyItemRemoved(i);
             if(orderListAdapter.getItemCount() == 0)
             {
@@ -90,7 +92,7 @@ public class OrderFragment extends KarnetFragment
             }
             assert getView() != null;
             Snackbar undo = Snackbar.make(getView(), R.string.order_removed, Snackbar.LENGTH_LONG);
-            undo.setAction(R.string.undo, this::onUndoCustomerDeletion);
+            undo.setAction(R.string.undo, this::onUndoOrderDeletion);
             undo.show();
         }
         else if(view.getId() == R.id.btn_order_done)
@@ -121,7 +123,7 @@ public class OrderFragment extends KarnetFragment
                 Animations.popOut(doneBtn);
                 return;
             }
-            Order o = OrderRegister.get().get(i);
+            Order o = orderListAdapter.visibleOrderList().get(i);
             Customer c = CustomerRegister.getCustomer(o.cid());
             assert c != null;
             NavDirections action = OrderFragmentDirections
@@ -140,6 +142,7 @@ public class OrderFragment extends KarnetFragment
         Order o = orderListAdapter.visibleOrderList().get(pos);
         Stock.validate(o);
         OrderRegister.get().remove(o);
+        orderListAdapter.update();
         orderListAdapter.notifyItemRemoved(pos);
         if(orderListAdapter.getItemCount() == 0)
         {
@@ -166,7 +169,7 @@ public class OrderFragment extends KarnetFragment
         }
     }
 
-    private void onUndoCustomerDeletion(View view)
+    private void onUndoOrderDeletion(View view)
     {
         if(orderListAdapter.getItemCount() == 0)
         {
@@ -174,7 +177,7 @@ public class OrderFragment extends KarnetFragment
             orderList.setVisibility(View.VISIBLE);
         }
         OrderRegister.add(Trash.popOrder());
-        orderListAdapter.notifyItemInserted(OrderRegister.size() - 1);
+        orderListAdapter.update();
     }
 
     @Override
@@ -193,9 +196,36 @@ public class OrderFragment extends KarnetFragment
                     .actionOrderFragmentToOrderAddModifyFragment(-1, getString(R.string.add_order));
             NavHostFragment.findNavController(this).navigate(action);
         }
-        else if(item.getItemId() == R.id.option_order_filter)
+        else if(item.getItemId() == R.id.option_delivery)
         {
-
+            NavDirections action = OrderFragmentDirections
+                    .actionOrderFragmentToDeliveryFragment();
+            NavHostFragment.findNavController(this).navigate(action);
+        }
+        else if(item.getItemId() == R.id.option_only_delivery)
+        {
+            if(orderListAdapter.onlyDelivery())
+            {
+                item.setIcon(ResourcesCompat.getDrawable(getResources(),
+                        R.drawable.ic_delivery_white, null));
+                orderListAdapter.onlyDelivery(false);
+                Toast.makeText(requireContext(), R.string.show_all_orders_text,
+                        Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                item.setIcon(ResourcesCompat.getDrawable(getResources(),
+                        R.drawable.ic_delivery, null));
+                orderListAdapter.onlyDelivery(true);
+                Toast.makeText(requireContext(), R.string.show_only_delivery_orders_text,
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(item.getItemId() == R.id.option_order_details)
+        {
+            NavDirections action = OrderFragmentDirections
+                    .actionOrderFragmentToOrderStockFragment();
+            NavHostFragment.findNavController(this).navigate(action);
         }
         return true;
     }

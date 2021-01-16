@@ -1,5 +1,8 @@
 package net.harmal.karnet2.core.registers;
 
+import android.widget.Toast;
+
+import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.Trash;
 
@@ -98,4 +101,13 @@ public class IngredientRegister
             list.add(p.displayName());
         return list;
     }
+
+    public static boolean hasEnoughIngredients()
+    {
+        return !(onlyType(ProductIngredient.Type.BASE ).size() == 0
+              || onlyType(ProductIngredient.Type.FAT  ).size() == 0
+              || onlyType(ProductIngredient.Type.SHAPE).size() == 0
+              || onlyType(ProductIngredient.Type.TASTE).size() == 0);
+    }
+
 }

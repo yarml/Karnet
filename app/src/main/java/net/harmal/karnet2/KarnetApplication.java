@@ -7,6 +7,7 @@ import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.savefile.SaveFileRW;
 import net.harmal.karnet2.utils.ErrorStream;
+import net.harmal.karnet2.utils.ExternalActivityInterface;
 import net.harmal.karnet2.utils.LogStream;
 import net.harmal.karnet2.utils.Logs;
 

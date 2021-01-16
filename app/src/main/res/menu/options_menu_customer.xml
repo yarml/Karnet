@@ -10,6 +10,11 @@
         app:showAsAction="collapseActionView|always"
         app:actionViewClass="android.widget.SearchView" />
     <item
+        android:id="@+id/option_customers_sync"
+        android:icon="@drawable/ic_sync"
+        android:title="@string/sync"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/option_add_customer"
         android:icon="@drawable/ic_add"
         android:title="@string/add_customer"

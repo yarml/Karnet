@@ -16,7 +16,6 @@ public class Utils
         name = name.replaceAll("Client", "");
         name = name.replaceAll("client", "");
         name = name.trim();
-        Logs.debug("Extracted name: " + name);
         return name;
     }
 
@@ -29,7 +28,6 @@ public class Utils
         num = num.replaceAll("-", "");
         num = num.replaceAll(" ", "");
         num = num.replace("+212", "0");
-        Logs.debug("Extracted num: " + num);
         return num;
     }
 

@@ -133,6 +133,15 @@ public class OrderAddModifyFragment extends KarnetFragment
             if(itemListAdapter.getItemCount() == 0)
                 Animations.popIn(noItemText);
         }
+        else
+        {
+            NumberInputDialog numDialog = new NumberInputDialog(R.string.select_count,
+                    1, 1000, n -> {
+                itemListAdapter.itemList().get(i).count(n);
+                itemListAdapter.notifyDataSetChanged();
+            }, requireView().getWindowToken());
+            numDialog.show(getChildFragmentManager(), "");
+        }
     }
 
     private void onAddStackButtonClick(View view)
@@ -160,7 +169,8 @@ public class OrderAddModifyFragment extends KarnetFragment
                         i.add(n);
                         break;
                     }
-                itemListAdapter.itemList().add(item);
+                if(!alreadyExist)
+                    itemListAdapter.itemList().add(item);
                 itemListAdapter.notifyDataSetChanged();
             }, requireView().getWindowToken());
             numDialog.show(getChildFragmentManager(), "");

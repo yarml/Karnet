@@ -21,6 +21,11 @@ import java.util.List;
 
 public class SelectIngredientBundleDialog extends KarnetDialogFragment
 {
+    private static int lastBase ;
+    private static int lastFat  ;
+    private static int lastShape;
+    private static int lastTaste;
+
     public interface SelectIngredientBundleDialogInterface
     {
         void onIngredientBundleSelected(IngredientBundle b);
@@ -51,6 +56,11 @@ public class SelectIngredientBundleDialog extends KarnetDialogFragment
         int shape = getSelectedIngredient(shapeSpinner, ProductIngredient.Type.SHAPE);
         int taste = getSelectedIngredient(tasteSpinner, ProductIngredient.Type.TASTE);
 
+        lastBase  = baseSpinner.getSelectedItemPosition( );
+        lastFat   = fatSpinner.getSelectedItemPosition(  );
+        lastShape = shapeSpinner.getSelectedItemPosition();
+        lastTaste = tasteSpinner.getSelectedItemPosition();
+
         this.dialogInterface.onIngredientBundleSelected(new IngredientBundle(
                 base, fat, shape,
                 taste, selectedExtras));
@@ -78,6 +88,11 @@ public class SelectIngredientBundleDialog extends KarnetDialogFragment
         fatSpinner.setAdapter(getAdapterForType(ProductIngredient.Type.FAT));
         shapeSpinner.setAdapter(getAdapterForType(ProductIngredient.Type.SHAPE));
         tasteSpinner.setAdapter(getAdapterForType(ProductIngredient.Type.TASTE));
+        baseSpinner.setSelection(lastBase  );
+        fatSpinner.setSelection(lastFat    );
+        shapeSpinner.setSelection(lastShape);
+        tasteSpinner.setSelection(lastTaste);
+
     }
 
     @NotNull

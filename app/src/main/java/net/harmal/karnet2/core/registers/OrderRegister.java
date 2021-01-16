@@ -1,5 +1,6 @@
 package net.harmal.karnet2.core.registers;
 
+import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Date;
@@ -45,6 +46,28 @@ public class OrderRegister
         return oid;
     }
 
+    @NotNull
+    public static List<Order> forDate(Date d)
+    {
+        if(d == null)
+            return get();
+        List<Order> orders = new ArrayList<>();
+        for(Order o : get())
+            if(o.dueDate().equals(d))
+                orders.add(o);
+        return orders;
+    }
+
+    @NotNull
+    public static List<Order> withDelivery()
+    {
+        List<Order> result = new ArrayList<>();
+        for(Order o : get())
+            if(o.deliveryPrice() != 0)
+                result.add(o);
+        return result;
+    }
+
     public static void remove(int oid)
     {
         if(orderRegister == null)
@@ -58,6 +81,14 @@ public class OrderRegister
                 break;
             }
         }
+    }
+
+    public static int countOf(@NotNull IngredientBundle bundle)
+    {
+        int count = 0;
+        for(Order o : orderRegister)
+            count += o.countOf(bundle);
+        return count;
     }
 
     @Nullable

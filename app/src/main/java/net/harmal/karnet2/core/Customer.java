@@ -73,6 +73,17 @@ public class Customer implements Savable
     }
 
     @Override
+    public String toString() {
+        return "Customer{" +
+                "cid=" + cid +
+                ", creationDate=" + creationDate +
+                ", name='" + name + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
+
+    @Override
     public void writeData(@NotNull DataOutputStream stream) throws IOException
     {
         stream.writeInt(cid);

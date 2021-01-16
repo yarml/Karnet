@@ -4,8 +4,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/option_add_order"
+        android:id="@+id/option_only_delivery"
         app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_delivery_white"
+        android:title="@string/only_delivery_text" />
+
+    <item
+        android:id="@+id/option_order_details"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_calc"
+        android:title="@string/more_details" />
+
+    <item
+        android:id="@+id/option_delivery"
+        android:icon="@drawable/ic_more"
+        app:showAsAction="ifRoom"
+        android:title="@string/delivery" />
+
+    <item
+        android:id="@+id/option_add_order"
+        app:showAsAction="always"
         android:icon="@drawable/ic_add"
         android:title="@string/add_order" />
 

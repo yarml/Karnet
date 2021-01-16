@@ -1,5 +1,7 @@
 package net.harmal.karnet2.ui.fragments.stock;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +25,16 @@ import net.harmal.karnet2.ui.dialogs.StockItemCountModifyDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
+import java.util.List;
+
 public class StockFragment extends KarnetFragment
 {
     private TextView                   noItemText            ;
     private RecyclerView               stockList             ;
     private RecyclerView.LayoutManager stockListLayoutManager;
     private StockAdapter               stockListAdapter      ;
+
+    private boolean[] filter;
 
     public StockFragment()
     {
@@ -75,10 +81,7 @@ public class StockFragment extends KarnetFragment
     {
         if(menuItem.getItemId() == R.id.option_add_stock)
         {
-            if(IngredientRegister.onlyType(ProductIngredient.Type.BASE ).size() == 0
-                    || IngredientRegister.onlyType(ProductIngredient.Type.FAT  ).size() == 0
-                    || IngredientRegister.onlyType(ProductIngredient.Type.SHAPE).size() == 0
-                    || IngredientRegister.onlyType(ProductIngredient.Type.TASTE).size() == 0)
+            if(!IngredientRegister.hasEnoughIngredients())
             {
                 Toast.makeText(requireContext(), R.string.missing_ingredients,
                         Toast.LENGTH_LONG).show();
@@ -93,13 +96,65 @@ public class StockFragment extends KarnetFragment
                         Animations.popIn(stockList);
                     }
                     Stock.add(b, n);
-                    stockListAdapter.notifyDataSetChanged();
+                    stockListAdapter.update();
                 }, requireView().getWindowToken());
                 numDialog.show(getChildFragmentManager(), "");
             }, requireView().getWindowToken());
             dialog.show(getChildFragmentManager(), "");
         }
+        else if(menuItem.getItemId() == R.id.option_stock_filter)
+        {
+            if(!IngredientRegister.hasEnoughIngredients())
+            {
+                Toast.makeText(requireContext(), R.string.missing_ingredients,
+                        Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            filter = stockListAdapter.filterArray();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle(R.string.modify_filter_dialog_title);
+            builder.setPositiveButton(android.R.string.ok    , this::onFilterSet               );
+            builder.setNeutralButton(R.string.clear_selection, null                    );
+
+            List<String> ingredientList = IngredientRegister.toStringList(IngredientRegister.get());
+            String[] ingredientArray = new String[ingredientList.size()];
+            for(int i = 0; i < ingredientList.size(); i++)
+                ingredientArray[i] = ingredientList.get(i);
+            builder.setMultiChoiceItems(ingredientArray, filter,
+                    this::onIngredientFilterClicked);
+
+            AlertDialog dialog = builder.create();
+
+            // Makes neutral button not dismissing
+            dialog.setOnShowListener(dialog1 -> ((AlertDialog) dialog1).getButton(AlertDialog
+                    .BUTTON_NEUTRAL).setOnClickListener(v -> onFilterDialogClearClicked(dialog1)));
+
+            dialog.show();
+
+        }
         return true;
+    }
+
+    private void onIngredientFilterClicked(DialogInterface dialogInterface,
+                                           int which, boolean checked     )
+    {
+        filter[which] = checked;
+    }
+
+    private void onFilterSet(DialogInterface dialog, int which)
+    {
+        stockListAdapter.filterArray(filter);
+    }
+
+    private void onFilterDialogClearClicked(DialogInterface dialog)
+    {
+        for (int i = 0; i < filter.length; ++i)
+        {
+            filter[i] = false;
+            ((AlertDialog) dialog).getListView().setItemChecked(i, false);
+        }
     }
 
     private void onItemClick(View view, int i)
@@ -107,9 +162,9 @@ public class StockFragment extends KarnetFragment
         StockItemCountModifyDialog dialog = new StockItemCountModifyDialog(R.string.enter_value,
                 stockListAdapter.visibleItemList().get(i).bundle(), requireView().getWindowToken());
 
-        dialog.addOnDismissEvent(dialog1 -> stockListAdapter.notifyDataSetChanged());
+        dialog.addOnDismissEvent(dialog1 -> stockListAdapter.update());
         dialog.show(getChildFragmentManager(), "");
-        stockListAdapter.notifyDataSetChanged();
+        stockListAdapter.update();
         if(stockListAdapter.getItemCount() == 0)
         {
             noItemText.setVisibility(View.VISIBLE);

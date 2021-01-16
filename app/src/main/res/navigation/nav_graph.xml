@@ -19,6 +19,12 @@
         <action
             android:id="@+id/action_orderFragment_to_orderDetailsFragment"
             app:destination="@id/orderDetailsFragment" />
+        <action
+            android:id="@+id/action_orderFragment_to_deliveryFragment"
+            app:destination="@id/deliveryFragment" />
+        <action
+            android:id="@+id/action_orderFragment_to_orderStockFragment"
+            app:destination="@id/orderStockFragment" />
     </fragment>
     <fragment
         android:id="@+id/customerFragment"
@@ -157,4 +163,14 @@
             android:name="piid"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/deliveryFragment"
+        android:name="net.harmal.karnet2.ui.fragments.order.DeliveryFragment"
+        android:label="Livraison"
+        tools:layout="@layout/fragment_delivery" />
+    <fragment
+        android:id="@+id/orderStockFragment"
+        android:name="net.harmal.karnet2.ui.fragments.order.OrderStockFragment"
+        android:label="Stock - Commandes"
+        tools:layout="@layout/fragment_order_stock" />
 </navigation>

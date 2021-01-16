@@ -1,6 +1,7 @@
 package net.harmal.karnet2.core;
 
 import net.harmal.karnet2.savefile.Savable;
+import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -69,6 +70,15 @@ public class Order implements Savable
     public void dueDate(@NotNull Date ndate)
     {
         this.dueDate = ndate;
+    }
+
+    public int countOf(@NotNull IngredientBundle bundle)
+    {
+        int count = 0;
+        for(Item i : items)
+            if(i.bundle().equals(bundle))
+                count += i.count();
+        return count;
     }
 
     /**

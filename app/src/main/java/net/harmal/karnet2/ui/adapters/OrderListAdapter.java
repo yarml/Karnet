@@ -1,5 +1,6 @@
 package net.harmal.karnet2.ui.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import net.harmal.karnet2.R;
-import net.harmal.karnet2.core.Item;
+import net.harmal.karnet2.core.Customer;
 import net.harmal.karnet2.core.Order;
-import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
@@ -24,17 +24,23 @@ import java.util.List;
 
 public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.OrderViewHolder>
 {
+    public enum ViewMode
+    {
+        ALL, DELIVERY, NO_DELIVERY
+    }
     public static class OrderViewHolder extends KarnetRecyclerViewHolder
     {
         CardView    mainCard    ;
+        TextView    priceView   ;
         TextView    nameView    ;
         TextView    dateView    ;
-        ImageButton deleteBtn;
-        ImageButton doneBtn  ;
+        ImageButton deleteBtn   ;
+        ImageButton doneBtn     ;
         public OrderViewHolder(@NotNull View itemView, OnItemInputListener l)
         {
             super(itemView, l);
             mainCard  = itemView.findViewById(R.id.card_order_item     );
+            priceView = itemView.findViewById(R.id.text_order_total    );
             nameView  = itemView.findViewById(R.id.text_order_item_name);
             dateView  = itemView.findViewById(R.id.text_order_item_date);
             deleteBtn = itemView.findViewById(R.id.btn_order_delete    );
@@ -44,14 +50,14 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     private final List<Order> orderList       ;
     private List<Order>       visibleOrderList;
 
-    private boolean onlyDelivery;
+    private ViewMode viewMode;
 
     public OrderListAdapter(@NotNull List<Order> orderList)
     {
         this.orderList   = orderList        ;
         visibleOrderList = new ArrayList<>();
         visibleOrderList.addAll(  orderList);
-        onlyDelivery = false;
+        viewMode = ViewMode.ALL;
     }
 
     @NonNull
@@ -63,12 +69,21 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         return new OrderViewHolder(v, onItemInputListener);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position)
     {
         Order current = visibleOrderList.get(position);
-        holder.nameView.setText(String.format("Pour %s", CustomerRegister.getCustomer(current.cid()).name()));
-        holder.dateView.setText(String.format("Pour le: %s", current.dueDate().toString()));
+        Customer customer = CustomerRegister.getCustomer(current.cid());
+        assert customer != null;
+        holder.nameView.setText(String.format(holder.nameView.getResources()
+                        .getString(R.string.order_customer_info),
+                        customer.cid(), customer.name()));
+        holder.priceView.setText(String.format(holder.priceView.getResources()
+                        .getString(R.string.currency),
+                        current.totalPrice() + current.deliveryPrice()));
+        holder.dateView.setText(String.format(holder.dateView.getResources()
+                .getString(R.string.text_for_date), current.dueDate().toString()));
         holder.deleteBtn.setVisibility(View.GONE);
         holder.doneBtn.setVisibility(View.GONE);
 
@@ -97,21 +112,21 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         visibleOrderList = new ArrayList<>();
         for(Order o : orderList)
         {
-            if (onlyDelivery && o.deliveryPrice() != 0)
-                visibleOrderList.add(o);
-            else if(!onlyDelivery)
+            if ((viewMode == ViewMode.DELIVERY    && o.deliveryPrice() != 0)
+             || (viewMode == ViewMode.NO_DELIVERY && o.deliveryPrice() == 0)
+             || (viewMode == ViewMode.ALL))
                 visibleOrderList.add(o);
         }
         notifyDataSetChanged();
     }
-    public boolean onlyDelivery()
+    public ViewMode viewMode()
     {
-        return onlyDelivery;
+        return viewMode;
     }
 
-    public void onlyDelivery(boolean onlyDelivery)
+    public void viewMode(ViewMode viewMode)
     {
-        this.onlyDelivery = onlyDelivery;
+        this.viewMode = viewMode;
         update();
     }
 }

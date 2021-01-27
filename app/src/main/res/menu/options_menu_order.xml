@@ -6,7 +6,7 @@
     <item
         android:id="@+id/option_only_delivery"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_delivery_white"
+        android:icon="@drawable/ic_negative"
         android:title="@string/only_delivery_text" />
 
     <item

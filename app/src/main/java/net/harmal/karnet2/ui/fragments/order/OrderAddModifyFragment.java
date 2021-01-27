@@ -45,17 +45,19 @@ import java.util.ArrayList;
 public class OrderAddModifyFragment extends KarnetFragment
 {
 
-    private Button                     chooseCustomerBtn     ;
-    private EditText                   deliveryPriceEdit     ;
-    private EditText                   dateEdit              ;
-    private ImageButton                editDeliveryPriceBtn  ;
-    private ImageButton                editDateBtn           ;
-    private FloatingActionButton       addItemBtn            ;
-    private TextView                   noItemText            ;
+    private Button                     chooseCustomerBtn    ;
+    private EditText                   deliveryPriceEdit    ;
+    private EditText                   dateEdit             ;
+    private EditText                   reductionEdit        ;
+    private ImageButton                editDeliveryPriceBtn ;
+    private ImageButton                editDateBtn          ;
+    private ImageButton                editReductionBtn     ;
+    private FloatingActionButton       addItemBtn           ;
+    private TextView                   noItemText           ;
 
-    private RecyclerView               itemList              ;
-    private RecyclerView.LayoutManager itemListLayoutManager ;
-    private OrderItemAdapter           itemListAdapter       ;
+    private RecyclerView               itemList             ;
+    private RecyclerView.LayoutManager itemListLayoutManager;
+    private OrderItemAdapter           itemListAdapter      ;
 
     private int oid;
     private int cid = -1;
@@ -77,30 +79,35 @@ public class OrderAddModifyFragment extends KarnetFragment
 
         oid = args.getOid();
 
-        chooseCustomerBtn      = v.findViewById(R.id.btn_order_choose_customer               );
-        deliveryPriceEdit      = v.findViewById(R.id.edit_text_add_order_delivery_price      );
-        dateEdit               = v.findViewById(R.id.edit_text_add_order_date                );
-        editDeliveryPriceBtn   = v.findViewById(R.id.btn_edit_delivery_price_add_modify_order);
-        editDateBtn            = v.findViewById(R.id.btn_edit_date_add_modify_order          );
-        addItemBtn = v.findViewById(R.id.floating_btn_add_order_stack            );
-        noItemText = v.findViewById(R.id.text_order_no_stack                     );
-        itemList = v.findViewById(R.id.recycler_order_stacks                   );
-        itemListLayoutManager = new LinearLayoutManager(requireContext(                    ));
+        chooseCustomerBtn     = v.findViewById(R.id.btn_order_choose_customer               );
+        deliveryPriceEdit     = v.findViewById(R.id.edit_text_add_order_delivery_price      );
+        dateEdit              = v.findViewById(R.id.edit_text_add_order_date                );
+        reductionEdit         = v.findViewById(R.id.edit_text_add_order_reduction           );
+        editDeliveryPriceBtn  = v.findViewById(R.id.btn_edit_delivery_price_add_modify_order);
+        editDateBtn           = v.findViewById(R.id.btn_edit_date_add_modify_order          );
+        editReductionBtn      = v.findViewById(R.id.btn_edit_reduction_add_modify_order     );
+        addItemBtn            = v.findViewById(R.id.floating_btn_add_order_stack            );
+        noItemText            = v.findViewById(R.id.text_order_no_stack                     );
+        itemList              = v.findViewById(R.id.recycler_order_stacks                   );
+        itemListLayoutManager = new LinearLayoutManager(requireContext(                   ));
 
         addItemBtn.setOnClickListener(this::onAddStackButtonClick);
 
         deliveryPriceEdit.setInputType(InputType.TYPE_NULL);
-        dateEdit.setInputType(InputType.TYPE_NULL);
+        dateEdit.setInputType(InputType.TYPE_NULL         );
+        reductionEdit.setInputType(InputType.TYPE_NULL    );
 
-        chooseCustomerBtn.setOnClickListener(this::onChooseCustomerBtnClick);
+        chooseCustomerBtn.setOnClickListener(this::onChooseCustomerBtnClick    );
         editDeliveryPriceBtn.setOnClickListener(this::onDeliveryEditButtonClick);
-        editDateBtn.setOnClickListener(this::onDateEditButtonClick);
+        editDateBtn.setOnClickListener(this::onDateEditButtonClick             );
+        editReductionBtn.setOnClickListener(this::onReductionEditButtonClick   );
 
         if(oid < 0)
         {
             chooseCustomerBtn.setText(getResources().getString(R.string.choose_customer));
             deliveryPriceEdit.setText("0");
             dateEdit.setText(Date.afterDays(3).toString());
+            reductionEdit.setText("0");
             itemListAdapter = new OrderItemAdapter(new ArrayList<>());
             Animations.popIn(noItemText);
         }
@@ -114,6 +121,7 @@ public class OrderAddModifyFragment extends KarnetFragment
             chooseCustomerBtn.setText(c.name());
             deliveryPriceEdit.setText(String.format("%d", o.deliveryPrice()));
             dateEdit.setText(o.dueDate().toString());
+            reductionEdit.setText(String.format("%d", o.reduction()));
             itemListAdapter = new OrderItemAdapter(o.items());
             if(o.items().size() == 0)
                 Animations.popIn(noItemText);
@@ -122,6 +130,21 @@ public class OrderAddModifyFragment extends KarnetFragment
                 this::onStackItemClick, null));
         itemList.setLayoutManager(itemListLayoutManager);
         itemList.setAdapter(itemListAdapter);
+    }
+
+
+    private void onReductionEditButtonClick(View view)
+    {
+        NumberInputDialog dialog = new NumberInputDialog(R.string.select_delivery_price,
+                0, 200,
+                this::onReductionPriceSet, requireView().getWindowToken());
+        dialog.show(getChildFragmentManager(), "");
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void onReductionPriceSet(int i)
+    {
+        reductionEdit.setText(String.format("%d", i));
     }
 
     private void onStackItemClick(@NotNull View view, int i)
@@ -146,10 +169,7 @@ public class OrderAddModifyFragment extends KarnetFragment
 
     private void onAddStackButtonClick(View view)
     {
-        if(IngredientRegister.onlyType(ProductIngredient.Type.BASE ).size() == 0
-        || IngredientRegister.onlyType(ProductIngredient.Type.FAT  ).size() == 0
-        || IngredientRegister.onlyType(ProductIngredient.Type.SHAPE).size() == 0
-        || IngredientRegister.onlyType(ProductIngredient.Type.TASTE).size() == 0)
+        if(IngredientRegister.notEnoughIngredients())
         {
             Toast.makeText(requireContext(), R.string.missing_ingredients,
                     Toast.LENGTH_LONG).show();
@@ -196,9 +216,10 @@ public class OrderAddModifyFragment extends KarnetFragment
                 return true;
             }
             int deliveryPrice = Integer.parseInt(deliveryPriceEdit.getText().toString());
+            int reduction     = Integer.parseInt(reductionEdit.getText().toString(    ));
             Date date = new Date(dateEdit.getText().toString());
             if(oid < 0)
-                OrderRegister.add(cid, deliveryPrice, itemListAdapter.itemList(), date);
+                OrderRegister.add(cid, deliveryPrice, itemListAdapter.itemList(), date, reduction);
             else
             {
                 Order o = OrderRegister.getOrder(oid);
@@ -207,6 +228,7 @@ public class OrderAddModifyFragment extends KarnetFragment
                 o.deliveryPrice(deliveryPrice);
                 o.items(itemListAdapter.itemList());
                 o.dueDate(date);
+                o.reduction(reduction);
             }
             NavHostFragment.findNavController(this).navigateUp();
         }
@@ -216,8 +238,7 @@ public class OrderAddModifyFragment extends KarnetFragment
     private void onDateEditButtonClick(View view)
     {
         Date date = new Date(dateEdit.getText().toString());
-        assert getContext() != null;
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), this::onDateSet,
+        DatePickerDialog dialog = new DatePickerDialog(requireContext(), this::onDateSet,
                 date.year(), date.month() - 1, date.day());
         dialog.show();
     }
@@ -231,10 +252,9 @@ public class OrderAddModifyFragment extends KarnetFragment
 
     private void onDeliveryEditButtonClick(View view)
     {
-        assert getView() != null;
         NumberInputDialog dialog = new NumberInputDialog(R.string.select_delivery_price,
                 0, 200,
-                this::onDeliveryPriceSet, getView().getWindowToken());
+                this::onDeliveryPriceSet, requireView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }
 
@@ -251,9 +271,8 @@ public class OrderAddModifyFragment extends KarnetFragment
             Toast.makeText(getContext(), R.string.toast_add_customer, Toast.LENGTH_LONG).show();
             return;
         }
-        assert getView() != null;
         SelectCustomerDialog dialog = new SelectCustomerDialog(R.string.select_customer,
-                this::onCustomerSelected, getView().getWindowToken());
+                this::onCustomerSelected, requireView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }
 

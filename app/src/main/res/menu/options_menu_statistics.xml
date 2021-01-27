@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/option_stats_all"
+        app:showAsAction="never"
+        android:title="@string/stats_all" />
+    <item
+        android:id="@+id/option_stats_today"
+        app:showAsAction="never"
+        android:title="@string/stats_today" />
+    <item
+        android:id="@+id/option_stats_week"
+        app:showAsAction="never"
+        android:title="@string/stats_week" />
+    <item
+        android:id="@+id/option_stats_month"
+        app:showAsAction="never"
+        android:title="@string/stats_month" />
+    <item
+        android:id="@+id/option_stats_custom"
+        app:showAsAction="never"
+        android:title="@string/stats_custom" />
+</menu>

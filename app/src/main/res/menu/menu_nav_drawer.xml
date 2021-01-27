@@ -21,6 +21,10 @@
             android:icon="@drawable/ic_business_center"
             android:title="@string/drawer_ingredients" />
         <item
+            android:id="@+id/statisticsFragment"
+            android:icon="@drawable/ic_chart"
+            android:title="@string/drawer_stats" />
+        <item
             android:id="@+id/aboutFragment"
             android:icon="@drawable/ic_info"
             android:title="@string/drawer_about" />

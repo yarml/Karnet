@@ -10,6 +10,7 @@ import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.IngredientRegister;
 import net.harmal.karnet2.core.registers.OrderRegister;
+import net.harmal.karnet2.core.registers.OrdersLog;
 import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.utils.Logs;
 
@@ -38,7 +39,7 @@ public class SaveFileRW
      * The file's version determines mainly how the header should be interpreted
      * but other parts of the body might be interpreted differently
      */
-    private static final int SAVE_FILE_VER = 0x00000201;
+    private static final int SAVE_FILE_VER = 0x00000202;
 
     private static final String SAVE_FILE_NAME = "save.bin";
     private static final String LOGS_FILE_NAME = "logs.txt";
@@ -98,7 +99,8 @@ public class SaveFileRW
                 buf.getInt(); // product register id count
                 buf.getInt();
                 break;
-            case SAVE_FILE_VER:
+            case 0x00000201:
+            case 0x00000202:
                 // head
                 customerCount   = buf.getInt();
                 ingredientCount = buf.getInt();
@@ -138,7 +140,7 @@ public class SaveFileRW
         for(int i = 0; i < orderCount; i++)
         {
             Order.OrderBuilder builder = new Order.OrderBuilder();
-            Order o = builder.readData(version,buf);
+            Order o = builder.readData(version, buf);
             OrderRegister.add(o);
         }
 
@@ -147,6 +149,18 @@ public class SaveFileRW
         {
             Item.ItemBuilder builder = new Item.ItemBuilder();
             Stock.add(builder.readData(version, buf));
+        }
+
+        if(version >= 0x00000202)
+        {
+            // Read Orders Log
+            int ordersLogCount = buf.getInt();
+            for(int i = 0; i < ordersLogCount; i++)
+            {
+                Order.OrderBuilder builder = new Order.OrderBuilder();
+                Order o = builder.readData(version, buf);
+                OrdersLog.registerValidatedOrder(o);
+            }
         }
 
         Logs.debug("Data read");
@@ -213,6 +227,11 @@ public class SaveFileRW
         // Write stock
         for(Item s : Stock.get())
             s.writeData(dataStream);
+
+        // Write Orders log
+        dataStream.writeInt(OrdersLog.get().size());
+        for(Order o : OrdersLog.get())
+            o.writeData(dataStream);
 
         {
             File dataFile = new File(path, SAVE_FILE_NAME);

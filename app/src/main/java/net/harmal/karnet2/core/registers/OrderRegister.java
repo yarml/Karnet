@@ -21,28 +21,30 @@ public class OrderRegister
 
     public static int add(@NotNull Order o)
     {
-        return add(o.oid(), o.cid(), o.deliveryPrice(), o.items(), o.dueDate());
+        return add(o.oid(), o.cid(), o.deliveryPrice(), o.items(), o.dueDate(), o.reduction());
     }
     // Returns OID
-    public static int add(int cid, int deliveryPrice, List<Item> stacks, Date dueDate)
+    public static int add(int cid, int deliveryPrice, List<Item> stacks,
+                          Date dueDate, int reduction)
     {
-        return add(orderIdCount++, cid, deliveryPrice, stacks, dueDate);
+        return add(orderIdCount++, cid, deliveryPrice, stacks, dueDate, reduction);
     }
     // Returns OID
-    public static int add(int oid, int cid, int deliveryPrice, List<Item> stacks, Date dueDate)
+    public static int add(int oid, int cid, int deliveryPrice,
+                          List<Item> stacks, Date dueDate, int reduction)
     {
         if(orderRegister == null)
             orderRegister = new ArrayList<>();
         if(cid < 0) // CID must be positive
         {
-            return add(0, cid, deliveryPrice, stacks, dueDate);
+            return add(0, cid, deliveryPrice, stacks, dueDate, reduction);
         }
         for(Order o : orderRegister) // Make sure the CID is unique
             if(o.oid() == oid)
             {
-                return add(oid + 1, cid, deliveryPrice, stacks, dueDate);
+                return add(oid + 1, cid, deliveryPrice, stacks, dueDate, reduction);
             }
-        orderRegister.add(new Order(oid, cid, deliveryPrice, stacks, dueDate));
+        orderRegister.add(new Order(oid, cid, deliveryPrice, stacks, dueDate, reduction));
         return oid;
     }
 

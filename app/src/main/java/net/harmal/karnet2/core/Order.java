@@ -16,16 +16,19 @@ public class Order implements Savable
     private int         oid          ;
     private int         cid          ;
     private int         deliveryPrice;
-    private List<Item>  items       ;
+    private List<Item>  items        ;
     private Date        dueDate      ;
+    private int         reduction    ;
 
-    public Order(int oid, int cid, int deliveryPrice, @NotNull List<Item> items, @NotNull Date dueDate)
+    public Order(int oid, int cid, int deliveryPrice, @NotNull List<Item> items,
+                 @NotNull Date dueDate, int reduction)
     {
         this.oid           = oid          ;
         this.cid           = cid          ;
         this.deliveryPrice = deliveryPrice;
-        this.items        = items       ;
+        this.items         = items        ;
         this.dueDate       = dueDate      ;
+        this.reduction     = reduction    ;
     }
 
     public int oid()
@@ -72,6 +75,15 @@ public class Order implements Savable
         this.dueDate = ndate;
     }
 
+    public int reduction()
+    {
+        return reduction;
+    }
+    public void reduction(int reduction)
+    {
+        this.reduction = reduction;
+    }
+
     public int countOf(@NotNull IngredientBundle bundle)
     {
         int count = 0;
@@ -89,7 +101,7 @@ public class Order implements Savable
         int price = 0;
         for(Item i : items)
             price += i.count() * i.bundle().price();
-        return price;
+        return price - reduction;
     }
 
     public void add(Item item)
@@ -99,6 +111,8 @@ public class Order implements Savable
             if(i.bundle().equals(item.bundle()))
             {
                 i.add(item.count());
+                added = true;
+                break;
             }
         if(!added)
             items.add(item);
@@ -123,6 +137,7 @@ public class Order implements Savable
         stream.writeInt(deliveryPrice);
         stream.writeInt(items.size());
         dueDate.writeData(stream);
+        stream.writeInt(reduction);
         for(Item i : items)
             i.writeData(stream);
     }
@@ -138,12 +153,15 @@ public class Order implements Savable
             Date.DateBuilder dateBuilder = new Date.DateBuilder();
             Date date = dateBuilder.readData(version, buffer);
             List<Item> items = new ArrayList<>();
+            int reduction = 0;
+            if(version >= 0x00000202)
+                reduction = buffer.getInt();
             for(int i = 0; i < itemCount; i++)
             {
                 Item.ItemBuilder builder = new Item.ItemBuilder();
                 items.add(builder.readData(version, buffer));
             }
-            return new Order(oid, cid, deliveryPrice, items, date);
+            return new Order(oid, cid, deliveryPrice, items, date, reduction);
         }
     }
 }

@@ -1,135 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:layout_marginStart="12dp"
-    android:layout_marginEnd="12dp"
-    tools:ignore="HardcodedText,ContentDescription"
-    tools:context=".ui.fragments.order.OrderAddModifyFragment">
+    android:layout_height="match_parent">
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:orientation="horizontal" >
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_identity"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
-            android:contentDescription="NAME" />
-        <Button
-            android:id="@+id/btn_order_choose_customer"
+        android:gravity="center"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        tools:ignore="HardcodedText,ContentDescription"
+        tools:context=".ui.fragments.order.OrderAddModifyFragment">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="-customer-" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:orientation="horizontal" >
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_delivery"
-            android:contentDescription="DELIVERY_PRICE" />
-        <EditText
-            android:id="@+id/edit_text_add_order_delivery_price"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="-deliveryPrice-"
-            android:inputType="none"
-            android:hint="@string/hint_delivery_price"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:gravity="center_vertical"
-            tools:ignore="Autofill,TextFields"
-            android:layout_marginEnd="48dp"/>
-        <ImageButton
-            android:id="@+id/btn_edit_delivery_price_add_modify_order"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_edit"
-            android:layout_marginStart="-48dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:orientation="horizontal" >
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_date"
-            android:contentDescription="DELIVERY_PRICE" />
-        <EditText
-            android:id="@+id/edit_text_add_order_date"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="-date-"
-            android:inputType="none"
-            android:hint="@string/hint_order_date"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:gravity="center_vertical"
-            tools:ignore="Autofill,TextFields"
-            android:layout_marginEnd="48dp"/>
-        <ImageButton
-            android:id="@+id/btn_edit_date_add_modify_order"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_edit"
-            android:layout_marginStart="-48dp" />
-    </LinearLayout>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="48dp"
-        app:cardCornerRadius="48dp">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/darker_gray">
-            <TextView
-                android:id="@+id/text_order_no_stack"
-                android:layout_width="256dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal" >
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_identity"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
+                android:contentDescription="NAME" />
+            <Button
+                android:id="@+id/btn_order_choose_customer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/str_no_stack"
-                android:textAlignment="center"
-                android:textColor="@android:color/white"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:layout_gravity="center" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_order_stacks"
+                android:text="-customer-" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal" >
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_delivery"
+                android:contentDescription="DELIVERY_PRICE" />
+            <EditText
+                android:id="@+id/edit_text_add_order_delivery_price"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:overScrollMode="never" />
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floating_btn_add_order_stack"
+                android:text="-deliveryPrice-"
+                android:inputType="none"
+                android:hint="@string/hint_delivery_price"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:gravity="center_vertical"
+                tools:ignore="Autofill,TextFields"
+                android:layout_marginEnd="48dp"/>
+            <ImageButton
+                android:id="@+id/btn_edit_delivery_price_add_modify_order"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add"
-                android:layout_gravity="end|bottom"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="12dp"/>
-        </FrameLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_edit"
+                android:layout_marginStart="-48dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal" >
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_date"
+                android:contentDescription="DELIVERY_PRICE" />
+            <EditText
+                android:id="@+id/edit_text_add_order_date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="-date-"
+                android:inputType="none"
+                android:hint="@string/hint_order_date"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:gravity="center_vertical"
+                tools:ignore="Autofill,TextFields"
+                android:layout_marginEnd="48dp"/>
+            <ImageButton
+                android:id="@+id/btn_edit_date_add_modify_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_edit"
+                android:layout_marginStart="-48dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal" >
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/ic_minus"
+                android:contentDescription="DELIVERY_PRICE" />
+            <EditText
+                android:id="@+id/edit_text_add_order_reduction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="-reduction-"
+                android:inputType="none"
+                android:hint="@string/hint_reduction"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:gravity="center_vertical"
+                tools:ignore="Autofill,TextFields"
+                android:layout_marginEnd="48dp"/>
+            <ImageButton
+                android:id="@+id/btn_edit_reduction_add_modify_order"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_edit"
+                android:layout_marginStart="-48dp" />
+        </LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="48dp"
+            app:cardCornerRadius="48dp">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray">
+                <TextView
+                    android:id="@+id/text_order_no_stack"
+                    android:layout_width="256dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/str_no_stack"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:layout_gravity="center" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_order_stacks"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:overScrollMode="never" />
 
-</LinearLayout>
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_btn_add_order_stack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"/>
+    </LinearLayout>
+</ScrollView>

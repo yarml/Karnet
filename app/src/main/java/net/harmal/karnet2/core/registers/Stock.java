@@ -3,6 +3,7 @@ package net.harmal.karnet2.core.registers;
 import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.Order;
+import net.harmal.karnet2.core.ProductIngredient;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ public class Stock
 {
     private static List<Item> stock;
 
-    public static void add(Item i)
+    public static void add(@NotNull Item i)
     {
         add(i.bundle(), i.count());
     }
@@ -71,11 +72,29 @@ public class Stock
         return 0;
     }
 
+    @NotNull
     public static List<Item> get()
     {
         if(stock == null)
             stock = new ArrayList<>();
-        return stock;
+        List<Item> returnedStock = new ArrayList<>();
+        for(IngredientBundle bundle : IngredientRegister.allPossibleIngredients())
+        {
+            boolean exists = false;
+            for(Item i : stock)
+                if(i.bundle().equals(bundle))
+                {
+                    exists = true;
+                    returnedStock.add(i);
+                    break;
+                }
+            if(!exists)
+                returnedStock.add(new Item(bundle, 0));
+        }
+        for(Item i : stock)
+            if(!returnedStock.contains(i))
+                returnedStock.add(i);
+        return returnedStock;
     }
 
     public static int size()
@@ -94,9 +113,7 @@ public class Stock
     public static void validate(Order o)
     {
         if(canValidate(o))
-        {
             for(Item i : o.items())
                 remove(i.bundle(), i.count());
-        }
     }
 }

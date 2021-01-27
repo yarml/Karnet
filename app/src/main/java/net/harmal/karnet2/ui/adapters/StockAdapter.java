@@ -25,6 +25,10 @@ import java.util.List;
 
 public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHolder>
 {
+    public interface ItemGetterInterface
+    {
+        List<Item> getItems();
+    }
     public static class StockItemHolder extends KarnetRecyclerViewHolder
     {
         private final TextView    productName;
@@ -39,16 +43,18 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
         }
     }
 
-    private final List<Item> items        ;
-    private       List<Item> visibleItems ;
+    private final ItemGetterInterface items       ;
+    private       List<Item>          visibleItems;
 
+    private String                  search;
     private List<ProductIngredient> filter; /* Allowed ingredient */
 
-    public StockAdapter(@NonNull List<Item> products)
+    public StockAdapter(@NonNull ItemGetterInterface items)
     {
-        this.items = products;
-        this.visibleItems = new ArrayList<>(products);
+        this.items = items;
+        this.visibleItems = new ArrayList<>(items.getItems());
         this.filter = new ArrayList<>(IngredientRegister.get());
+        this.search = "";
     }
 
     @NonNull
@@ -78,16 +84,17 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
     {
         this.visibleItems = new ArrayList<>();
 
-        if(filter.size() == 0)
+        if(filter.size() == 0 && search.equals(""))
         {
-            visibleItems.addAll(items);
+            visibleItems.addAll(items.getItems());
             notifyDataSetChanged();
             return;
         }
 
-        for(Item i : items)
+        for(Item i : items.getItems())
             for(ProductIngredient filterIngredient : filter)
-                if(i.bundle().contains(filterIngredient))
+                if(i.bundle().contains(filterIngredient)
+                        && i.bundle().name().toLowerCase().contains(search.toLowerCase()))
                 {
                     visibleItems.add(i);
                     break;
@@ -109,6 +116,17 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
     public List<ProductIngredient> filter()
     {
         return filter;
+    }
+
+    public void search(@NonNull String search)
+    {
+        this.search = search;
+        update();
+    }
+
+    public String search()
+    {
+        return this.search;
     }
 
     public void filter(List<ProductIngredient> filter)

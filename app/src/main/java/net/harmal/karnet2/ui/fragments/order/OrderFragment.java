@@ -20,10 +20,12 @@ import com.google.android.material.snackbar.Snackbar;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
+import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Trash;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.OrderRegister;
+import net.harmal.karnet2.core.registers.OrdersLog;
 import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.OrderListAdapter;
@@ -116,11 +118,13 @@ public class OrderFragment extends KarnetFragment
             View v = orderListLayoutManager.findViewByPosition(i);
             assert v != null;
             ImageButton deleteButton = v.findViewById(R.id.btn_order_delete);
-            ImageButton doneBtn = v.findViewById(R.id.btn_order_done);
+            ImageButton doneBtn      = v.findViewById(R.id.btn_order_done  );
+            TextView    price        = v.findViewById(R.id.text_order_total);
             if(deleteButton.getVisibility() == View.VISIBLE)
             {
                 Animations.popOut(deleteButton);
-                Animations.popOut(doneBtn);
+                Animations.popOut(doneBtn     );
+                Animations.popIn(price        );
                 return;
             }
             Order o = orderListAdapter.visibleOrderList().get(i);
@@ -142,6 +146,7 @@ public class OrderFragment extends KarnetFragment
         Order o = orderListAdapter.visibleOrderList().get(pos);
         Stock.validate(o);
         OrderRegister.get().remove(o);
+        OrdersLog.registerValidatedOrder(o);
         orderListAdapter.update();
         orderListAdapter.notifyItemRemoved(pos);
         if(orderListAdapter.getItemCount() == 0)
@@ -156,16 +161,19 @@ public class OrderFragment extends KarnetFragment
         View v = orderListLayoutManager.findViewByPosition(i);
         assert v != null;
         ImageButton deleteButton = v.findViewById(R.id.btn_order_delete);
-        ImageButton doneBtn = v.findViewById(R.id.btn_order_done);
+        ImageButton doneBtn      = v.findViewById(R.id.btn_order_done  );
+        TextView    price        = v.findViewById(R.id.text_order_total);
         if(deleteButton.getVisibility() == View.GONE) // should appear
         {
             Animations.popIn(deleteButton);
-            Animations.popIn(doneBtn);
+            Animations.popIn(doneBtn     );
+            Animations.popOut(price      );
         }
         else
         {
             Animations.popOut(deleteButton);
-            Animations.popOut(doneBtn);
+            Animations.popOut(doneBtn     );
+            Animations.popIn(price        );
         }
     }
 
@@ -204,21 +212,29 @@ public class OrderFragment extends KarnetFragment
         }
         else if(item.getItemId() == R.id.option_only_delivery)
         {
-            if(orderListAdapter.onlyDelivery())
+            switch (orderListAdapter.viewMode())
             {
-                item.setIcon(ResourcesCompat.getDrawable(getResources(),
-                        R.drawable.ic_delivery_white, null));
-                orderListAdapter.onlyDelivery(false);
-                Toast.makeText(requireContext(), R.string.show_all_orders_text,
-                        Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                item.setIcon(ResourcesCompat.getDrawable(getResources(),
-                        R.drawable.ic_delivery, null));
-                orderListAdapter.onlyDelivery(true);
-                Toast.makeText(requireContext(), R.string.show_only_delivery_orders_text,
-                        Toast.LENGTH_SHORT).show();
+                case ALL: // -> DELIVERY
+                    item.setIcon(ResourcesCompat.getDrawable(getResources(),
+                            R.drawable.ic_delivery_white, null));
+                    orderListAdapter.viewMode(OrderListAdapter.ViewMode.DELIVERY);
+                    Toast.makeText(requireContext(), R.string.show_only_delivery_orders_text,
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case DELIVERY: // ->NO_DELIVERY
+                    item.setIcon(ResourcesCompat.getDrawable(getResources(),
+                            R.drawable.ic_delivery, null));
+                    orderListAdapter.viewMode(OrderListAdapter.ViewMode.NO_DELIVERY);
+                    Toast.makeText(requireContext(), R.string.show_not_delivery,
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case NO_DELIVERY: // -> ALL
+                    item.setIcon(ResourcesCompat.getDrawable(getResources(),
+                            R.drawable.ic_negative, null));
+                    orderListAdapter.viewMode(OrderListAdapter.ViewMode.ALL);
+                    Toast.makeText(requireContext(), R.string.show_all_orders_text,
+                            Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
         else if(item.getItemId() == R.id.option_order_details)

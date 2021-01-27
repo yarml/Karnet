@@ -30,6 +30,7 @@ public class OrderDetailsFragment extends KarnetFragment
     private LinearLayout               deliveryPriceLayout  ;
     private TextView                   deliveryPriceText    ;
     private TextView                   dateText             ;
+    private TextView                   reductionText        ;
     private TextView                   totalPriceText       ;
     private TextView                   totalWithDeliveryText;
     private RecyclerView               itemList             ;
@@ -53,10 +54,11 @@ public class OrderDetailsFragment extends KarnetFragment
         deliveryPriceLayout    = view.findViewById(R.id.layout_delivery_price                       );
         deliveryPriceText      = view.findViewById(R.id.text_order_details_delivery_price           );
         dateText               = view.findViewById(R.id.text_order_details_date                     );
+        reductionText          = view.findViewById(R.id.text_order_details_reduction                );
         totalPriceText         = view.findViewById(R.id.text_order_details_total_price              );
         totalWithDeliveryText  = view.findViewById(R.id.text_order_details_total_with_delivery_price);
-        itemList = view.findViewById(R.id.recycler_order_details_stacks               );
-        itemListLayoutManager = new LinearLayoutManager(requireContext(                           ));
+        itemList               = view.findViewById(R.id.recycler_order_details_stacks               );
+        itemListLayoutManager  = new LinearLayoutManager(requireContext(                           ));
 
 
         Order o = OrderRegister.getOrder(oid);
@@ -73,8 +75,13 @@ public class OrderDetailsFragment extends KarnetFragment
                     R.string.total_with_delivery_price),
                     o.totalPrice() + o.deliveryPrice()));
         }
+
+        if(o.reduction() == 0)
+            reductionText.setVisibility(View.GONE);
+        else
+            reductionText.setText(String.format(getString(R.string.reduction_text), o.reduction()));
         dateText.setText(o.dueDate().toString());
-        totalPriceText.setText(String.format(getString(R.string.total_price), o.totalPrice()));
+        totalPriceText.setText(String.format(getString(R.string.price), o.totalPrice()));
 
         itemListAdapter = new OrderItemAdapter(o.items(), false,
                 getString(R.string.order_details_item_description));

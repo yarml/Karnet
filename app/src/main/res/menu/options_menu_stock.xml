@@ -4,6 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/option_stock_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search"
+        app:showAsAction="collapseActionView|always"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <item
         android:id="@+id/option_stock_filter"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_filter"

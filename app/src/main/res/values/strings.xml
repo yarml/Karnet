@@ -87,7 +87,7 @@
     <string name="modify_order_label">Modifier la commande pour: %s</string>
     <string name="confirm_order_delete">Êtes vous sûr de vouloir valider la commande de %s?</string>
     <string name="order_details_label">Commande pour: %s</string>
-    <string name="total_price">Total: %d dhs</string>
+    <string name="price">Total: %d dhs</string>
     <string name="currency">%d dhs</string>
     <string name="order_details_item_description">%d boîtes x %d dhs</string>
     <string name="total_with_delivery_price">Total + livraison: %d dhs</string>
@@ -113,4 +113,15 @@
     <string name="default_city">Casablanca</string>
     <string name="sync">Sync</string>
     <string name="wait">Veuillez patienter</string>
+    <string name="order_customer_info">%d %s</string>
+    <string name="show_not_delivery">Seulement les commandes sans livraison seront affichés</string>
+    <string name="hint_reduction">Réduction</string>
+    <string name="reduction_text">Réduction: %d dhs</string>
+    <string name="text_for_date">Pour le: %s</string>
+    <string name="drawer_stats">Statistiques</string>
+    <string name="stats_all">Tous</string>
+    <string name="stats_month">Ce mois</string>
+    <string name="stats_week">Cette semaine</string>
+    <string name="stats_today">Aujourd\'hui</string>
+    <string name="stats_custom">Depuis ...</string>
 </resources>

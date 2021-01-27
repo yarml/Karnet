@@ -40,7 +40,10 @@ public class WaitDialog extends KarnetDialogFragment
         builder.setCancelable(false);
         Thread taskThread = new Thread(() -> {
             task.doTask();
-            requireActivity().runOnUiThread(this::dismiss);
+            requireActivity().runOnUiThread(() -> {
+                Toast.makeText(requireContext(), taskEndToast, Toast.LENGTH_SHORT).show();
+                dismiss();
+            });
         });
         taskThread.start();
     }

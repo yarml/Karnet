@@ -3,8 +3,12 @@ package net.harmal.karnet2.ui.fragments.stock;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,16 +18,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.harmal.karnet2.R;
-import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.registers.IngredientRegister;
 import net.harmal.karnet2.core.registers.Stock;
-import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.StockAdapter;
-import net.harmal.karnet2.ui.dialogs.NumberInputDialog;
 import net.harmal.karnet2.ui.dialogs.SelectIngredientBundleDialog;
 import net.harmal.karnet2.ui.dialogs.StockItemCountModifyDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
+import net.harmal.karnet2.ui.listeners.OnActionExpandListenerBuilder;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
+import net.harmal.karnet2.ui.listeners.OnQueryTextListenerBuilder;
+import net.harmal.karnet2.utils.Logs;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -46,11 +52,11 @@ public class StockFragment extends KarnetFragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        noItemText = view.findViewById(R.id.text_stock_no_product);
+        noItemText = view.findViewById(R.id.text_stock_no_stock);
         stockList = view.findViewById(R.id.recycler_stock);
 
         stockListLayoutManager = new LinearLayoutManager(getContext());
-        stockListAdapter = new StockAdapter(Stock.get());
+        stockListAdapter = new StockAdapter(Stock::get);
 
         stockListAdapter.setOnItemInputListener(new OnItemInputListener.Builder(this::onItemClick,
                 null));
@@ -81,30 +87,31 @@ public class StockFragment extends KarnetFragment
     {
         if(menuItem.getItemId() == R.id.option_add_stock)
         {
-            if(!IngredientRegister.hasEnoughIngredients())
+            if(IngredientRegister.notEnoughIngredients())
             {
                 Toast.makeText(requireContext(), R.string.missing_ingredients,
                         Toast.LENGTH_LONG).show();
                 return false;
             }
             SelectIngredientBundleDialog dialog = new SelectIngredientBundleDialog(b -> {
-                NumberInputDialog numDialog = new NumberInputDialog(R.string.select_count,
-                        1, 1000, n -> {
-                    if(stockListAdapter.getItemCount() == 0)
-                    {
-                        Animations.popOut(noItemText);
-                        Animations.popIn(stockList);
-                    }
-                    Stock.add(b, n);
-                    stockListAdapter.update();
-                }, requireView().getWindowToken());
-                numDialog.show(getChildFragmentManager(), "");
+                StockItemCountModifyDialog itemCountModifyDialog =
+                        new StockItemCountModifyDialog(R.string.enter_value, b,
+                                requireView().getWindowToken());
+
+                itemCountModifyDialog.addOnDismissEvent(dialog1 -> stockListAdapter.update());
+                itemCountModifyDialog.show(getChildFragmentManager(), "");
+                stockListAdapter.update();
+                if(stockListAdapter.getItemCount() == 0)
+                {
+                    noItemText.setVisibility(View.VISIBLE);
+                    stockList.setVisibility(View.GONE);
+                }
             }, requireView().getWindowToken());
             dialog.show(getChildFragmentManager(), "");
         }
         else if(menuItem.getItemId() == R.id.option_stock_filter)
         {
-            if(!IngredientRegister.hasEnoughIngredients())
+            if(IngredientRegister.notEnoughIngredients())
             {
                 Toast.makeText(requireContext(), R.string.missing_ingredients,
                         Toast.LENGTH_LONG).show();
@@ -134,6 +141,41 @@ public class StockFragment extends KarnetFragment
             dialog.show();
 
         }
+        return true;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(R.id.option_stock_search);
+        searchItem.setOnActionExpandListener(new OnActionExpandListenerBuilder(null,
+                this::onSearchClose).build());
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setIconifiedByDefault(false);
+        searchView.setIconified(false);
+        ViewGroup.LayoutParams params = new ViewGroup
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT              );
+        searchView.setLayoutParams(params);
+        searchView.setOnQueryTextListener(new OnQueryTextListenerBuilder(this::onSearchChange,
+                this::onSearchChange)
+                .build());
+    }
+
+    private boolean onSearchChange(String text)
+    {
+        stockListAdapter.search(text);
+        return true;
+    }
+
+    private boolean onSearchClose(@NotNull MenuItem item)
+    {
+        Logs.debug("Search closed STATISTICS");
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQuery("", false);
+        hideSoftwareKeyboard();
+        // Refiltering the list is done automatically when we set query to empty
         return true;
     }
 

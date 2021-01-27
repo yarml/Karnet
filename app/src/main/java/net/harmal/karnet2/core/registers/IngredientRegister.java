@@ -1,8 +1,6 @@
 package net.harmal.karnet2.core.registers;
 
-import android.widget.Toast;
-
-import net.harmal.karnet2.R;
+import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.Trash;
 
@@ -102,12 +100,43 @@ public class IngredientRegister
         return list;
     }
 
-    public static boolean hasEnoughIngredients()
+    /*
+     * Returns all possible ingredients with at most one extra
+     */
+    @NotNull
+    public static List<IngredientBundle> allPossibleIngredients()
     {
-        return !(onlyType(ProductIngredient.Type.BASE ).size() == 0
-              || onlyType(ProductIngredient.Type.FAT  ).size() == 0
-              || onlyType(ProductIngredient.Type.SHAPE).size() == 0
-              || onlyType(ProductIngredient.Type.TASTE).size() == 0);
+        if(notEnoughIngredients())
+            return new ArrayList<>();
+        List<IngredientBundle> bundles = new ArrayList<>();
+        for(ProductIngredient base : onlyType(ProductIngredient.Type.BASE))
+            for(ProductIngredient fat : onlyType(ProductIngredient.Type.FAT))
+                for(ProductIngredient shape : onlyType(ProductIngredient.Type.SHAPE))
+                    for(ProductIngredient taste : onlyType(ProductIngredient.Type.TASTE))
+                    {
+                        IngredientBundle bundle = new IngredientBundle(base.piid(), fat.piid(),
+                                shape.piid(), taste.piid(), new ArrayList<>());
+                        if(!bundles.contains(bundle))
+                            bundles.add(bundle);
+                        for(ProductIngredient extra : onlyType(ProductIngredient.Type.EXTRA))
+                        {
+                            ArrayList<Integer> extras = new ArrayList<>();
+                            extras.add(extra.piid());
+                            IngredientBundle bundleWithExtra =  new IngredientBundle(base.piid(),
+                                    fat.piid(), shape.piid(), taste.piid(), extras);
+                            if(!bundles.contains(bundleWithExtra))
+                                bundles.add(bundleWithExtra);
+                        }
+                    }
+        return bundles;
+    }
+
+    public static boolean notEnoughIngredients()
+    {
+        return onlyType(ProductIngredient.Type.BASE).size() == 0
+                || onlyType(ProductIngredient.Type.FAT).size() == 0
+                || onlyType(ProductIngredient.Type.SHAPE).size() == 0
+                || onlyType(ProductIngredient.Type.TASTE).size() == 0;
     }
 
 }

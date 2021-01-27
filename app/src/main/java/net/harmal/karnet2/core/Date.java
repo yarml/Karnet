@@ -115,6 +115,37 @@ public class Date implements Savable
         this.year = (short) year;
     }
 
+    public boolean after(@NotNull Date d)
+    {
+        if(d.year == 0 && d.month == 0 && d.day == 0)
+            return true;
+        if(year == d.year)
+        {
+            if(month == d.month)
+                return day > d.day;
+            return month > d.month;
+        }
+        return year > d.year;
+    }
+
+    public boolean before(@NotNull Date d)
+    {
+        if(d.year == 0 && d.month == 0 && d.day == 0)
+            return true;
+        if(year == d.year)
+        {
+            if(month == d.month)
+                return day < d.day;
+            return month < d.month;
+        }
+        return year < d.year;
+    }
+
+    public boolean equals(@NotNull Date d)
+    {
+        return year == d.year && month == d.month && day == d.day;
+    }
+
     @NotNull
     @Contract(" -> new")
     public static Date today()
@@ -124,13 +155,22 @@ public class Date implements Savable
         return new Date(LocalDate.now());
     }
     @NotNull
-    @Contract("_ -> new")
     public static Date afterDays(int days)
     {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             return new Date(1 + days, 1, 2019);
         return new Date(LocalDate.now().plusDays(days));
     }
+
+    @NotNull
+    public static Date beforeDays(int days)
+    {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+            return new Date(days  - 1, 1, 2019);
+        return new Date(LocalDate.now().minusDays(days));
+    }
+
+
 
     @NotNull
     @Override

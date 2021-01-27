@@ -173,4 +173,9 @@
         android:name="net.harmal.karnet2.ui.fragments.order.OrderStockFragment"
         android:label="Stock - Commandes"
         tools:layout="@layout/fragment_order_stock" />
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="net.harmal.karnet2.ui.fragments.statistics.StatisticsFragment"
+        android:label="Statistiques"
+        tools:layout="@layout/fragment_statistics" />
 </navigation>

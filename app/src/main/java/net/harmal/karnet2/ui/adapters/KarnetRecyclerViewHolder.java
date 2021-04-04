@@ -15,10 +15,10 @@ public abstract class KarnetRecyclerViewHolder extends RecyclerView.ViewHolder
 {
     private final OnItemInputListener l;
 
-    public KarnetRecyclerViewHolder(@NonNull View itemView, OnItemInputListener listener)
+    public KarnetRecyclerViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
     {
         super(itemView);
-        this.l = listener;
+        this.l = adapter.onItemInputListener;
 
         Logs.debug("Creating Holder");
 
@@ -47,6 +47,7 @@ public abstract class KarnetRecyclerViewHolder extends RecyclerView.ViewHolder
         if (l != null)
             if (position != RecyclerView.NO_POSITION)
                 l.onItemClick(v, position);
+        Logs.debug("Recycler click event called");
     }
 
     private boolean onLongClick(View v)

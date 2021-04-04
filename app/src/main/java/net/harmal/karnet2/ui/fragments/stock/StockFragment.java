@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -141,6 +143,12 @@ public class StockFragment extends KarnetFragment
             dialog.show();
 
         }
+        else if(menuItem.getItemId() == R.id.options_table_stock)
+        {
+            NavDirections action = StockFragmentDirections
+                    .actionStockFragmentToStockTableFragment();
+            NavHostFragment.findNavController(this).navigate(action);
+        }
         return true;
     }
 
@@ -201,12 +209,12 @@ public class StockFragment extends KarnetFragment
 
     private void onItemClick(View view, int i)
     {
+        Toast.makeText(requireContext(), stockListAdapter.visibleItemList().get(i).bundle().name(), Toast.LENGTH_SHORT).show();
         StockItemCountModifyDialog dialog = new StockItemCountModifyDialog(R.string.enter_value,
                 stockListAdapter.visibleItemList().get(i).bundle(), requireView().getWindowToken());
-
         dialog.addOnDismissEvent(dialog1 -> stockListAdapter.update());
         dialog.show(getChildFragmentManager(), "");
-        stockListAdapter.update();
+        // stockListAdapter.update();
         if(stockListAdapter.getItemCount() == 0)
         {
             noItemText.setVisibility(View.VISIBLE);

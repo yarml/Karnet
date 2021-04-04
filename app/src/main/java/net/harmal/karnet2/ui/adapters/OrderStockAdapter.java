@@ -29,9 +29,9 @@ public class OrderStockAdapter extends KarnetRecyclerAdapter<OrderStockAdapter.O
         TextView stockText ;
         TextView ordersText;
         TextView sumText   ;
-        public OrderStockViewHolder(@NonNull View itemView, OnItemInputListener listener)
+        public OrderStockViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
-            super(itemView, listener);
+            super(itemView, adapter);
             mainCard   = itemView.findViewById(R.id.card_order_stock              );
             nameText   = itemView.findViewById(R.id.text_order_details_item_name  );
             stockText  = itemView.findViewById(R.id.text_order_details_item_stock );
@@ -58,7 +58,7 @@ public class OrderStockAdapter extends KarnetRecyclerAdapter<OrderStockAdapter.O
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_order_details, parent, false);
-        return new OrderStockViewHolder(v, onItemInputListener);
+        return new OrderStockViewHolder(v, this);
     }
 
     @SuppressLint("DefaultLocale")

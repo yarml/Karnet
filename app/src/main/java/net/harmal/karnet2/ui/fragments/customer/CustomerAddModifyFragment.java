@@ -128,7 +128,10 @@ public class CustomerAddModifyFragment extends KarnetFragment
             phoneStr = phoneStr.replace(".", "");
             phoneStr = phoneStr.trim();
 
-            if(phoneStr.length() != 10 || !(phoneStr.startsWith("06") || phoneStr.startsWith("07"))) // Invalid phoneStr num
+            if(phoneStr.length() != 10 || !(phoneStr.startsWith("06") ||
+                                            phoneStr.startsWith("05") ||
+                                            phoneStr.startsWith("08") ||
+                                            phoneStr.startsWith("07")   )) // Invalid phoneStr num
             {
                 Animations.shake(phoneEdit);
                 Toast.makeText(getContext(), R.string.toast_invalid_phone_num, Toast.LENGTH_SHORT).show();

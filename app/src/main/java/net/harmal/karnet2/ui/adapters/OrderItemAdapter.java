@@ -22,9 +22,9 @@ public class OrderItemAdapter extends KarnetRecyclerAdapter<OrderItemAdapter.Ord
         private final TextView    stackItemName ;
         private final TextView    stackItemCount;
         private final ImageButton stackDeleteBtn;
-        public OrderItemViewHolder(@NonNull View itemView, OnItemInputListener listener)
+        public OrderItemViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
-            super(itemView, listener);
+            super(itemView, adapter);
 
             stackItemName  = itemView.findViewById(R.id.text_order_stack_item_name );
             stackItemCount = itemView.findViewById(R.id.text_order_stack_item_count);
@@ -63,7 +63,7 @@ public class OrderItemAdapter extends KarnetRecyclerAdapter<OrderItemAdapter.Ord
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_order_item, parent, false);
-        OrderItemViewHolder vh = new OrderItemViewHolder(v, onItemInputListener);
+        OrderItemViewHolder vh = new OrderItemViewHolder(v, this);
         if(showDelete)
             vh.stackDeleteBtn.setVisibility(View.VISIBLE);
         else

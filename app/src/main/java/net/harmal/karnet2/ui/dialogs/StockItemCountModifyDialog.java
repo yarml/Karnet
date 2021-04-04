@@ -3,7 +3,9 @@ package net.harmal.karnet2.ui.dialogs;
 import android.app.AlertDialog;
 import android.os.IBinder;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -11,6 +13,7 @@ import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.registers.Stock;
+import net.harmal.karnet2.ui.Animations;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +21,10 @@ public class StockItemCountModifyDialog extends KarnetDialogFragment
 {
     private final IngredientBundle bundle;
 
-    private NumberPicker         numberPicker;
-    private FloatingActionButton setBtn      ;
-    private FloatingActionButton addBtn      ;
-    private FloatingActionButton removeBtn   ;
+    private EditText             numberEdit;
+    private FloatingActionButton setBtn    ;
+    private FloatingActionButton addBtn    ;
+    private FloatingActionButton removeBtn ;
 
     public StockItemCountModifyDialog(int title, IngredientBundle bundle, IBinder windowToken)
     {
@@ -32,28 +35,47 @@ public class StockItemCountModifyDialog extends KarnetDialogFragment
     @Override
     protected void onCreatingDialog(@NotNull View v, AlertDialog.Builder builder)
     {
-        numberPicker = v.findViewById(R.id.number_picker_stock_number_input);
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(200);
+        numberEdit   = v.findViewById(R.id.edit_stock_number_input         );
         setBtn       = v.findViewById(R.id.floating_btn_set_quantity       );
         addBtn       = v.findViewById(R.id.floating_btn_add_quantity       );
         removeBtn    = v.findViewById(R.id.floating_btn_sub_quantity       );
 
         setBtn.setOnClickListener(v1 -> {
-            int num = numberPicker.getValue();
-            Stock.set(bundle, num);
-            dismiss();
+            try
+            {
+                int num = Integer.parseInt(numberEdit.getText().toString());
+                Stock.set(bundle, num);
+                dismiss();
+            }catch (Exception e)
+            {
+                Animations.shake(numberEdit);
+                Toast.makeText(requireContext(), R.string.invalid_number, Toast.LENGTH_SHORT).show();
+            }
         });
 
         addBtn.setOnClickListener(v1 -> {
-            int num = numberPicker.getValue();
-            Stock.add(bundle, num);
-            dismiss();
+            try
+            {
+                int num = Integer.parseInt(numberEdit.getText().toString());
+                Stock.add(bundle, num);
+                dismiss();
+            }catch (Exception e)
+            {
+                Animations.shake(numberEdit);
+                Toast.makeText(requireContext(), R.string.invalid_number, Toast.LENGTH_SHORT).show();
+            }
         });
         removeBtn.setOnClickListener(v1 -> {
-            int num = numberPicker.getValue();
-            Stock.remove(bundle, num);
-            dismiss();
+            try
+            {
+                int num = Integer.parseInt(numberEdit.getText().toString());
+                Stock.remove(bundle, num);
+                dismiss();
+            }catch (Exception e)
+            {
+                Animations.shake(numberEdit);
+                Toast.makeText(requireContext(), R.string.invalid_number, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

@@ -1,6 +1,8 @@
 package net.harmal.karnet2.core;
 
 
+import androidx.annotation.Nullable;
+
 import net.harmal.karnet2.savefile.Savable;
 
 import java.io.DataOutputStream;
@@ -67,12 +69,15 @@ public class Item implements Savable
 
     public static class ItemBuilder implements Savable.BUILDER<Item>
     {
+        @Nullable
         @Override
         public Item readData(int version, ByteBuffer buffer)
         {
             IngredientBundle.IngredientBundleBuilder builder = new IngredientBundle
                     .IngredientBundleBuilder();
             IngredientBundle bundle = builder.readData(version, buffer);
+            if(bundle == null)
+                return null;
             int count = buffer.getInt();
             return new Item(bundle, count);
         }

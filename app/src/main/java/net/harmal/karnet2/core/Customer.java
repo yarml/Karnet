@@ -2,6 +2,7 @@ package net.harmal.karnet2.core;
 
 import net.harmal.karnet2.savefile.Savable;
 import net.harmal.karnet2.savefile.Utils;
+import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 

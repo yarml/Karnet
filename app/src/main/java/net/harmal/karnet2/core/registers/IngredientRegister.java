@@ -1,8 +1,13 @@
 package net.harmal.karnet2.core.registers;
 
+import android.os.Bundle;
+
 import net.harmal.karnet2.core.IngredientBundle;
+import net.harmal.karnet2.core.Item;
+import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.Trash;
+import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,13 +52,38 @@ public class IngredientRegister
     {
         if(ingredients == null)
             ingredients = new ArrayList<>();
+        List<IngredientBundle> bundlesToRemoveFromStock = new ArrayList<>();
         for(ProductIngredient p : ingredients)
             if(p.piid() == piid)
             {
+                Logs.debug("Removing ingredient with piid: " + piid + ", name: " + p.displayName());
+                for(Item i : Stock.items())
+                {
+                    if(i.bundle().contains(piid))
+                        bundlesToRemoveFromStock.add(i.bundle());
+                }
+                for(IngredientBundle b : bundlesToRemoveFromStock)
+                    Stock.set(b, 0);
+                for(Order o : OrderRegister.get())
+                {
+                    List<Item> itemsToRemove = new ArrayList<>();
+                    for(Item i : o.items())
+                    {
+                        if(i.bundle().contains(piid))
+                            itemsToRemove.add(i);
+                    }
+                    for(Item i : itemsToRemove)
+                        o.remove(i);
+                }
                 Trash.pushIngredient(p);
                 ingredients.remove(p);
                 return;
             }
+    }
+
+    public static boolean exists(int piid)
+    {
+        return getIngredient(piid) != null;
     }
 
     @Nullable
@@ -64,6 +94,12 @@ public class IngredientRegister
         for(ProductIngredient p : ingredients)
             if(p.piid() == piid)
                 return p;
+        Logs.debug("No ingredient with piid: " + piid + " found");
+        Logs.debug("Available piids: ");
+        for(ProductIngredient p : ingredients)
+        {
+            Logs.debug(p.displayName() + ": " + p.piid());
+        }
         return null;
     }
 

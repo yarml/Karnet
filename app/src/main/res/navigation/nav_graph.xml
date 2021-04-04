@@ -58,7 +58,11 @@
         android:id="@+id/stockFragment"
         android:name="net.harmal.karnet2.ui.fragments.stock.StockFragment"
         android:label="@string/fragment_stock_label"
-        tools:layout="@layout/fragment_stock" />
+        tools:layout="@layout/fragment_stock" >
+        <action
+            android:id="@+id/action_stockFragment_to_stockTableFragment"
+            app:destination="@id/stockTableFragment" />
+    </fragment>
     <fragment
         android:id="@+id/customerDetailsFragment"
         android:name="net.harmal.karnet2.ui.fragments.customer.CustomerDetailsFragment"
@@ -149,7 +153,11 @@
         tools:layout="@layout/fragment_ingredient" >
         <action
             android:id="@+id/action_ingredientFragment_to_ingredientAddModifyFragment"
-            app:destination="@id/ingredientAddModifyFragment" />
+            app:destination="@id/ingredientAddModifyFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/ingredientAddModifyFragment"
@@ -178,4 +186,9 @@
         android:name="net.harmal.karnet2.ui.fragments.statistics.StatisticsFragment"
         android:label="Statistiques"
         tools:layout="@layout/fragment_statistics" />
+    <fragment
+        android:id="@+id/stockTableFragment"
+        android:name="net.harmal.karnet2.ui.fragments.stock.StockTableFragment"
+        android:label="Stock(Tableau)"
+        tools:layout="@layout/fragment_stock_table" />
 </navigation>

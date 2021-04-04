@@ -81,6 +81,20 @@ public class CustomerRegister
         return customerRegister;
     }
 
+    public static List<String> allCities()
+    {
+        List<String> cities = new ArrayList<>();
+        CUSTOMER_LOOP:
+        for(Customer c : customerRegister)
+        {
+            for(String city : cities)
+                if(city.equalsIgnoreCase(c.city()))
+                    continue CUSTOMER_LOOP;
+            cities.add(c.city());
+        }
+        return cities;
+    }
+
     public static int size()
     {
         return get().size();

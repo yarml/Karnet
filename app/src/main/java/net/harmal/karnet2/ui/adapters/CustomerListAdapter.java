@@ -1,5 +1,6 @@
 package net.harmal.karnet2.ui.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,9 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
         private final TextView    phoneCity   ;
         private final ImageButton deleteBtn;
 
-        public CustomerViewHolder(@NonNull View itemView, OnItemInputListener listener)
+        public CustomerViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
-            super(itemView, listener);
+            super(itemView, adapter);
             customerName = itemView.findViewById(R.id.text_customer_list_name      );
             phoneCity    = itemView.findViewById(R.id.text_customer_list_phone_city);
             deleteBtn    = itemView.findViewById(R.id.btn_customer_delete          );
@@ -55,7 +56,7 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_customer, parent, false);
-        return new CustomerViewHolder(v, onItemInputListener);
+        return new CustomerViewHolder(v, this);
     }
 
     @Override
@@ -76,6 +77,7 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
     }
 
 
+    @SuppressLint("DefaultLocale")
     public void filter(@NotNull String s)
     {
         lastFilter = s;
@@ -87,7 +89,8 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
                 if(c.name().toLowerCase().contains(s.toLowerCase())
                 || c.phoneNum().toLowerCase().contains(s.toLowerCase())
                 || c.city().toLowerCase().contains(s.toLowerCase())
-                || c.creationDate().toString().toLowerCase().contains(s.toLowerCase()))
+                || c.creationDate().toString().toLowerCase().contains(s.toLowerCase())
+                || String.format("%d", c.cid()).contains(s))
                     visibleCustomerList.add(c);
         notifyDataSetChanged();
     }

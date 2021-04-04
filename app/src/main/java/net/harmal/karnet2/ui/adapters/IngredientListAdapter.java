@@ -23,9 +23,9 @@ public class IngredientListAdapter extends KarnetRecyclerAdapter<IngredientListA
     {
         TextView    ingredientNameText;
         ImageButton deleteBtn         ;
-        public IngredientViewHolder(@NonNull View itemView, OnItemInputListener listener)
+        public IngredientViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
-            super(itemView, listener);
+            super(itemView, adapter);
             ingredientNameText = itemView.findViewById(R.id.text_ingredient_name );
             deleteBtn          = itemView.findViewById(R.id.btn_ingredient_delete);
         }
@@ -49,7 +49,7 @@ public class IngredientListAdapter extends KarnetRecyclerAdapter<IngredientListA
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_ingredient, parent, false);
-        return new IngredientViewHolder(v, onItemInputListener);
+        return new IngredientViewHolder(v, this);
     }
 
     @Override

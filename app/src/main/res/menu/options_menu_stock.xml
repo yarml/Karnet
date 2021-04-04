@@ -21,5 +21,11 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_add"
         android:title="@string/add_order" />
+    <item
+        android:id="@+id/options_table_stock"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_table_chart"
+        android:title="@string/table" />
+
 
 </menu>

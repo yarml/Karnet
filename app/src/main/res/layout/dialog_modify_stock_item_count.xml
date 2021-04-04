@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:ignore="HardcodedText">
-    <NumberPicker
-        android:id="@+id/number_picker_stock_number_input"
+    <EditText
+        android:id="@+id/edit_stock_number_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="128dp"
-        android:layout_marginEnd="128dp" />
+        android:layout_marginEnd="128dp"
+        android:inputType="number"
+        android:hint="@string/hint_enter_number"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

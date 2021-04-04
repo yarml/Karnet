@@ -26,9 +26,9 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
         TextView idText   ;
         TextView infoText ;
         TextView priceText;
-        public DeliveryViewHolder(@NonNull View itemView, OnItemInputListener listener)
+        public DeliveryViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
-            super(itemView, listener);
+            super(itemView, adapter);
             idText    = itemView.findViewById(R.id.text_delivery_id   );
             infoText  = itemView.findViewById(R.id.text_delivery_info );
             priceText = itemView.findViewById(R.id.text_delivery_price);
@@ -37,6 +37,8 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
 
     private final List<Order> orderList;
     private List<Order> visibleOrders;
+
+    private List<String> filterCities;
 
     public DeliveryAdapter(@NotNull List<Order> orderList)
     {
@@ -50,7 +52,7 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_delivery, parent, false);
-        return new DeliveryViewHolder(v, onItemInputListener);
+        return new DeliveryViewHolder(v, this);
     }
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
@@ -67,9 +69,45 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
                 current.totalPrice() + current.deliveryPrice()));
     }
 
+    public void filterCities(List<String> cities)
+    {
+        this.filterCities = cities;
+        update();
+    }
+
+    public void update()
+    {
+        visibleOrders = new ArrayList<>();
+        for(Order o : orderList)
+        {
+            boolean cityFilter = false;
+            if(filterCities !=null)
+            {
+                Customer c = CustomerRegister.getCustomer(o.cid());
+                assert c != null;
+                for (String city : filterCities)
+                    if (city.equalsIgnoreCase(c.city()))
+                    {
+                        cityFilter = true;
+                        break;
+                    }
+            }
+            else
+                cityFilter = true;
+            if(cityFilter)
+                visibleOrders.add(o);
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount()
     {
         return visibleOrders.size();
+    }
+
+    public List<Order> visibleOrders()
+    {
+        return visibleOrders;
     }
 }

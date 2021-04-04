@@ -120,13 +120,18 @@ public class Order implements Savable
 
     public void remove(Item item)
     {
+        List<Item> itemsToRemove = new ArrayList<>();
         for(Item i : items)
             if(i.bundle().equals(item.bundle()))
             {
                 i.remove(item.count());
                 if(i.count() <= 0)
-                    items.remove(i);
+                {
+                    itemsToRemove.add(i);
+                }
             }
+        for(Item i : itemsToRemove)
+            items.remove(i);
     }
 
     @Override
@@ -159,7 +164,9 @@ public class Order implements Savable
             for(int i = 0; i < itemCount; i++)
             {
                 Item.ItemBuilder builder = new Item.ItemBuilder();
-                items.add(builder.readData(version, buffer));
+                Item it = builder.readData(version, buffer);
+                if(it != null)
+                    items.add(it);
             }
             return new Order(oid, cid, deliveryPrice, items, date, reduction);
         }

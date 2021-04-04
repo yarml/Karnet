@@ -78,7 +78,7 @@ public class IngredientAddModifyFragment extends KarnetFragment
 
     private void onBtnEditPriceClicked(View view)
     {
-        NumberInputDialog dialog = new NumberInputDialog(R.string.choose_price, 0, 100,
+        NumberInputDialog dialog = new NumberInputDialog(R.string.choose_price,
                 this::onPriceSet, requireView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }

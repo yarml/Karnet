@@ -1,5 +1,7 @@
 package net.harmal.karnet2.core;
 
+import androidx.annotation.Nullable;
+
 import net.harmal.karnet2.core.registers.IngredientRegister;
 import net.harmal.karnet2.savefile.Savable;
 import net.harmal.karnet2.utils.Logs;
@@ -180,7 +182,7 @@ public class IngredientBundle implements Savable
 
     public static class IngredientBundleBuilder implements Savable.BUILDER<IngredientBundle>
     {
-
+        @Nullable
         @Override
         public IngredientBundle readData(int version, ByteBuffer buffer)
         {
@@ -191,8 +193,17 @@ public class IngredientBundle implements Savable
             int extraCount = buffer.getInt();
             List<Integer> extras = new ArrayList<>();
             for(int i = 0 ; i < extraCount; i++)
-                extras.add(buffer.getInt());
-            return new IngredientBundle(base, fat, shape, taste, extras);
+            {
+                int extra = buffer.getInt();
+                if(IngredientRegister.exists(extra))
+                    extras.add(extra);
+                else
+                    return null;
+            }
+            if(IngredientRegister.exists(base) && IngredientRegister.exists(fat)
+                    && IngredientRegister.exists(shape) && IngredientRegister.exists(taste))
+                return new IngredientBundle(base, fat, shape, taste, extras);
+            return null;
         }
     }
 }

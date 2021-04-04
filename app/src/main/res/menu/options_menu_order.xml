@@ -2,13 +2,23 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
+    <item
+        android:id="@+id/option_order_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search"
+        app:showAsAction="collapseActionView|always"
+        app:actionViewClass="android.widget.SearchView" />
 
     <item
         android:id="@+id/option_only_delivery"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_negative"
-        android:title="@string/only_delivery_text" />
-
+        android:title="@string/show_orders_delivery" />
+    <item
+        android:id="@+id/option_order_city"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_city_white"
+        android:title="@string/city_filter" />
     <item
         android:id="@+id/option_order_details"
         app:showAsAction="ifRoom"

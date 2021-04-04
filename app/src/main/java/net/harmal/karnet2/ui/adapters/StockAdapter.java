@@ -17,6 +17,7 @@ import net.harmal.karnet2.core.registers.IngredientRegister;
 import net.harmal.karnet2.core.registers.OrderRegister;
 import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
+import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,9 +35,9 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
         private final TextView    productName;
         private final TextView    count;
 
-        public StockItemHolder(@NonNull View itemView, OnItemInputListener listener)
+        public StockItemHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
-            super(itemView, listener);
+            super(itemView, adapter);
 
             productName = itemView.findViewById(R.id.text_stock_product_name);
             count = itemView.findViewById(R.id.text_stock_count);
@@ -63,7 +64,7 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_stock, parent, false);
-        return new StockItemHolder(v, onItemInputListener);
+        return new StockItemHolder(v, this);
     }
 
     @SuppressLint("DefaultLocale")
@@ -82,23 +83,36 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
 
     public void update()
     {
+        Logs.debug("Updating stock list");
         this.visibleItems = new ArrayList<>();
 
         if(filter.size() == 0 && search.equals(""))
         {
+            Logs.debug("A blank filter");
             visibleItems.addAll(items.getItems());
             notifyDataSetChanged();
             return;
         }
-
+        Logs.debug("Not a blank filter");
+        ITEMS_LOOP:
         for(Item i : items.getItems())
-            for(ProductIngredient filterIngredient : filter)
+        {
+            Logs.debug("New iteration");
+            Logs.debug("Iterating for item: " + i.bundle().name());
+            for (ProductIngredient filterIngredient : filter)
+            {
+                Logs.debug("Iterating for ingredient: " + filterIngredient.displayName());
                 if(i.bundle().contains(filterIngredient)
                         && i.bundle().name().toLowerCase().contains(search.toLowerCase()))
                 {
+                    Logs.debug("Adding item");
                     visibleItems.add(i);
-                    break;
+                    Logs.debug("Added Item");
+                    continue ITEMS_LOOP;
                 }
+            }
+        }
+        Logs.debug("Notifying change");
         notifyDataSetChanged();
     }
 

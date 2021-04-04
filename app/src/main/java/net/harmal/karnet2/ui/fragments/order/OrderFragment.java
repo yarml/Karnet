@@ -1,9 +1,15 @@
 package net.harmal.karnet2.ui.fragments.order;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +26,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
-import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Trash;
 import net.harmal.karnet2.core.registers.CustomerRegister;
@@ -30,11 +35,17 @@ import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.Animations;
 import net.harmal.karnet2.ui.adapters.OrderListAdapter;
 import net.harmal.karnet2.ui.dialogs.ConfirmationDialog;
+import net.harmal.karnet2.ui.dialogs.KarnetDialogs;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
+import net.harmal.karnet2.ui.listeners.OnActionExpandListenerBuilder;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
+import net.harmal.karnet2.ui.listeners.OnQueryTextListenerBuilder;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderFragment extends KarnetFragment
 {
@@ -44,7 +55,8 @@ public class OrderFragment extends KarnetFragment
     private RecyclerView.LayoutManager orderListLayoutManager;
     private OrderListAdapter           orderListAdapter      ;
 
-
+    private String[]  filterCities       ;
+    private boolean[] filterCitiesChecked;
 
     public OrderFragment()
     {
@@ -196,6 +208,25 @@ public class OrderFragment extends KarnetFragment
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(R.id.option_order_search);
+        searchItem.setOnActionExpandListener(new OnActionExpandListenerBuilder(null,
+                this::onSearchClose).build());
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setIconifiedByDefault(false);
+        searchView.setIconified(false);
+        ViewGroup.LayoutParams params = new ViewGroup
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT              );
+        searchView.setLayoutParams(params);
+        searchView.setOnQueryTextListener(new OnQueryTextListenerBuilder(this::onSearchChange,
+                this::onSearchChange)
+                .build());
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item)
     {
         if(item.getItemId() == R.id.option_add_order)
@@ -217,13 +248,15 @@ public class OrderFragment extends KarnetFragment
                 case ALL: // -> DELIVERY
                     item.setIcon(ResourcesCompat.getDrawable(getResources(),
                             R.drawable.ic_delivery_white, null));
+                    item.setTitle(R.string.show_orders_no_delivery);
                     orderListAdapter.viewMode(OrderListAdapter.ViewMode.DELIVERY);
                     Toast.makeText(requireContext(), R.string.show_only_delivery_orders_text,
                             Toast.LENGTH_SHORT).show();
                     break;
-                case DELIVERY: // ->NO_DELIVERY
+                case DELIVERY: // -> NO_DELIVERY
                     item.setIcon(ResourcesCompat.getDrawable(getResources(),
                             R.drawable.ic_delivery, null));
+                    item.setTitle(R.string.show_orders_all);
                     orderListAdapter.viewMode(OrderListAdapter.ViewMode.NO_DELIVERY);
                     Toast.makeText(requireContext(), R.string.show_not_delivery,
                             Toast.LENGTH_SHORT).show();
@@ -231,6 +264,7 @@ public class OrderFragment extends KarnetFragment
                 case NO_DELIVERY: // -> ALL
                     item.setIcon(ResourcesCompat.getDrawable(getResources(),
                             R.drawable.ic_negative, null));
+                    item.setTitle(R.string.show_orders_delivery);
                     orderListAdapter.viewMode(OrderListAdapter.ViewMode.ALL);
                     Toast.makeText(requireContext(), R.string.show_all_orders_text,
                             Toast.LENGTH_SHORT).show();
@@ -243,6 +277,64 @@ public class OrderFragment extends KarnetFragment
                     .actionOrderFragmentToOrderStockFragment();
             NavHostFragment.findNavController(this).navigate(action);
         }
+        else if(item.getItemId() == R.id.option_order_city)
+        {
+            List<String> cities = CustomerRegister.allCities();
+            filterCities = new String[cities.size()];
+            filterCitiesChecked = new boolean[cities.size()];
+            for(int i = 0; i < cities.size(); i++)
+            {
+                filterCities[i] = cities.get(i);
+                filterCitiesChecked[i] = true;
+            }
+            AlertDialog dialog = KarnetDialogs.multiCityChoiceDialog(requireContext(),
+                    filterCities,
+                    filterCitiesChecked,
+                    this::onFilterSelectChange,
+                    this::onFilterSelect,
+                    this::onFilterClear);
+            dialog.show();
+        }
+        return true;
+    }
+    private void onFilterClear(DialogInterface dialog)
+    {
+        for(int i = 0; i < filterCitiesChecked.length; i++)
+        {
+            filterCitiesChecked[i] = false;
+            ((AlertDialog) dialog).getListView().setItemChecked(i, false);
+        }
+    }
+
+    private void onFilterSelectChange(DialogInterface dialogInterface, int i, boolean b)
+    {
+        filterCitiesChecked[i] = b;
+    }
+
+    private void onFilterSelect(DialogInterface dialogInterface, int button)
+    {
+        List<String> filterCitiesList = new ArrayList<>();
+        for(int i = 0; i < filterCities.length; i++)
+        {
+            if(filterCitiesChecked[i])
+                filterCitiesList.add(filterCities[i]);
+        }
+        orderListAdapter.filterCities(filterCitiesList);
+    }
+
+    private boolean onSearchChange(String text)
+    {
+        orderListAdapter.filterText(text);
+        return true;
+    }
+
+    private boolean onSearchClose(@NotNull MenuItem item)
+    {
+        Logs.debug("Order Search closed");
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQuery("", false);
+        hideSoftwareKeyboard();
+        // Refiltering the list is done automatically when we set query to empty
         return true;
     }
 }

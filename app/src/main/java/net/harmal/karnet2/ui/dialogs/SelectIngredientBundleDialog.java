@@ -88,8 +88,8 @@ public class SelectIngredientBundleDialog extends KarnetDialogFragment
         fatSpinner.setAdapter(getAdapterForType(ProductIngredient.Type.FAT));
         shapeSpinner.setAdapter(getAdapterForType(ProductIngredient.Type.SHAPE));
         tasteSpinner.setAdapter(getAdapterForType(ProductIngredient.Type.TASTE));
-        baseSpinner.setSelection(lastBase  );
-        fatSpinner.setSelection(lastFat    );
+        baseSpinner.setSelection( lastBase );
+        fatSpinner.setSelection(  lastFat  );
         shapeSpinner.setSelection(lastShape);
         tasteSpinner.setSelection(lastTaste);
 

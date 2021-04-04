@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="12dp"
-    android:layout_marginBottom="12dp" >
+    android:layout_marginBottom="12dp"
+    tools:ignore="Autofill" >
 
-    <NumberPicker
-        android:id="@+id/number_picker_number_input"
+    <EditText
+        android:id="@+id/edit_num_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginEnd="128dp" />
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:hint="@string/hint_enter_number"
+        android:inputType="number" />
 
 </LinearLayout>

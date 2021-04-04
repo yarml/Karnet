@@ -136,7 +136,6 @@ public class OrderAddModifyFragment extends KarnetFragment
     private void onReductionEditButtonClick(View view)
     {
         NumberInputDialog dialog = new NumberInputDialog(R.string.select_delivery_price,
-                0, 200,
                 this::onReductionPriceSet, requireView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }
@@ -158,8 +157,7 @@ public class OrderAddModifyFragment extends KarnetFragment
         }
         else
         {
-            NumberInputDialog numDialog = new NumberInputDialog(R.string.select_count,
-                    1, 1000, n -> {
+            NumberInputDialog numDialog = new NumberInputDialog(R.string.select_count, n -> {
                 itemListAdapter.itemList().get(i).count(n);
                 itemListAdapter.notifyDataSetChanged();
             }, requireView().getWindowToken());
@@ -176,8 +174,7 @@ public class OrderAddModifyFragment extends KarnetFragment
             return;
         }
         SelectIngredientBundleDialog dialog = new SelectIngredientBundleDialog(b -> {
-            NumberInputDialog numDialog = new NumberInputDialog(R.string.select_count,
-                    1, 1000, n -> {
+            NumberInputDialog numDialog = new NumberInputDialog(R.string.select_count, n -> {
                 Item item = new Item(b, n);
                 if(itemListAdapter.getItemCount() == 0)
                     Animations.popOut(noItemText);
@@ -253,7 +250,6 @@ public class OrderAddModifyFragment extends KarnetFragment
     private void onDeliveryEditButtonClick(View view)
     {
         NumberInputDialog dialog = new NumberInputDialog(R.string.select_delivery_price,
-                0, 200,
                 this::onDeliveryPriceSet, requireView().getWindowToken());
         dialog.show(getChildFragmentManager(), "");
     }

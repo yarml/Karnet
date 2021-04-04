@@ -24,6 +24,7 @@ import java.util.List;
 
 public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.OrderViewHolder>
 {
+
     public enum ViewMode
     {
         ALL, DELIVERY, NO_DELIVERY
@@ -36,9 +37,9 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         TextView    dateView    ;
         ImageButton deleteBtn   ;
         ImageButton doneBtn     ;
-        public OrderViewHolder(@NotNull View itemView, OnItemInputListener l)
+        public OrderViewHolder(@NotNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
-            super(itemView, l);
+            super(itemView, adapter);
             mainCard  = itemView.findViewById(R.id.card_order_item     );
             priceView = itemView.findViewById(R.id.text_order_total    );
             nameView  = itemView.findViewById(R.id.text_order_item_name);
@@ -50,7 +51,9 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     private final List<Order> orderList       ;
     private List<Order>       visibleOrderList;
 
-    private ViewMode viewMode;
+    private ViewMode     viewMode    ;
+    private List<String> filterCities;
+    private String       filterText  ;
 
     public OrderListAdapter(@NotNull List<Order> orderList)
     {
@@ -66,7 +69,7 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_order, parent, false);
-        return new OrderViewHolder(v, onItemInputListener);
+        return new OrderViewHolder(v, this);
     }
 
     @SuppressLint("DefaultLocale")
@@ -90,6 +93,9 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         if(!Stock.canValidate(current))
             holder.mainCard.setCardBackgroundColor(holder.mainCard.getResources()
                     .getColor(android.R.color.holo_red_light, null));
+        else
+            holder.mainCard.setCardBackgroundColor(holder.mainCard.getResources()
+                    .getColor(android.R.color.white, null));
 
     }
 
@@ -107,14 +113,58 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         return visibleOrderList;
     }
 
+    public void filterCities(List<String> cities)
+    {
+        filterCities = cities;
+        update();
+    }
+
+    public void filterText(String text)
+    {
+        filterText = text;
+        update();
+    }
+
+    @SuppressLint("DefaultLocale")
     public void update()
     {
         visibleOrderList = new ArrayList<>();
         for(Order o : orderList)
         {
+            boolean viewModeFilter = false;
+            boolean cityFilter     = false;
+            boolean textFilter     = false;
             if ((viewMode == ViewMode.DELIVERY    && o.deliveryPrice() != 0)
              || (viewMode == ViewMode.NO_DELIVERY && o.deliveryPrice() == 0)
              || (viewMode == ViewMode.ALL))
+                viewModeFilter = true;
+
+            if(filterCities != null)
+            {
+                Customer c = CustomerRegister.getCustomer(o.cid());
+                assert c != null;
+                for (String city : filterCities)
+                    if (c.city().equalsIgnoreCase(city))
+                    {
+                        cityFilter = true;
+                        break;
+                    }
+            }
+            else
+                cityFilter = true;
+            if(filterText != null)
+            {
+                Customer c = CustomerRegister.getCustomer(o.cid());
+                assert c != null;
+                if(c.name().toLowerCase().contains(filterText.toLowerCase()) ||
+                   c.city().toLowerCase().contains(filterText.toLowerCase()) ||
+                   o.dueDate().toString().toLowerCase().contains(filterText.toLowerCase()) ||
+                   String.format("%d", c.cid()).contains(filterText))
+                    textFilter = true;
+            }
+            else
+                textFilter = true;
+            if(viewModeFilter && cityFilter && textFilter)
                 visibleOrderList.add(o);
         }
         notifyDataSetChanged();

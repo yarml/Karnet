@@ -16,6 +16,8 @@ public class Stock
 
     public static void add(@NotNull Item i)
     {
+        if(i == null)
+            return;
         add(i.bundle(), i.count());
     }
 
@@ -115,5 +117,11 @@ public class Stock
         if(canValidate(o))
             for(Item i : o.items())
                 remove(i.bundle(), i.count());
+    }
+    public static List<Item> items()
+    {
+        if(stock == null)
+            stock = new ArrayList<>();
+        return stock;
     }
 }

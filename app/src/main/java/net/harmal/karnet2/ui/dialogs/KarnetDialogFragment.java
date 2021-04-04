@@ -103,7 +103,7 @@ public abstract class KarnetDialogFragment extends AppCompatDialogFragment
         super.onDismiss(dialog);
         Logs.debug("Dismissing dialog");
         ((InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(windowToken, 0);
+               .hideSoftInputFromWindow(windowToken, 0);
         for(CustomDismissEvent e : customDismissEvents)
             e.onDismiss(dialog);
     }

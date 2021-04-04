@@ -22,9 +22,9 @@ public class StatisticsAdapter extends KarnetRecyclerAdapter<StatisticsAdapter.S
     {
         TextView productName ;
         TextView sellingsView;
-        public StatisticsViewHolder(@NonNull View itemView, OnItemInputListener listener)
+        public StatisticsViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
-            super(itemView, listener);
+            super(itemView, adapter);
             productName  = itemView.findViewById(R.id.text_stats_product_name  );
             sellingsView = itemView.findViewById(R.id.text_stats_sellings_total);
         }
@@ -45,7 +45,7 @@ public class StatisticsAdapter extends KarnetRecyclerAdapter<StatisticsAdapter.S
     {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_statistics, parent, false);
-        return new StatisticsViewHolder(v, onItemInputListener);
+        return new StatisticsViewHolder(v, this);
     }
 
     @SuppressLint("DefaultLocale")

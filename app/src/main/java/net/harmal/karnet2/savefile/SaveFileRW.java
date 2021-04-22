@@ -41,7 +41,7 @@ public class SaveFileRW
      */
     private static final int SAVE_FILE_VER = 0x00000202;
 
-    private static final String SAVE_FILE_NAME = "save.bin";
+    public static final String SAVE_FILE_NAME = "save.bin";
     private static final String LOGS_FILE_NAME = "logs.txt";
 
     public static void read(@NotNull String path) throws Exception
@@ -80,6 +80,12 @@ public class SaveFileRW
             Logs.debug("Save file not signed!");
             return;
         }
+        CustomerRegister.clear();
+        IngredientRegister.clear();
+        OrderRegister.clear();
+        Stock.clear();
+        OrdersLog.clear();
+
         int version = buf.getInt();
         // Read head
         int customerCount  ;

@@ -56,6 +56,7 @@ public class KarnetApplication extends Application
         super.onCreate();
         // Read save file
         Logs.debug("Reading save file");
+
         String path = getApplicationContext().getFilesDir().getAbsolutePath();
         try
         {

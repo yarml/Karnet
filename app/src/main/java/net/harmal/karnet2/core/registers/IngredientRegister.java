@@ -174,5 +174,10 @@ public class IngredientRegister
                 || onlyType(ProductIngredient.Type.SHAPE).size() == 0
                 || onlyType(ProductIngredient.Type.TASTE).size() == 0;
     }
-
+    public static void clear()
+    {
+        if(ingredients == null)
+            ingredients = new ArrayList<>();
+        ingredients.clear();
+    }
 }

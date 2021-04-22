@@ -15,7 +15,7 @@ public abstract class KarnetRecyclerViewHolder extends RecyclerView.ViewHolder
 {
     private final OnItemInputListener l;
 
-    public KarnetRecyclerViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
+    public KarnetRecyclerViewHolder(@NonNull View itemView, @NotNull KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
     {
         super(itemView);
         this.l = adapter.onItemInputListener;

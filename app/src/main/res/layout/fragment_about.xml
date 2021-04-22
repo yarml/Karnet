@@ -13,5 +13,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/update" />
+    <Button
+        android:id="@+id/btn_backup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backup_internal_files" />
+    <Button
+        android:id="@+id/btn_load_backup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/download_external_backup_files" />
 
 </LinearLayout>

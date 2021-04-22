@@ -4,6 +4,8 @@ import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.Order;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ public class OrdersLog
 {
     private static List<Order> orders;
 
-    public static void registerValidatedOrder(Order o)
+    public static void registerValidatedOrder(@NotNull Order o)
     {
         o.dueDate(Date.today());
         get().add(o);
@@ -31,6 +33,13 @@ public class OrdersLog
         if(orders == null)
             orders = new ArrayList<>();
         return orders;
+    }
+
+    public static void clear()
+    {
+        if(orders == null)
+            orders = new ArrayList<>();
+        orders.clear();
     }
 
 

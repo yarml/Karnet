@@ -135,4 +135,10 @@ public class Stock
             stock = new ArrayList<>();
         return stock;
     }
+    public static void clear()
+    {
+        if(stock == null)
+            stock = new ArrayList<>();
+        stock.clear();
+    }
 }

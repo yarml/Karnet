@@ -139,5 +139,10 @@ public class OrderRegister
     {
         return get().size();
     }
-
+    public static void clear()
+    {
+        if(orderRegister == null)
+            orderRegister = new ArrayList<>();
+        orderRegister.clear();
+    }
 }

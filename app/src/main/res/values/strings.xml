@@ -144,4 +144,9 @@
     <string name="permission_not_granted">Permission refusée</string>
     <string name="download_update">Mise à jour de Karnet</string>
     <string name="no_update_available">Karnet est déja à jour</string>
+    <string name="backup_internal_files">Sauvegarder les fichers internes</string>
+    <string name="download_external_backup_files">Remmettre la dernière sauvegarde</string>
+    <string name="file_copy_error">Erreur de copie de ficher</string>
+    <string name="backup_success">Fichier sauvegarder(Karnet/save.bin)</string>
+    <string name="unable_to_load">Problème au chargement de nouveau donné</string>
 </resources>

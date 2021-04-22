@@ -3,4 +3,7 @@
     <external-path
         name="downloads"
         path="Download/" />
+    <external-path
+        name="data-backup"
+        path="Karnet/" />
 </paths>

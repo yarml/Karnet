@@ -99,5 +99,10 @@ public class CustomerRegister
     {
         return get().size();
     }
-
+    public static void clear()
+    {
+        if(customerRegister == null)
+            customerRegister = new ArrayList<>();
+        customerRegister.clear();
+    }
 }

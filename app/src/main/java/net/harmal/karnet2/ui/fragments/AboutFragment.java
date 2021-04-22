@@ -2,29 +2,20 @@ package net.harmal.karnet2.ui.fragments;
 
 import android.Manifest;
 import android.app.DownloadManager;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInstaller;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.android.volley.Cache;
@@ -38,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import net.harmal.karnet2.BuildConfig;
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.savefile.SaveFileRW;
 import net.harmal.karnet2.utils.ExternalActivityInterface;
 import net.harmal.karnet2.utils.Logs;
 import net.harmal.karnet2.utils.Utils;
@@ -46,11 +38,19 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class AboutFragment extends KarnetFragment
 {
-    private Button updateBtn ;
-    private long   downloadID;
+    private Button updateBtn    ;
+    private Button backupBtn    ;
+    private Button loadBackupBtn;
 
     public AboutFragment()
     {
@@ -62,25 +62,72 @@ public class AboutFragment extends KarnetFragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        this.updateBtn = view.findViewById(R.id.btn_update);
+        this.updateBtn     = view.findViewById(R.id.btn_update     );
+        this.backupBtn     = view.findViewById(R.id.btn_backup     );
+        this.loadBackupBtn = view.findViewById(R.id.btn_load_backup);
 
-        this.updateBtn.setOnClickListener(this::onUpdateButton);
+        this.updateBtn.setOnClickListener(this::onUpdateButton     );
+        this.backupBtn.setOnClickListener(this::onBackupBtn        );
+        this.loadBackupBtn.setOnClickListener(this::onLoadBackupBtn);
 
         requireContext().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        requireContext().unregisterReceiver(onComplete);
+    private void onLoadBackupBtn(View view)
+    {
+        ExternalActivityInterface.grantPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, this::onLoadBackupPermission);
+    }
+
+
+    private void onBackupBtn(View view)
+    {
+        ExternalActivityInterface.grantPermissions(requireActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, this::onBackupPermission);
+    }
+
+    private void onLoadBackupPermission(String[] requested, String[] granted, @NotNull String[] denied)
+    {
+        if(denied.length != 0)
+        {
+            Toast.makeText(requireContext(), R.string.permission_not_granted, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        File src = Utils.appDataBackupFile();
+        File dest = new File(requireContext().getFilesDir(), SaveFileRW.SAVE_FILE_NAME);
+        if(!Utils.copy(src, dest))
+            Toast.makeText(requireContext(), R.string.file_copy_error, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(requireContext(), R.string.backup_success, Toast.LENGTH_SHORT).show();
+        try {
+            SaveFileRW.read(requireContext().getFilesDir().getAbsolutePath());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), R.string.unable_to_load, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onBackupPermission(String[] requested, String[] granted, @NotNull String[] denied)
+    {
+        if(denied.length != 0)
+        {
+            Toast.makeText(requireContext(), R.string.permission_not_granted, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        File src = new File(requireContext().getFilesDir(), SaveFileRW.SAVE_FILE_NAME);
+        File dest = Utils.appDataBackupFile();
+        if(!Utils.copy(src, dest))
+            Toast.makeText(requireContext(), R.string.file_copy_error, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(requireContext(), R.string.backup_success, Toast.LENGTH_SHORT).show();
     }
 
     private void onUpdateButton(View view)
     {
-        ExternalActivityInterface.grantPermissions(requireActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, this::permissionResulted);
+        ExternalActivityInterface.grantPermissions(requireActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, this::onUpdatePermission);
     }
 
-    private void permissionResulted(String[] requested, String[] granted, @NotNull String[] denied)
+    private void onUpdatePermission(String[] requested, String[] granted, @NotNull String[] denied)
     {
         if(denied.length != 0)
         {
@@ -114,7 +161,7 @@ public class AboutFragment extends KarnetFragment
                 Uri uri = Uri.parse(Utils.updateLink(tagName));
                 DownloadManager mgr = (DownloadManager) requireContext().getSystemService(Context.DOWNLOAD_SERVICE);
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
-                downloadID = mgr.enqueue(new DownloadManager.Request(uri)
+                mgr.enqueue(new DownloadManager.Request(uri)
                         .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
                         .setAllowedOverRoaming(false)
                         .setTitle(getString(R.string.download_update))
@@ -152,5 +199,13 @@ public class AboutFragment extends KarnetFragment
             }
         }
     };
+
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        requireContext().unregisterReceiver(onComplete);
+    }
 
 }

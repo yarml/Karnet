@@ -57,6 +57,8 @@ public class CustomerFragment extends KarnetFragment
 
         Logs.debug("Creating CUSTOMER fragment");
 
+        CustomerRegister.get().sort(new Customer.CustomerNameComparator());
+
         noCustomerText = view.findViewById(R.id.text_fragment_customer_no_customer);
 
         customerList              = view.findViewById(R.id.recycler_customer_list);
@@ -140,7 +142,7 @@ public class CustomerFragment extends KarnetFragment
             WaitDialog waitDialog = new WaitDialog(() -> {
                 ExternalActivityInterface.syncCustomers(requireContext());
                 requireActivity().runOnUiThread(() -> customerListAdapter.update());
-            }, "Synchronization en cours", "Clients synchronizé",
+            }, getString(R.string.syncing), getString(R.string.synced),
                     requireView().getWindowToken());
             waitDialog.show(getChildFragmentManager(), "");
         }

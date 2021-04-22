@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
@@ -25,14 +26,15 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
     {
         private final TextView    customerName;
         private final TextView    phoneCity   ;
-        private final ImageButton deleteBtn;
-
+        private final ImageButton deleteBtn   ;
+        private final CardView    background  ;
         public CustomerViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
             super(itemView, adapter);
             customerName = itemView.findViewById(R.id.text_customer_list_name      );
             phoneCity    = itemView.findViewById(R.id.text_customer_list_phone_city);
             deleteBtn    = itemView.findViewById(R.id.btn_customer_delete          );
+            background   = itemView.findViewById(R.id.customer_list_item_view      );
         }
     }
 
@@ -68,6 +70,15 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
         holder.phoneCity.setText(String.format("%s, %s", current.phoneNum(), current.city()));
         if(holder.deleteBtn.getVisibility() == View.VISIBLE)
             Animations.popOut(holder.deleteBtn);
+        for(Customer c : customerList)
+            if(c != current && c.phoneNum().equalsIgnoreCase(current.phoneNum()))
+            {
+                holder.background.setBackgroundColor(holder.background.getResources()
+                        .getColor(android.R.color.holo_orange_light, null));
+                return;
+            }
+        holder.background.setBackgroundColor(holder.background.getResources()
+                .getColor(android.R.color.white, null));
     }
 
     @Override

@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import net.harmal.karnet2.R;
@@ -23,10 +25,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -38,6 +42,7 @@ public class ExternalActivityInterface
 
     private static final int PICK_CONTACT_REQ = 0;
 
+    private static int permRequestCount = 0;
 
     private static final String[] CONTACT_DATA_PROJECTION = new String[]{
             ContactsContract.Contacts.DISPLAY_NAME,
@@ -46,18 +51,21 @@ public class ExternalActivityInterface
 
     private static final Map<Integer, Pair<Boolean, Intent>> waitingFor = new HashMap<>();
 
+    private static final Map<Integer, String[]> requestedPermMap = new HashMap<>();
+    private static final Map<Integer, PermissionGrantInterface> permissionInterfaceMap = new HashMap<>();
+
     @Nullable
     public static ContactData getContactData(@NotNull Activity a)
     {
-        Intent pickContactIntent = new Intent("android.intent.action.PICK");
+
+        Intent pickContactIntent = new Intent(Intent.ACTION_PICK);
         pickContactIntent.setDataAndType(Uri.parse("content://contacts"),
                 "vnd.android.cursor.dir/phone_v2");
         a.startActivityForResult(pickContactIntent, PICK_CONTACT_REQ);
 
         waitingFor.put(PICK_CONTACT_REQ, new Pair<>(false, null));
 
-        while(!waitingFor.get(PICK_CONTACT_REQ).first);
-
+        while (!Objects.requireNonNull(waitingFor.get(PICK_CONTACT_REQ)).first) ;
         Pair<Boolean, Intent> activityState = waitingFor.get(PICK_CONTACT_REQ);
         assert activityState != null;
 
@@ -79,8 +87,49 @@ public class ExternalActivityInterface
         return contactData;
     }
 
+    public static void grantPermissions(@NonNull Activity a, @NotNull String[] perms, @NonNull PermissionGrantInterface grantInterface)
+    {
+        List<String> permToGrant = new ArrayList<>();
+        for(String perm : perms)
+        {
+            int permissionCheck = ContextCompat.checkSelfPermission(a, perm);
+            if(permissionCheck != PackageManager.PERMISSION_GRANTED)
+                permToGrant.add(perm);
+        }
+        if(permToGrant.size() != 0)
+        {
+            String[] requestedPerms = permToGrant.toArray(new String[0]);
+            ActivityCompat.requestPermissions(a, requestedPerms, permRequestCount);
+            permissionInterfaceMap.put(permRequestCount, grantInterface);
+            requestedPermMap.put(permRequestCount++, requestedPerms);
+        }
+        else
+            grantInterface.resulted(new String[0], new String[0], new String[0]);
+    }
+
+    public static void requestedPermissionResult(int reqCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        Logs.debug("Requested permission resulted");
+        List<String> granted = new ArrayList<>();
+        List<String> denied  = new ArrayList<>();
+
+        for(int i = 0; i < permissions.length; i++)
+        {
+            if(grantResults[i] == PackageManager.PERMISSION_GRANTED)
+                granted.add(permissions[i]);
+            else
+                denied.add(permissions[i]);
+        }
+        String[] grantedArr = granted.toArray(new String[0]);
+        String[] deniedArr = denied.toArray(new String[0]);
+        String[] requestedArr = requestedPermMap.remove(reqCode);
+        PermissionGrantInterface grantInterface = permissionInterfaceMap.remove(reqCode);
+        assert grantInterface != null && requestedArr != null;
+        grantInterface.resulted(requestedArr, grantedArr, deniedArr);
+    }
     public static void activityResulted(int reqCode, @Nullable Intent intent)
     {
+        Logs.debug("External Activity resulted");
         synchronized (waitingFor)
         {
             waitingFor.put(reqCode, new Pair<>(true, intent));
@@ -122,6 +171,7 @@ public class ExternalActivityInterface
     @NotNull
     public static List<ContactData> getContactList(@NotNull Context context)
     {
+        Logs.debug("Getting contact list");
         List<ContactData> contactList = new ArrayList<>();
 
         ContentResolver cr = context.getContentResolver();
@@ -134,6 +184,7 @@ public class ExternalActivityInterface
         final int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
         String name, number;
+        Logs.debug("Iterating over contact list");
         while (cursor.moveToNext()) {
             name = cursor.getString(nameIndex);
             number = cursor.getString(numberIndex);
@@ -144,7 +195,17 @@ public class ExternalActivityInterface
                 mobileNoSet.add(number);
             }
         }
+        Logs.debug("Closing contacts cursor");
         cursor.close();
         return contactList;
+    }
+
+    public interface PermissionGrantInterface
+    {
+        void resulted(@NonNull String[] requested, @NonNull String[] granted, @NonNull String[] denied);
+    }
+    public interface ContactDataInterface
+    {
+        void resulted(ContactData data);
     }
 }

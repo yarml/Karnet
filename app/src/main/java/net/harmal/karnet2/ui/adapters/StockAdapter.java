@@ -56,6 +56,7 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
         this.visibleItems = new ArrayList<>(items.getItems());
         this.filter = new ArrayList<>(IngredientRegister.get());
         this.search = "";
+        visibleItems.sort(new Item.ItemBundleNameComparator());
     }
 
     @NonNull
@@ -112,6 +113,7 @@ public class StockAdapter extends KarnetRecyclerAdapter<StockAdapter.StockItemHo
                 }
             }
         }
+        visibleItems.sort(new Item.ItemBundleNameComparator());
         Logs.debug("Notifying change");
         notifyDataSetChanged();
     }

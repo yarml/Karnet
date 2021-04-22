@@ -1,6 +1,9 @@
 package net.harmal.karnet2;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Looper;
 
 import net.harmal.karnet2.core.Customer;
@@ -10,6 +13,7 @@ import net.harmal.karnet2.utils.ErrorStream;
 import net.harmal.karnet2.utils.ExternalActivityInterface;
 import net.harmal.karnet2.utils.LogStream;
 import net.harmal.karnet2.utils.Logs;
+import net.harmal.karnet2.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,6 +54,7 @@ public class KarnetApplication extends Application
     public void onCreate()
     {
         super.onCreate();
+        // Read save file
         Logs.debug("Reading save file");
         String path = getApplicationContext().getFilesDir().getAbsolutePath();
         try
@@ -59,10 +64,6 @@ public class KarnetApplication extends Application
         catch (Exception e)
         {
             e.printStackTrace();
-        }
-        for(Customer c : CustomerRegister.get())
-        {
-            Logs.debug(c.cid() + ": " + c.name() + ", " + c.city() + ", " + c.phoneNum() + ", " + c.creationDate().toString());
         }
     }
 }

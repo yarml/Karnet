@@ -80,7 +80,7 @@ public class CustomerRegister
             customerRegister = new ArrayList<>();
         return customerRegister;
     }
-
+    @NotNull
     public static List<String> allCities()
     {
         List<String> cities = new ArrayList<>();

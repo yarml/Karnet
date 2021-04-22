@@ -9,6 +9,11 @@ import org.jetbrains.annotations.NotNull;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Comparator;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 public class Customer implements Savable
 {
@@ -73,6 +78,7 @@ public class Customer implements Savable
         phoneNum = nphoneNum;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Customer{" +
@@ -105,6 +111,13 @@ public class Customer implements Savable
             String city = Utils.readString(buffer);
             String phoneNum = Utils.readString(buffer);
             return new Customer(cid, date, name, phoneNum, city);
+        }
+    }
+    public static class CustomerNameComparator implements Comparator<Customer>
+    {
+        @Override
+        public int compare(@NotNull Customer o1, @NotNull Customer o2) {
+            return o1.name.compareToIgnoreCase(o2.name);
         }
     }
 }

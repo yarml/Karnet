@@ -1,5 +1,6 @@
 package net.harmal.karnet2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -95,6 +96,12 @@ public class MainActivity extends AppCompatActivity
             ExternalActivityInterface.activityResulted(requestCode, data);
         else
             ExternalActivityInterface.cancel(requestCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        ExternalActivityInterface.requestedPermissionResult(requestCode, permissions, grantResults);
     }
 
     /**

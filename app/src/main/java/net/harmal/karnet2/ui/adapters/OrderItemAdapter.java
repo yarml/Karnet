@@ -8,9 +8,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Item;
+import net.harmal.karnet2.core.registers.OrderRegister;
+import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import java.util.List;
@@ -22,6 +25,7 @@ public class OrderItemAdapter extends KarnetRecyclerAdapter<OrderItemAdapter.Ord
         private final TextView    stackItemName ;
         private final TextView    stackItemCount;
         private final ImageButton stackDeleteBtn;
+        private final CardView    background    ;
         public OrderItemViewHolder(@NonNull View itemView, KarnetRecyclerAdapter<? extends KarnetRecyclerViewHolder> adapter)
         {
             super(itemView, adapter);
@@ -29,6 +33,7 @@ public class OrderItemAdapter extends KarnetRecyclerAdapter<OrderItemAdapter.Ord
             stackItemName  = itemView.findViewById(R.id.text_order_stack_item_name );
             stackItemCount = itemView.findViewById(R.id.text_order_stack_item_count);
             stackDeleteBtn = itemView.findViewById(R.id.btn_order_stack_delete     );
+            background     = itemView.findViewById(R.id.order_item_view            );
         }
     }
 
@@ -79,6 +84,18 @@ public class OrderItemAdapter extends KarnetRecyclerAdapter<OrderItemAdapter.Ord
         holder.stackItemName.setText(current.bundle().name());
         holder.stackItemCount.setText(String.format(itemSubtitle,
                 current.count(), current.bundle().price()));
+        if(showDelete)
+        {
+            if(Stock.countOf(current.bundle()) < current.count())
+                holder.background.setBackgroundColor(holder.background.getResources()
+                        .getColor(android.R.color.holo_red_light, null));
+            else if (Stock.countOf(current.bundle()) - OrderRegister.countOf(current.bundle()) < 0)
+                holder.background.setBackgroundColor(holder.background.getResources()
+                        .getColor(android.R.color.holo_orange_light, null));
+            else
+                holder.background.setBackgroundColor(holder.background.getResources()
+                        .getColor(android.R.color.white, null));
+        }
     }
 
     @Override

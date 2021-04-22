@@ -9,6 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Order implements Savable
@@ -169,6 +170,14 @@ public class Order implements Savable
                     items.add(it);
             }
             return new Order(oid, cid, deliveryPrice, items, date, reduction);
+        }
+    }
+    public static class OrderCIDComparator implements Comparator<Order>
+    {
+        @Override
+        public int compare(@NotNull Order o1, @NotNull Order o2)
+        {
+            return o1.cid - o2.cid;
         }
     }
 }

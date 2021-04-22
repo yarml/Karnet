@@ -47,7 +47,17 @@ public class OrderRegister
         orderRegister.add(new Order(oid, cid, deliveryPrice, stacks, dueDate, reduction));
         return oid;
     }
-
+    @NotNull
+    public static List<Order> beforeDate(Date d)
+    {
+        if(d == null)
+            return get();
+        List<Order> orders = new ArrayList<>();
+        for(Order o : get())
+            if(o.dueDate().before(d))
+                orders.add(o);
+        return orders;
+    }
     @NotNull
     public static List<Order> forDate(Date d)
     {
@@ -92,7 +102,20 @@ public class OrderRegister
             count += o.countOf(bundle);
         return count;
     }
-
+    public static int countOf(@NotNull IngredientBundle bundle, Date monitoredDate)
+    {
+        int count = 0;
+        for(Order o : forDate(monitoredDate))
+            count += o.countOf(bundle);
+        return count;
+    }
+    public static int countOfBefore(@NotNull IngredientBundle bundle, Date monitoredDate)
+    {
+        int count = 0;
+        for(Order o : beforeDate(monitoredDate))
+            count += o.countOf(bundle);
+        return count;
+    }
     @Nullable
     public static Order getOrder(int oid)
     {

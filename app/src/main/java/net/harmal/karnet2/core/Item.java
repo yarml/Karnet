@@ -8,6 +8,7 @@ import net.harmal.karnet2.savefile.Savable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Comparator;
 
 public class Item implements Savable
 {
@@ -80,6 +81,14 @@ public class Item implements Savable
                 return null;
             int count = buffer.getInt();
             return new Item(bundle, count);
+        }
+    }
+    public static class ItemBundleNameComparator implements Comparator<Item>
+    {
+        @Override
+        public int compare(Item o1, Item o2)
+        {
+            return o1.bundle.name().compareToIgnoreCase(o2.bundle.name());
         }
     }
 }

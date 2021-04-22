@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,9 @@ public class WaitDialog extends KarnetDialogFragment
                 Toast.makeText(requireContext(), taskEndToast, Toast.LENGTH_SHORT));
         builder.setCancelable(false);
         Thread taskThread = new Thread(() -> {
+            Logs.debug("WaitDialog start task");
             task.doTask();
+            Logs.debug("Task ended");
             requireActivity().runOnUiThread(() -> {
                 Toast.makeText(requireContext(), taskEndToast, Toast.LENGTH_SHORT).show();
                 dismiss();

@@ -17,6 +17,8 @@ import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.DeliveryViewHolder>
@@ -44,6 +46,7 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
     {
         this.orderList = orderList;
         visibleOrders = new ArrayList<>(orderList);
+        visibleOrders.sort(new Order.OrderCIDComparator());
     }
 
     @NonNull
@@ -63,7 +66,7 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
         Customer customer = CustomerRegister.getCustomer(current.cid());
         assert customer != null;
         holder.idText.setText(String.format("%d", customer.cid()));
-        holder.infoText.setText(String.format(" - %s-%s", customer.name(),
+        holder.infoText.setText(String.format(" - %s - %s", customer.name(),
                 customer.phoneNum()));
         holder.priceText.setText(String.format("%d dhs",
                 current.totalPrice() + current.deliveryPrice()));
@@ -97,6 +100,7 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
             if(cityFilter)
                 visibleOrders.add(o);
         }
+        visibleOrders.sort(new Order.OrderCIDComparator());
         notifyDataSetChanged();
     }
 

@@ -131,4 +131,17 @@
     <string name="show_orders_no_delivery">Afficher les commandes sans livraison</string>
     <string name="show_orders_all">Afficher tout les commandes</string>
     <string name="show_orders_delivery">Afficher les commandes avec livraison</string>
+    <string name="syncing">Synchronization en cours</string>
+    <string name="synced">Clients synchronizé</string>
+    <string name="no_limit_date">Pas de date limite</string>
+    <string name="choose_date_filter">Filtrer par date</string>
+    <string name="limit_date">Date limite</string>
+    <string name="update">Mise à jour</string>
+    <string name="default_notification_channel">Notification général</string>
+    <string name="download_complete">Téléchargement terminé</string>
+    <string name="operation_cancel">Opération Annulé</string>
+    <string name="select_date">Sélectionner une date</string>
+    <string name="permission_not_granted">Permission refusée</string>
+    <string name="download_update">Mise à jour de Karnet</string>
+    <string name="no_update_available">Karnet est déja à jour</string>
 </resources>

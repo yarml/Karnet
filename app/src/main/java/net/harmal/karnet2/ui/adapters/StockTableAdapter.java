@@ -10,11 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.registers.OrderRegister;
 import net.harmal.karnet2.core.registers.Stock;
-import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +42,7 @@ public class StockTableAdapter extends KarnetRecyclerTableAdapter<
     private final List<Pair<ProductIngredient, ProductIngredient>> rowElements;
     private ProductIngredient baseIngredient;
     private ProductIngredient fatIngredient ;
+    private Date limitDate;
 
     public StockTableAdapter(int columns, int rows, ProductIngredient baseIngredient,
                              ProductIngredient fatIngredient ,
@@ -50,6 +51,7 @@ public class StockTableAdapter extends KarnetRecyclerTableAdapter<
                              List<ProductIngredient> extras)
     {
         super(columns, rows);
+        this.limitDate = null;
         this.baseIngredient = baseIngredient;
         this.fatIngredient = fatIngredient;
         columnElements = new ArrayList<>(shapes);
@@ -129,7 +131,7 @@ public class StockTableAdapter extends KarnetRecyclerTableAdapter<
         IngredientBundle bundle = new IngredientBundle(baseIngredient.piid(), fatIngredient.piid(),
                 shapeIngredient.piid(), taste.piid(), extras);
         int stock = Stock.countOf(bundle);
-        int count = OrderRegister.countOf(bundle);
+        int count = OrderRegister.countOfBefore(bundle, limitDate);
         int sum = stock - count;
         holder.text.setText(String.format("%d / %d", Stock.countOf(bundle), sum));
     }
@@ -175,6 +177,11 @@ public class StockTableAdapter extends KarnetRecyclerTableAdapter<
         return extras;
     }
 
+    public void limitDate(Date date)
+    {
+        this.limitDate = date;
+        update();
+    }
     public void update()
     {
         notifyDataSetChanged();

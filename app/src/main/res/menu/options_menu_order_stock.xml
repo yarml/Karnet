@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/option_order_stock_limit_date"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_date_white"
+        android:title="@string/limit_date" />
+    <item
+        android:id="@+id/option_order_stock_select_date"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_date_white"
+        android:title="@string/select_date" />
+    <item
+        android:id="@+id/option_order_stock_no_date"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_date_white"
+        android:title="@string/no_limit_date" />
+</menu>

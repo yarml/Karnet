@@ -112,7 +112,7 @@ public class OrderFragment extends KarnetFragment
         else if(view.getId() == R.id.btn_order_done)
         {
             Order o = orderListAdapter.visibleOrderList().get(i);
-            if(!Stock.canValidate(o))
+            if(Stock.canValidate(o) == Stock.VALIDATE_IMPOSSIBLE)
             {
                 Toast.makeText(getContext(), R.string.insufficient_stock, Toast.LENGTH_LONG).show();
                 return;

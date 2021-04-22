@@ -90,12 +90,16 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
         holder.deleteBtn.setVisibility(View.GONE);
         holder.doneBtn.setVisibility(View.GONE);
 
-        if(!Stock.canValidate(current))
+        int canValidate = Stock.canValidate(current);
+        if(canValidate == Stock.VALIDATE_IMPOSSIBLE)
             holder.mainCard.setCardBackgroundColor(holder.mainCard.getResources()
                     .getColor(android.R.color.holo_red_light, null));
-        else
+        else if(canValidate == Stock.VALIDATE_POSSIBLE)
             holder.mainCard.setCardBackgroundColor(holder.mainCard.getResources()
                     .getColor(android.R.color.white, null));
+        else if(canValidate == Stock.VALIDATE_WARN)
+            holder.mainCard.setCardBackgroundColor(holder.mainCard.getResources()
+                    .getColor(android.R.color.holo_orange_light, null));
 
     }
 

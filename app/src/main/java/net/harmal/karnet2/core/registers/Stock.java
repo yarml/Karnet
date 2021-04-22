@@ -4,17 +4,23 @@ import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.ProductIngredient;
+import net.harmal.karnet2.utils.Logs;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Stock
 {
+    public static int VALIDATE_IMPOSSIBLE = 0;
+    public static int VALIDATE_POSSIBLE   = 1;
+    public static int VALIDATE_WARN       = 2;
+
     private static List<Item> stock;
 
-    public static void add(@NotNull Item i)
+    public static void add(@Nullable Item i)
     {
         if(i == null)
             return;
@@ -104,17 +110,22 @@ public class Stock
         return get().size();
     }
 
-    public static boolean canValidate(@NotNull Order o)
+    public static int canValidate(@NotNull Order o)
     {
         for(Item i : o.items())
             if(countOf(i.bundle()) < i.count())
-                return false;
-        return true;
+                return VALIDATE_IMPOSSIBLE;
+        for(Item i : o.items())
+
+            if (countOf(i.bundle()) - OrderRegister.countOf(i.bundle()) < 0)
+                return VALIDATE_WARN;
+
+        return VALIDATE_POSSIBLE;
     }
 
     public static void validate(Order o)
     {
-        if(canValidate(o))
+        if(canValidate(o) != VALIDATE_IMPOSSIBLE)
             for(Item i : o.items())
                 remove(i.bundle(), i.count());
     }

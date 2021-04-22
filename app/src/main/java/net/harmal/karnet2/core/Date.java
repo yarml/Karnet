@@ -193,7 +193,7 @@ public class Date implements Savable
     public static class DateBuilder implements BUILDER<Date>
     {
         @Override
-        public Date readData(int version, ByteBuffer buffer)
+        public Date readData(int version, @NotNull ByteBuffer buffer)
         {
             return new Date(buffer.get(), buffer.get(), buffer.getShort());
         }

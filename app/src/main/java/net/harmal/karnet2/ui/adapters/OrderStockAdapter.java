@@ -15,7 +15,6 @@ import net.harmal.karnet2.core.Item;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.registers.OrderRegister;
 import net.harmal.karnet2.core.registers.Stock;
-import net.harmal.karnet2.ui.listeners.OnItemInputListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +39,17 @@ public class OrderStockAdapter extends KarnetRecyclerAdapter<OrderStockAdapter.O
         }
     }
     
-    private Date monitoredDate;
+    private Date date;
+    private boolean uniqueDate = false;
 
     public OrderStockAdapter()
     {
         this(null);
     }
 
-    public OrderStockAdapter(Date monitoredDate)
+    public OrderStockAdapter(Date limitDate)
     {
-        this.monitoredDate = monitoredDate;
+        this.date = limitDate;
     }
     
     @NonNull
@@ -94,7 +94,12 @@ public class OrderStockAdapter extends KarnetRecyclerAdapter<OrderStockAdapter.O
     public List<Item> visibleItems()
     {
         List<Item> items = new ArrayList<>();
-        for(Order o : OrderRegister.forDate(monitoredDate))
+        List<Order> orders;
+        if(uniqueDate)
+            orders = OrderRegister.forDate(date);
+        else
+            orders = OrderRegister.beforeDate(date);
+        for(Order o : orders)
         {
             for(Item i : o.items())
             {
@@ -112,7 +117,22 @@ public class OrderStockAdapter extends KarnetRecyclerAdapter<OrderStockAdapter.O
                     items.add(new Item(i.bundle(), i.count()));
             }
         }
+        items.sort(new Item.ItemBundleNameComparator());
         return items;
+    }
+
+    public void limitDate(Date newLimitDate)
+    {
+        this.date = newLimitDate;
+        uniqueDate = false;
+        update();
+    }
+
+    public void monitoredDate(Date newLimitDate)
+    {
+        this.date = newLimitDate;
+        uniqueDate = true;
+        update();
     }
 
     public void update()

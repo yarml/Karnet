@@ -1,9 +1,12 @@
 package net.harmal.karnet2.ui.fragments.stock;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.harmal.karnet2.R;
+import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.IngredientBundle;
 import net.harmal.karnet2.core.ProductIngredient;
 import net.harmal.karnet2.core.registers.IngredientRegister;
@@ -126,6 +130,35 @@ public class StockTableFragment extends KarnetFragment
             dialog.addOnDismissEvent(dialog1 -> stockTableAdapter.update());
             dialog.show(getChildFragmentManager(), "");
         }
+    }
+
+    @Override
+    public int getOptionsMenu() {
+        return R.menu.options_menu_stock_table;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        if(item.getItemId() == R.id.option_stock_table_date)
+        {
+            Date date = Date.today();
+            DatePickerDialog dialog = new DatePickerDialog(requireContext(), this::onDateSet,
+                    date.year(), date.month() - 1, date.day());
+            dialog.show();
+            return true;
+        }
+        else if(item.getItemId() == R.id.option_stock_table_no_date)
+        {
+            stockTableAdapter.limitDate(null);
+        }
+        return false;
+    }
+
+    private void onDateSet(DatePicker datePicker, int year, int month, int day)
+    {
+        Date d = new Date(day, month + 1, year);
+        stockTableAdapter.limitDate(d);
     }
 
 }

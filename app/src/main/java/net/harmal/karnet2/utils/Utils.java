@@ -69,7 +69,16 @@ public class Utils
     {
         File dir = new File(Environment.getExternalStorageDirectory(), "Karnet/");
         dir.mkdirs();
-        return new File(dir, "save.bin");
+        return new File(dir, SaveFileRW.SAVE_FILE_NAME);
+    }
+
+    @NotNull
+    @Contract(" -> new")
+    public static File appLogBackupFile()
+    {
+        File dir = new File(Environment.getExternalStorageDirectory(), "Karnet/");
+        dir.mkdirs();
+        return new File(dir, SaveFileRW.LOGS_FILE_NAME);
     }
 
     public static boolean copy(File srcFile, File destFile)

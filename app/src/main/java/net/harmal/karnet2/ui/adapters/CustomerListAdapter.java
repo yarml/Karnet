@@ -61,12 +61,13 @@ public class CustomerListAdapter extends KarnetRecyclerAdapter<CustomerListAdapt
         return new CustomerViewHolder(v, this);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull CustomerViewHolder holder, int position)
     {
         Customer current = visibleCustomerList.get(position);
 
-        holder.customerName.setText(current.name());
+        holder.customerName.setText(String.format("%d - %s", current.cid(), current.name()));
         holder.phoneCity.setText(String.format("%s, %s", current.phoneNum(), current.city()));
         if(holder.deleteBtn.getVisibility() == View.VISIBLE)
             Animations.popOut(holder.deleteBtn);

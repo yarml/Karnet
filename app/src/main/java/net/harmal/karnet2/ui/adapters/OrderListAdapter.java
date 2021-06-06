@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
+import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.core.registers.Stock;
@@ -51,9 +52,10 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     private final List<Order> orderList       ;
     private List<Order>       visibleOrderList;
 
-    private ViewMode     viewMode    ;
-    private List<String> filterCities;
-    private String       filterText  ;
+    private ViewMode     viewMode     ;
+    private List<String> filterCities ;
+    private String       filterText   ;
+    private Date         monitoredDate;
 
     public OrderListAdapter(@NotNull List<Order> orderList)
     {
@@ -138,6 +140,9 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
             boolean viewModeFilter = false;
             boolean cityFilter     = false;
             boolean textFilter     = false;
+            boolean dateFilter     = false;
+            if(o.dueDate().equals(monitoredDate))
+                dateFilter = true;
             if ((viewMode == ViewMode.DELIVERY    && o.deliveryPrice() != 0)
              || (viewMode == ViewMode.NO_DELIVERY && o.deliveryPrice() == 0)
              || (viewMode == ViewMode.ALL))
@@ -168,7 +173,7 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
             }
             else
                 textFilter = true;
-            if(viewModeFilter && cityFilter && textFilter)
+            if(viewModeFilter && cityFilter && textFilter && dateFilter)
                 visibleOrderList.add(o);
         }
         notifyDataSetChanged();
@@ -181,6 +186,12 @@ public class OrderListAdapter extends KarnetRecyclerAdapter<OrderListAdapter.Ord
     public void viewMode(ViewMode viewMode)
     {
         this.viewMode = viewMode;
+        update();
+    }
+
+    public void monitoredDate(Date d)
+    {
+        this.monitoredDate = d;
         update();
     }
 }

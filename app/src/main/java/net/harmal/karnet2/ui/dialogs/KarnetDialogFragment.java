@@ -43,7 +43,6 @@ public abstract class KarnetDialogFragment extends AppCompatDialogFragment
     private int negative = R.string.dialog_negative;
     @StringRes
     private int neutral  = R.string.dialog_neutral;
-    private final IBinder windowToken;
 
     private View view;
 
@@ -54,11 +53,10 @@ public abstract class KarnetDialogFragment extends AppCompatDialogFragment
     private final List<CustomDismissEvent> customDismissEvents;
 
 
-    public KarnetDialogFragment(@StringRes int title, @LayoutRes int layout, IBinder windowToken)
+    public KarnetDialogFragment(@StringRes int title, @LayoutRes int layout)
     {
         this.title = title;
         this.layout = layout;
-        this.windowToken = windowToken;
         customDismissEvents = new ArrayList<>();
     }
 
@@ -92,10 +90,13 @@ public abstract class KarnetDialogFragment extends AppCompatDialogFragment
         onCreatingDialog(view, builder);
         builder.setView(view);
         this.view = view;
-        return builder.create();
+        AlertDialog dialog = builder.create();
+        onDialogCreated(dialog);
+        return dialog;
     }
 
     protected abstract void onCreatingDialog(View v, AlertDialog.Builder builder);
+    protected void onDialogCreated(AlertDialog dialog) {}
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog)
@@ -103,7 +104,7 @@ public abstract class KarnetDialogFragment extends AppCompatDialogFragment
         super.onDismiss(dialog);
         Logs.debug("Dismissing dialog");
         ((InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-               .hideSoftInputFromWindow(windowToken, 0);
+               .hideSoftInputFromWindow(requireView().getWindowToken(), 0);
         for(CustomDismissEvent e : customDismissEvents)
             e.onDismiss(dialog);
     }

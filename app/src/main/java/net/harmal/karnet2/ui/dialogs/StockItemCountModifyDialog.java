@@ -1,6 +1,7 @@
 package net.harmal.karnet2.ui.dialogs;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.EditText;
@@ -26,9 +27,9 @@ public class StockItemCountModifyDialog extends KarnetDialogFragment
     private FloatingActionButton addBtn    ;
     private FloatingActionButton removeBtn ;
 
-    public StockItemCountModifyDialog(int title, IngredientBundle bundle, IBinder windowToken)
+    public StockItemCountModifyDialog(int title, IngredientBundle bundle)
     {
-        super(title, R.layout.dialog_modify_stock_item_count, windowToken);
+        super(title, R.layout.dialog_modify_stock_item_count);
         this.bundle = bundle;
     }
 

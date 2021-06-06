@@ -11,5 +11,5 @@
         android:id="@+id/option_stock_table_no_date"
         app:showAsAction="never"
         android:icon="@drawable/ic_date_white"
-        android:title="@string/no_limit_date" />
+        android:title="@string/remove_date_filter" />
 </menu>

@@ -1,6 +1,7 @@
 package net.harmal.karnet2.ui.fragments.order;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
+import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.Trash;
 import net.harmal.karnet2.core.registers.CustomerRegister;
@@ -121,8 +124,7 @@ public class OrderFragment extends KarnetFragment
             assert c != null;
             ConfirmationDialog dialog = new ConfirmationDialog(R.string.confirmation,
                     String.format(getString(R.string.confirm_order_delete), c.name()),
-                    (dialog1, which) -> validateOrder(i),
-                    requireView().getWindowToken());
+                    (dialog1, which) -> validateOrder(i));
             dialog.show(getChildFragmentManager(), "");
         }
         else
@@ -234,12 +236,14 @@ public class OrderFragment extends KarnetFragment
             NavDirections action = OrderFragmentDirections
                     .actionOrderFragmentToOrderAddModifyFragment(-1, getString(R.string.add_order));
             NavHostFragment.findNavController(this).navigate(action);
+            return true;
         }
         else if(item.getItemId() == R.id.option_delivery)
         {
             NavDirections action = OrderFragmentDirections
                     .actionOrderFragmentToDeliveryFragment();
             NavHostFragment.findNavController(this).navigate(action);
+            return true;
         }
         else if(item.getItemId() == R.id.option_only_delivery)
         {
@@ -270,12 +274,14 @@ public class OrderFragment extends KarnetFragment
                             Toast.LENGTH_SHORT).show();
                     break;
             }
+            return true;
         }
         else if(item.getItemId() == R.id.option_order_details)
         {
             NavDirections action = OrderFragmentDirections
                     .actionOrderFragmentToOrderStockFragment();
             NavHostFragment.findNavController(this).navigate(action);
+            return true;
         }
         else if(item.getItemId() == R.id.option_order_city)
         {
@@ -294,9 +300,30 @@ public class OrderFragment extends KarnetFragment
                     this::onFilterSelect,
                     this::onFilterClear);
             dialog.show();
+            return true;
         }
-        return true;
+        else if(item.getItemId() == R.id.option_order_select_date)
+        {
+            Date date = Date.today();
+            DatePickerDialog dialog = new DatePickerDialog(requireContext(), this::onSelectDate,
+                    date.year(), date.month() - 1, date.day());
+            dialog.show();
+            return true;
+        }
+        else if(item.getItemId() == R.id.option_order_unselect_date)
+        {
+            orderListAdapter.monitoredDate(null);
+            return true;
+        }
+        return false;
     }
+
+    private void onSelectDate(DatePicker datePicker, int year, int month, int day)
+    {
+        Date d = new Date(day, month + 1, year);
+        orderListAdapter.monitoredDate(d);
+    }
+
     private void onFilterClear(DialogInterface dialog)
     {
         for(int i = 0; i < filterCitiesChecked.length; i++)

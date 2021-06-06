@@ -142,8 +142,7 @@ public class CustomerFragment extends KarnetFragment
             WaitDialog waitDialog = new WaitDialog(() -> {
                 ExternalActivityInterface.syncCustomers(requireContext());
                 requireActivity().runOnUiThread(() -> customerListAdapter.update());
-            }, getString(R.string.syncing), getString(R.string.synced),
-                    requireView().getWindowToken());
+            }, getString(R.string.syncing), getString(R.string.synced));
             waitDialog.show(getChildFragmentManager(), "");
         }
         return true;

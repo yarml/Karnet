@@ -136,7 +136,7 @@ public class OrderAddModifyFragment extends KarnetFragment
     private void onReductionEditButtonClick(View view)
     {
         NumberInputDialog dialog = new NumberInputDialog(R.string.select_delivery_price,
-                this::onReductionPriceSet, requireView().getWindowToken());
+                this::onReductionPriceSet);
         dialog.show(getChildFragmentManager(), "");
     }
 
@@ -160,7 +160,7 @@ public class OrderAddModifyFragment extends KarnetFragment
             NumberInputDialog numDialog = new NumberInputDialog(R.string.select_count, n -> {
                 itemListAdapter.itemList().get(i).count(n);
                 itemListAdapter.notifyDataSetChanged();
-            }, requireView().getWindowToken());
+            });
             numDialog.show(getChildFragmentManager(), "");
         }
     }
@@ -189,9 +189,9 @@ public class OrderAddModifyFragment extends KarnetFragment
                 if(!alreadyExist)
                     itemListAdapter.itemList().add(item);
                 itemListAdapter.notifyDataSetChanged();
-            }, requireView().getWindowToken());
+            });
             numDialog.show(getChildFragmentManager(), "");
-        }, requireView().getWindowToken());
+        });
         dialog.show(getChildFragmentManager(), "");
     }
 
@@ -250,7 +250,7 @@ public class OrderAddModifyFragment extends KarnetFragment
     private void onDeliveryEditButtonClick(View view)
     {
         NumberInputDialog dialog = new NumberInputDialog(R.string.select_delivery_price,
-                this::onDeliveryPriceSet, requireView().getWindowToken());
+                this::onDeliveryPriceSet);
         dialog.show(getChildFragmentManager(), "");
     }
 
@@ -268,7 +268,7 @@ public class OrderAddModifyFragment extends KarnetFragment
             return;
         }
         SelectCustomerDialog dialog = new SelectCustomerDialog(R.string.select_customer,
-                this::onCustomerSelected, requireView().getWindowToken());
+                this::onCustomerSelected);
         dialog.show(getChildFragmentManager(), "");
     }
 

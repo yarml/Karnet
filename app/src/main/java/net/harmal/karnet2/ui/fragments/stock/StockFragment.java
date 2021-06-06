@@ -25,6 +25,7 @@ import net.harmal.karnet2.core.registers.Stock;
 import net.harmal.karnet2.ui.adapters.StockAdapter;
 import net.harmal.karnet2.ui.dialogs.SelectIngredientBundleDialog;
 import net.harmal.karnet2.ui.dialogs.StockItemCountModifyDialog;
+import net.harmal.karnet2.ui.dialogs.StockPasswordDialog;
 import net.harmal.karnet2.ui.fragments.KarnetFragment;
 import net.harmal.karnet2.ui.listeners.OnActionExpandListenerBuilder;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
@@ -47,6 +48,14 @@ public class StockFragment extends KarnetFragment
     public StockFragment()
     {
         super(R.layout.fragment_stock);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        StockPasswordDialog dialog = new StockPasswordDialog();
+        dialog.show(getChildFragmentManager(), "");
     }
 
     @Override
@@ -97,8 +106,7 @@ public class StockFragment extends KarnetFragment
             }
             SelectIngredientBundleDialog dialog = new SelectIngredientBundleDialog(b -> {
                 StockItemCountModifyDialog itemCountModifyDialog =
-                        new StockItemCountModifyDialog(R.string.enter_value, b,
-                                requireView().getWindowToken());
+                        new StockItemCountModifyDialog(R.string.enter_value, b);
 
                 itemCountModifyDialog.addOnDismissEvent(dialog1 -> stockListAdapter.update());
                 itemCountModifyDialog.show(getChildFragmentManager(), "");
@@ -108,7 +116,7 @@ public class StockFragment extends KarnetFragment
                     noItemText.setVisibility(View.VISIBLE);
                     stockList.setVisibility(View.GONE);
                 }
-            }, requireView().getWindowToken());
+            });
             dialog.show(getChildFragmentManager(), "");
         }
         else if(menuItem.getItemId() == R.id.option_stock_filter)
@@ -211,7 +219,7 @@ public class StockFragment extends KarnetFragment
     {
         Toast.makeText(requireContext(), stockListAdapter.visibleItemList().get(i).bundle().name(), Toast.LENGTH_SHORT).show();
         StockItemCountModifyDialog dialog = new StockItemCountModifyDialog(R.string.enter_value,
-                stockListAdapter.visibleItemList().get(i).bundle(), requireView().getWindowToken());
+                stockListAdapter.visibleItemList().get(i).bundle());
         dialog.addOnDismissEvent(dialog1 -> stockListAdapter.update());
         dialog.show(getChildFragmentManager(), "");
         // stockListAdapter.update();

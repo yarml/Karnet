@@ -42,7 +42,8 @@ public class SaveFileRW
     private static final int SAVE_FILE_VER = 0x00000202;
 
     public static final String SAVE_FILE_NAME = "save.bin";
-    private static final String LOGS_FILE_NAME = "logs.txt";
+    public static final String LOGS_FILE_NAME = "logs.txt";
+    public static final String PASSWORDS_FILE = "passwords.bin";
 
     public static void read(@NotNull String path) throws Exception
     {

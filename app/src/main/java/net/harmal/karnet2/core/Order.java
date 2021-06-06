@@ -107,16 +107,13 @@ public class Order implements Savable
 
     public void add(Item item)
     {
-        boolean added = false;
         for(Item i : items)
             if(i.bundle().equals(item.bundle()))
             {
                 i.add(item.count());
-                added = true;
-                break;
+                return;
             }
-        if(!added)
-            items.add(item);
+        items.add(item);
     }
 
     public void remove(Item item)

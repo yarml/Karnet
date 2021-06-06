@@ -14,6 +14,8 @@ import java.util.List;
 
 public class Stock
 {
+    public static String password = "0000";
+
     public static int VALIDATE_IMPOSSIBLE = 0;
     public static int VALIDATE_POSSIBLE   = 1;
     public static int VALIDATE_WARN       = 2;
@@ -66,7 +68,7 @@ public class Stock
                     stock.remove(i);
                 return;
             }
-        if(count >= 0)
+        if(count > 0)
             stock.add(new Item(bundle, count));
     }
 
@@ -116,7 +118,6 @@ public class Stock
             if(countOf(i.bundle()) < i.count())
                 return VALIDATE_IMPOSSIBLE;
         for(Item i : o.items())
-
             if (countOf(i.bundle()) - OrderRegister.countOf(i.bundle()) < 0)
                 return VALIDATE_WARN;
 

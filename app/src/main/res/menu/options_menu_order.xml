@@ -8,7 +8,16 @@
         android:title="@string/search"
         app:showAsAction="collapseActionView|always"
         app:actionViewClass="android.widget.SearchView" />
-
+    <item
+        android:id="@+id/option_order_select_date"
+        android:icon="@drawable/ic_date_white"
+        app:showAsAction="ifRoom"
+        android:title="@string/select_date" />
+    <item
+        android:id="@+id/option_order_unselect_date"
+        android:icon="@drawable/ic_date_white"
+        app:showAsAction="ifRoom"
+        android:title="@string/remove_date_filter" />
     <item
         android:id="@+id/option_only_delivery"
         app:showAsAction="ifRoom"

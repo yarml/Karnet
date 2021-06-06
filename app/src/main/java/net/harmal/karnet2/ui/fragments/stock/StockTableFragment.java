@@ -126,7 +126,7 @@ public class StockTableFragment extends KarnetFragment
                                                            stockTableAdapter.extrasAt(row));
             Toast.makeText(requireContext(), bundle.name(), Toast.LENGTH_SHORT).show();
             StockItemCountModifyDialog dialog = new StockItemCountModifyDialog(R.string.enter_value,
-                    bundle, requireView().getWindowToken());
+                    bundle);
             dialog.addOnDismissEvent(dialog1 -> stockTableAdapter.update());
             dialog.show(getChildFragmentManager(), "");
         }

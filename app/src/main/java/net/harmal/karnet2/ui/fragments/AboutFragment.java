@@ -93,10 +93,10 @@ public class AboutFragment extends KarnetFragment
         }
         File src = Utils.appDataBackupFile();
         File dest = new File(requireContext().getFilesDir(), SaveFileRW.SAVE_FILE_NAME);
-        if(!Utils.copy(src, dest))
-            Toast.makeText(requireContext(), R.string.file_copy_error, Toast.LENGTH_SHORT).show();
+        if(Utils.copy(src, dest))
+            Toast.makeText(requireContext(), R.string.load_backup_success, Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(requireContext(), R.string.backup_success, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.file_copy_error, Toast.LENGTH_SHORT).show();
         try {
             SaveFileRW.read(requireContext().getFilesDir().getAbsolutePath());
         }
@@ -116,10 +116,16 @@ public class AboutFragment extends KarnetFragment
         }
         File src = new File(requireContext().getFilesDir(), SaveFileRW.SAVE_FILE_NAME);
         File dest = Utils.appDataBackupFile();
-        if(!Utils.copy(src, dest))
-            Toast.makeText(requireContext(), R.string.file_copy_error, Toast.LENGTH_SHORT).show();
+        File logSrc = new File(requireContext().getFilesDir(), SaveFileRW.LOGS_FILE_NAME);
+        File logDest = Utils.appLogBackupFile();
+        if(Utils.copy(logSrc, logDest))
+            Toast.makeText(requireContext(), R.string.backup_log_success, Toast.LENGTH_SHORT).show();
         else
+            Toast.makeText(requireContext(), R.string.file_copy_error, Toast.LENGTH_SHORT).show();
+        if(Utils.copy(src, dest))
             Toast.makeText(requireContext(), R.string.backup_success, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(requireContext(), R.string.file_copy_error, Toast.LENGTH_SHORT).show();
     }
 
     private void onUpdateButton(View view)

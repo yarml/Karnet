@@ -133,7 +133,7 @@
     <string name="show_orders_delivery">Afficher les commandes avec livraison</string>
     <string name="syncing">Synchronization en cours</string>
     <string name="synced">Clients synchronizé</string>
-    <string name="no_limit_date">Pas de date limite</string>
+    <string name="remove_date_filter">Annuler le filtre date</string>
     <string name="choose_date_filter">Filtrer par date</string>
     <string name="limit_date">Date limite</string>
     <string name="update">Mise à jour</string>
@@ -149,4 +149,14 @@
     <string name="file_copy_error">Erreur de copie de ficher</string>
     <string name="backup_success">Fichier sauvegarder(Karnet/save.bin)</string>
     <string name="unable_to_load">Problème au chargement de nouveau donné</string>
+    <string name="load_backup_success">Sauvgarde restaurée</string>
+    <string name="backup_log_success">Journal sauvegarder(Karnet/logs.txt)</string>
+    <string name="modify_stock_password_title">Modifier le mot de passe</string>
+    <string name="password">Mot de passe</string>
+    <string name="enter_password">Entrer votre mot de passe</string>
+    <string name="modify_stock_password">Modifier le mot de passe</string>
+    <string name="invalid_password">Mot de passe invalide</string>
+    <string name="new_password">Nouveau Mot de Passe</string>
+    <string name="confirm_password">Confirmer le mot de passe</string>
+    <string name="confirm_not_math">Verifier la confirmation du mot de passe</string>
 </resources>

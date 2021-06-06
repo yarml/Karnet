@@ -23,9 +23,9 @@ public class WaitDialog extends KarnetDialogFragment
     private final String   taskEndToast;
     private final Task     task        ;
 
-    public WaitDialog(Task task, String msg, String taskEndToast, IBinder windowToken)
+    public WaitDialog(Task task, String msg, String taskEndToast)
     {
-        super(R.string.wait, R.layout.dialog_wait, windowToken);
+        super(R.string.wait, R.layout.dialog_wait);
         this.msg          = msg         ;
         this.taskEndToast = taskEndToast;
         this.task         = task        ;

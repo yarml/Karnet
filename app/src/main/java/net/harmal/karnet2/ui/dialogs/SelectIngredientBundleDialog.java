@@ -40,10 +40,9 @@ public class SelectIngredientBundleDialog extends KarnetDialogFragment
     private final List<Integer> selectedExtras;
     private final SelectIngredientBundleDialogInterface dialogInterface;
 
-    public SelectIngredientBundleDialog(SelectIngredientBundleDialogInterface dialogInterface,
-                                        IBinder windowToken)
+    public SelectIngredientBundleDialog(SelectIngredientBundleDialogInterface dialogInterface)
     {
-        super(R.string.select_product, R.layout.dialog_ingredient_bundle_select, windowToken);
+        super(R.string.select_product, R.layout.dialog_ingredient_bundle_select);
         positiveListener(this::onOk);
         this.dialogInterface = dialogInterface;
         selectedExtras = new ArrayList<>();

@@ -141,8 +141,10 @@ public class Date implements Savable
         return year < d.year;
     }
 
-    public boolean equals(@NotNull Date d)
+    public boolean equals(Date d)
     {
+        if(d == null)
+            return true;
         return year == d.year && month == d.month && day == d.day;
     }
 

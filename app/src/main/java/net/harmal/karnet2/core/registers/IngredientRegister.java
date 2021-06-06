@@ -94,12 +94,6 @@ public class IngredientRegister
         for(ProductIngredient p : ingredients)
             if(p.piid() == piid)
                 return p;
-        Logs.debug("No ingredient with piid: " + piid + " found");
-        Logs.debug("Available piids: ");
-        for(ProductIngredient p : ingredients)
-        {
-            Logs.debug(p.displayName() + ": " + p.piid());
-        }
         return null;
     }
 

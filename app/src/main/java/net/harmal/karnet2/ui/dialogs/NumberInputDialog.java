@@ -24,10 +24,9 @@ public class NumberInputDialog extends KarnetDialogFragment
     private final NumberInputDialogInterface numberInputDialogInterface;
 
     public NumberInputDialog(@StringRes int title,
-                             NumberInputDialogInterface numberInputDialogInterface,
-                             IBinder windowToken)
+                             NumberInputDialogInterface numberInputDialogInterface)
     {
-        super(title, R.layout.dialog_number_input, windowToken);
+        super(title, R.layout.dialog_number_input);
         this.numberInputDialogInterface = numberInputDialogInterface;
         positiveListener(this::onOk);
     }

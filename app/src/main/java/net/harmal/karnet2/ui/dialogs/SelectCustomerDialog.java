@@ -32,9 +32,9 @@ public class SelectCustomerDialog extends KarnetDialogFragment
 
     private final SelectCustomerDialogInterface selectCustomerDialogInterface;
 
-    public SelectCustomerDialog(int title, SelectCustomerDialogInterface selectCustomerDialogInterface, IBinder windowToken)
+    public SelectCustomerDialog(int title, SelectCustomerDialogInterface selectCustomerDialogInterface)
     {
-        super(title, R.layout.dialog_select_customer, windowToken);
+        super(title, R.layout.dialog_select_customer);
         this.selectCustomerDialogInterface = selectCustomerDialogInterface;
     }
 

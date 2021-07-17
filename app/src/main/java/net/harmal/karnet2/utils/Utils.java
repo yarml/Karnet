@@ -22,8 +22,8 @@ import java.nio.file.Paths;
 
 public class Utils
 {
-    public static final String GITHUB_API_LATEST = "https://api.github.com/repos/TheCoderCrab/Karnet/releases/latest";
-    private static final String GITHUB_LATEST_RELEASE = "https://github.com/TheCoderCrab/Karnet/releases/download/%s/karnet.apk";                 ;
+    public static final String GITHUB_API_LATEST = "https://api.github.com/repos/YavaCocoAlt/Karnet/releases/latest";
+    private static final String GITHUB_LATEST_RELEASE = "https://github.com/TheCoderCrab/YavaCocoAlt/releases/download/%s/karnet.apk";                 ;
 
     public static final String UPDATE_FILE_NAME  = "karnet.apk";
 

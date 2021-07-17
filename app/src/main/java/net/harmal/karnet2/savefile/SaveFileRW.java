@@ -39,11 +39,10 @@ public class SaveFileRW
      * The file's version determines mainly how the header should be interpreted
      * but other parts of the body might be interpreted differently
      */
-    private static final int SAVE_FILE_VER = 0x00000202;
+    private static final int SAVE_FILE_VER = 0x00000203;
 
     public static final String SAVE_FILE_NAME = "save.bin";
     public static final String LOGS_FILE_NAME = "logs.txt";
-    public static final String PASSWORDS_FILE = "passwords.bin";
 
     public static void read(@NotNull String path) throws Exception
     {
@@ -113,6 +112,19 @@ public class SaveFileRW
                 ingredientCount = buf.getInt();
                 orderCount      = buf.getInt();
                 stockCount      = buf.getInt();
+
+                // id counts
+                CustomerRegister.customerIdCount     = buf.getInt();
+                IngredientRegister.ingredientIdCount = buf.getInt();
+                OrderRegister.orderIdCount           = buf.getInt();
+                break;
+            case 0x00000203:
+                // head
+                customerCount   = buf.getInt(         );
+                ingredientCount = buf.getInt(         );
+                orderCount      = buf.getInt(         );
+                stockCount      = buf.getInt(         );
+                Stock.password  = Utils.readString(buf);
 
                 // id counts
                 CustomerRegister.customerIdCount     = buf.getInt();
@@ -212,6 +224,7 @@ public class SaveFileRW
         dataStream.writeInt(IngredientRegister.size());
         dataStream.writeInt(OrderRegister.size(     ));
         dataStream.writeInt(Stock.size(             ));
+        Utils.writeString(Stock.password, dataStream );
 
         // id counts
         dataStream.writeInt(CustomerRegister.customerIdCount    );

@@ -159,4 +159,13 @@
     <string name="new_password">Nouveau Mot de Passe</string>
     <string name="confirm_password">Confirmer le mot de passe</string>
     <string name="confirm_not_math">Verifier la confirmation du mot de passe</string>
+    <string name="deliver_date_filter">Filtrer par date</string>
+    <string name="delivery_fragment">Livraison</string>
+    <string name="stock_orders_fragment">Stock - Commandes</string>
+    <string name="statistics_fragment">Statistiques</string>
+    <string name="stock_table_fragment">Stock(Tableau)</string>
+    <string name="packets_count">Nb de paquets</string>
+    <string name="raw_total">Sous total</string>
+    <string name="coupon">Remise</string>
+    <string name="total">Total</string>
 </resources>

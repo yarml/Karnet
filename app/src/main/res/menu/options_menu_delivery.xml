@@ -4,8 +4,15 @@
 
     <item
         android:id="@+id/option_delivery_city"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_city_white"
+        app:showAsAction="never"
         android:title="@string/city_filter" />
+    <item
+        android:id="@+id/option_delivery_date"
+        app:showAsAction="never"
+        android:title="@string/choose_date_filter" />
+    <item
+        android:id="@+id/option_delivery_remove_date_filter"
+        app:showAsAction="never"
+        android:title="@string/remove_date_filter" />
 
 </menu>

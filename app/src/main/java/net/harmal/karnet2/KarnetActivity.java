@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity
+public class KarnetActivity extends AppCompatActivity
 {
 
     private NavController       navController      ;

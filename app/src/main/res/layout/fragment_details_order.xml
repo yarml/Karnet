@@ -37,29 +37,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:gravity="center_vertical"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/layout_delivery_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
-            android:orientation="horizontal" >
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="24dp"
-                android:src="@drawable/ic_delivery"
-                android:contentDescription="DELIVERY_PRICE" />
-            <TextView
-                android:id="@+id/text_order_details_delivery_price"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="-deliveryPrice-"
-                android:inputType="none"
-                android:hint="@string/hint_delivery_price"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:gravity="center_vertical"/>
-        </LinearLayout>
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,30 +59,104 @@
                     android:overScrollMode="never" />
             </FrameLayout>
         </androidx.cardview.widget.CardView>
-        <TextView
-            android:id="@+id/text_order_details_reduction"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-42dp"
-            android:layout_marginBottom="6dp"
-            android:text="Réduction: -reduction-"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textAlignment="center"/>
-        <TextView
-            android:id="@+id/text_order_details_total_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:text="Total: -total-"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textAlignment="center"/>
-        <TextView
-            android:id="@+id/text_order_details_total_with_delivery_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:text="Total + livraison: -total + livraison-"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textAlignment="center" />
+            android:orientation="vertical" >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/packets_count" />
+                <TextView
+                    android:id="@+id/text_order_details_packet_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/raw_total" />
+                <TextView
+                    android:id="@+id/text_order_details_raw_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/coupon" />
+                <TextView
+                    android:id="@+id/text_order_details_reduction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/delivery" />
+                <TextView
+                    android:id="@+id/text_order_details_delivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/total" />
+                <TextView
+                    android:id="@+id/text_order_details_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

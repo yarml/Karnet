@@ -172,6 +172,12 @@ public class Date implements Savable
         return new Date(LocalDate.now().minusDays(days));
     }
 
+    @NotNull
+    public static Date always()
+    {
+        return new Date(0, 0, 0);
+    }
+
 
 
     @NotNull

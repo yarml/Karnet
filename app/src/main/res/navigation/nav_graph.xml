@@ -174,21 +174,21 @@
     <fragment
         android:id="@+id/deliveryFragment"
         android:name="net.harmal.karnet2.ui.fragments.order.DeliveryFragment"
-        android:label="Livraison"
+        android:label="@string/delivery_fragment"
         tools:layout="@layout/fragment_delivery" />
     <fragment
         android:id="@+id/orderStockFragment"
         android:name="net.harmal.karnet2.ui.fragments.order.OrderStockFragment"
-        android:label="Stock - Commandes"
+        android:label="@string/stock_orders_fragment"
         tools:layout="@layout/fragment_order_stock" />
     <fragment
         android:id="@+id/statisticsFragment"
         android:name="net.harmal.karnet2.ui.fragments.statistics.StatisticsFragment"
-        android:label="Statistiques"
+        android:label="@string/statistics_fragment"
         tools:layout="@layout/fragment_statistics" />
     <fragment
         android:id="@+id/stockTableFragment"
         android:name="net.harmal.karnet2.ui.fragments.stock.StockTableFragment"
-        android:label="Stock(Tableau)"
+        android:label="@string/stock_table_fragment"
         tools:layout="@layout/fragment_stock_table" />
 </navigation>

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.core.Customer;
+import net.harmal.karnet2.core.Date;
 import net.harmal.karnet2.core.Order;
 import net.harmal.karnet2.core.registers.CustomerRegister;
 import net.harmal.karnet2.ui.listeners.OnItemInputListener;
@@ -42,11 +43,15 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
 
     private List<String> filterCities;
 
+    private Date filterDate;
+
     public DeliveryAdapter(@NotNull List<Order> orderList)
     {
         this.orderList = orderList;
         visibleOrders = new ArrayList<>(orderList);
         visibleOrders.sort(new Order.OrderCIDComparator());
+        filterDate = Date.always();
+        filterCities = new ArrayList<>();
     }
 
     @NonNull
@@ -78,13 +83,30 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
         update();
     }
 
+    public List<String> filterCities()
+    {
+        return filterCities;
+    }
+
+    public void filterDate(Date newDate)
+    {
+        this.filterDate = newDate;
+        update();
+    }
+
+    public Date filterDate()
+    {
+        return filterDate;
+    }
+
     public void update()
     {
         visibleOrders = new ArrayList<>();
         for(Order o : orderList)
         {
             boolean cityFilter = false;
-            if(filterCities !=null)
+            boolean dateFilter = false;
+            if(filterCities != null)
             {
                 Customer c = CustomerRegister.getCustomer(o.cid());
                 assert c != null;
@@ -97,7 +119,9 @@ public class DeliveryAdapter extends KarnetRecyclerAdapter<DeliveryAdapter.Deliv
             }
             else
                 cityFilter = true;
-            if(cityFilter)
+            if(filterDate.equals(Date.always()) || o.dueDate().equals(filterDate))
+                dateFilter = true;
+            if(cityFilter && dateFilter)
                 visibleOrders.add(o);
         }
         visibleOrders.sort(new Order.OrderCIDComparator());

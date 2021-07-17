@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.harmal.karnet2">
+    package="net.harmal.karnet2"
+    android:versionCode="4"
+    android:versionName="v0.4-alpha">
 
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -26,7 +28,7 @@
                 android:resource="@xml/filepaths"/>
         </provider>
         <activity
-            android:name=".MainActivity"
+            android:name=".KarnetActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
             <intent-filter>

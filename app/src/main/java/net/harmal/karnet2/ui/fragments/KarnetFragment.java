@@ -6,12 +6,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import net.harmal.karnet2.R;
 import net.harmal.karnet2.utils.Logs;
@@ -63,5 +67,10 @@ public abstract class KarnetFragment extends Fragment
     {
         ((InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(requireView().getWindowToken(), 0);
+    }
+
+    public void setTitle(String title)
+    {
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle(title);
     }
 }

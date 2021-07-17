@@ -105,6 +105,14 @@ public class Order implements Savable
         return price - reduction;
     }
 
+    public int rawTotalPrice()
+    {
+        int price = 0;
+        for(Item i : items)
+            price += i.count() * i.bundle().price();
+        return price;
+    }
+
     public void add(Item item)
     {
         for(Item i : items)

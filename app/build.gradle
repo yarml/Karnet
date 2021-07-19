@@ -10,8 +10,8 @@ android {
         applicationId "net.harmal.karnet2"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 4
-        versionName "v0.4-alpha"
+        versionCode 5
+        versionName "v0.4.1-alpha"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
